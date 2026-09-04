@@ -3,6 +3,9 @@ export type Lang = "EN" | "ID";
 /** Teks bilingual. Kedua bahasa selalu dikirim ke client supaya toggle instan. */
 export type Bi = { en: string; id: string };
 
+/** Daftar bilingual, mis. poin kontribusi. */
+export type BiList = { en: string[]; id: string[] };
+
 export type Stat = {
   id: string;
   /** Nilai akhir. Angka (di-count-up) atau teks apa adanya seperti "IC2IE 2026". */
@@ -20,6 +23,8 @@ export type Track = {
   accent: boolean;
 };
 
+export type ProjectFact = { label: string; value: Bi };
+
 export type Project = {
   id: string;
   slug: string;
@@ -35,14 +40,14 @@ export type Project = {
   featured: boolean;
   /** Kartu kecil dengan thumbnail vs kartu teks saja. */
   hasThumb: boolean;
-};
 
-export type CaseStudy = {
-  projectSlug: string;
-  projectTitle: string;
-  heading: Bi;
-  facts: { label: string; value: Bi }[];
-  imageUrls: (string | null)[];
+  /* --- Isi halaman detail. Semuanya opsional: halaman detail tetap tampil
+         utuh selama field ini masih kosong. --- */
+  overview: Bi;
+  facts: ProjectFact[];
+  /** Galeri di halaman detail; item pertama jadi gambar utama. */
+  imageUrls: string[];
+  highlights: BiList;
 };
 
 export type Research = {
@@ -66,12 +71,6 @@ export type SkillGroup = {
   accent: boolean;
 };
 
-export type Post = {
-  id: string;
-  category: Bi;
-  title: Bi;
-};
-
 export type Profile = {
   name: string;
   badge: Bi;
@@ -89,7 +88,6 @@ export type Profile = {
 };
 
 export type SiteSettings = {
-  showBlog: boolean;
   defaultLang: Lang;
 };
 
@@ -98,10 +96,8 @@ export type Content = {
   stats: Stat[];
   tracks: Track[];
   projects: Project[];
-  caseStudy: CaseStudy;
   research: Research;
   experiences: Experience[];
   skillGroups: SkillGroup[];
-  posts: Post[];
   settings: SiteSettings;
 };

@@ -47,19 +47,7 @@ create table if not exists public.profile (
 
 create table if not exists public.site_settings (
   id smallint primary key default 1 check (id = 1),
-  show_blog boolean not null default true,
   default_lang text not null default 'EN' check (default_lang in ('EN', 'ID')),
-  updated_at timestamptz not null default now()
-);
-
-create table if not exists public.case_study (
-  id smallint primary key default 1 check (id = 1),
-  project_slug text not null default 'indeta',
-  heading_en text not null default '',
-  heading_id text not null default '',
-  -- [{ "label": "ROLE", "value_en": "...", "value_id": "..." }, ...]
-  facts jsonb not null default '[]'::jsonb,
-  image_paths text[] not null default '{}',
   updated_at timestamptz not null default now()
 );
 
@@ -109,6 +97,13 @@ create table if not exists public.projects (
   github_url text,
   featured boolean not null default false,
   has_thumb boolean not null default true,
+  -- Isi halaman detail /projects/<slug>; semuanya opsional.
+  overview_en text not null default '',
+  overview_id text not null default '',
+  facts jsonb not null default '[]'::jsonb,       -- [{label, value_en, value_id}]
+  image_paths text[] not null default '{}',       -- item pertama = gambar utama
+  highlights_en text[] not null default '{}',
+  highlights_id text[] not null default '{}',
   sort smallint not null default 0
 );
 
@@ -132,16 +127,6 @@ create table if not exists public.skill_groups (
   sort smallint not null default 0
 );
 
-create table if not exists public.posts (
-  id text primary key,
-  category_en text not null default '',
-  category_id text not null default '',
-  title_en text not null default '',
-  title_id text not null default '',
-  published boolean not null default true,
-  sort smallint not null default 0
-);
-
 -- ---------------------------------------------------------------------- RLS --
 -- Baca: terbuka untuk siapa pun (situs publik). Tulis: hanya admin.
 do $$
@@ -149,8 +134,8 @@ declare
   t text;
 begin
   foreach t in array array[
-    'profile', 'site_settings', 'case_study', 'research',
-    'stats', 'tracks', 'projects', 'experiences', 'skill_groups', 'posts'
+    'profile', 'site_settings', 'research',
+    'stats', 'tracks', 'projects', 'experiences', 'skill_groups'
   ]
   loop
     execute format('alter table public.%I enable row level security', t);

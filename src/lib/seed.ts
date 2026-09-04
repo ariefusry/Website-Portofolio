@@ -117,6 +117,18 @@ export const SEED: Content = {
       tech: ["Laravel", "Tailwind", "Vite", "Vercel"],
       imageUrl: null,
       githubUrl: null,
+      overview: {
+        en: "Built solo. Paid for. Live on Vercel.",
+        id: "Dibangun sendiri. Dibayar. Live di Vercel.",
+      },
+      facts: [
+        { label: "ROLE", value: { en: "Sole fullstack developer", id: "Fullstack developer tunggal" } },
+        { label: "SCOPE", value: { en: "Public site + admin CMS", id: "Situs publik + CMS admin" } },
+        { label: "STACK", value: { en: "Laravel · Tailwind · Vite", id: "Laravel · Tailwind · Vite" } },
+        { label: "OUTCOME", value: { en: "Delivered and deployed", id: "Selesai dan ter-deploy" } },
+      ],
+      imageUrls: [],
+      highlights: { en: [], id: [] },
       featured: true,
       hasThumb: true,
     },
@@ -133,6 +145,10 @@ export const SEED: Content = {
       tech: [],
       imageUrl: null,
       githubUrl: null,
+      overview: { en: "", id: "" },
+      facts: [],
+      imageUrls: [],
+      highlights: { en: [], id: [] },
       featured: false,
       hasThumb: true,
     },
@@ -149,6 +165,10 @@ export const SEED: Content = {
       tech: [],
       imageUrl: null,
       githubUrl: null,
+      overview: { en: "", id: "" },
+      facts: [],
+      imageUrls: [],
+      highlights: { en: [], id: [] },
       featured: false,
       hasThumb: true,
     },
@@ -165,6 +185,10 @@ export const SEED: Content = {
       tech: [],
       imageUrl: null,
       githubUrl: null,
+      overview: { en: "", id: "" },
+      facts: [],
+      imageUrls: [],
+      highlights: { en: [], id: [] },
       featured: false,
       hasThumb: false,
     },
@@ -181,38 +205,14 @@ export const SEED: Content = {
       tech: [],
       imageUrl: null,
       githubUrl: null,
+      overview: { en: "", id: "" },
+      facts: [],
+      imageUrls: [],
+      highlights: { en: [], id: [] },
       featured: false,
       hasThumb: false,
     },
   ],
-
-  caseStudy: {
-    projectSlug: "indeta",
-    projectTitle: "INDETA",
-    heading: {
-      en: "Built solo. Paid for. Live on Vercel.",
-      id: "Dibangun sendiri. Dibayar. Live di Vercel.",
-    },
-    facts: [
-      {
-        label: "ROLE",
-        value: { en: "Sole fullstack developer", id: "Fullstack developer tunggal" },
-      },
-      {
-        label: "SCOPE",
-        value: { en: "Public site + admin CMS", id: "Situs publik + CMS admin" },
-      },
-      {
-        label: "STACK",
-        value: { en: "Laravel · Tailwind · Vite", id: "Laravel · Tailwind · Vite" },
-      },
-      {
-        label: "OUTCOME",
-        value: { en: "Delivered and deployed", id: "Selesai dan ter-deploy" },
-      },
-    ],
-    imageUrls: [null, null, null],
-  },
 
   research: {
     badge: "ACCEPTED — IC2IE 2026",
@@ -319,35 +319,8 @@ export const SEED: Content = {
     },
   ],
 
-  posts: [
-    {
-      id: "sync",
-      category: { en: "ENGINEERING", id: "ENGINEERING" },
-      title: {
-        en: "Keeping Flutter and Laravel in sync on one Supabase project",
-        id: "Menjaga Flutter dan Laravel tetap sinkron di satu project Supabase",
-      },
-    },
-    {
-      id: "resampling",
-      category: { en: "MACHINE LEARNING", id: "MACHINE LEARNING" },
-      title: {
-        en: "Resampling inside the training split, and nowhere else",
-        id: "Resampling hanya di dalam data latih, tidak di tempat lain",
-      },
-    },
-    {
-      id: "freelance",
-      category: { en: "FREELANCE", id: "FREELANCE" },
-      title: {
-        en: "Shipping a client platform alone: scope, schema, deploy",
-        id: "Merilis platform klien sendirian: scope, skema, deploy",
-      },
-    },
-  ],
 
   settings: {
-    showBlog: true,
     defaultLang: "EN",
   },
 };
