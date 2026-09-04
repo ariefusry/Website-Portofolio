@@ -95,6 +95,14 @@ create table if not exists public.projects (
   tech text[] not null default '{}',
   image_path text,
   github_url text,
+  live_url text,
+  -- Baris peran di bawah judul kartu; kosong = pakai `badges`.
+  role_en text not null default '',
+  role_id text not null default '',
+  -- Badge status opsional, mis. "IN PROGRESS". Kosong = tidak ditampilkan.
+  status_en text not null default '',
+  status_id text not null default '',
+  -- true = tampil di section Featured Build, dan dikeluarkan dari grid.
   featured boolean not null default false,
   has_thumb boolean not null default true,
   -- Isi halaman detail /projects/<slug>; semuanya opsional.

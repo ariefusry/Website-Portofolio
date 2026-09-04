@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { useLang } from "@/lib/lang-context";
 import { UI } from "@/lib/i18n";
-import { Chip, TagPill } from "@/components/ui/Primitives";
+import { TagPill } from "@/components/ui/Primitives";
+import { TechIcons } from "@/components/ui/TechIcons";
 import { SmartImage } from "@/components/ui/SmartImage";
 import type { Project } from "@/lib/types";
 
@@ -45,15 +46,7 @@ export function ProjectDetail({ project }: { project: Project }) {
           {t(project.summary)}
         </p>
 
-        {project.tech.length ? (
-          <div className="flex flex-wrap gap-1.5">
-            {project.tech.map((tech) => (
-              <Chip key={tech} outlined>
-                {tech}
-              </Chip>
-            ))}
-          </div>
-        ) : null}
+        <TechIcons items={project.tech} size={20} />
       </header>
 
       {/* Gambar utama */}
@@ -121,7 +114,7 @@ export function ProjectDetail({ project }: { project: Project }) {
         </div>
 
         {/* Fakta ringkas + tautan */}
-        {project.facts.length || project.githubUrl ? (
+        {project.facts.length || project.githubUrl || project.liveUrl ? (
           <aside className="lg:sticky lg:top-[calc(var(--header-h)+24px)] lg:self-start">
             {project.facts.length ? (
               <dl className="m-0 grid border-t border-[var(--color-line-strong)]">
@@ -141,16 +134,28 @@ export function ProjectDetail({ project }: { project: Project }) {
               </dl>
             ) : null}
 
-            {project.githubUrl ? (
+            <div className="mt-6 flex flex-wrap gap-2.5">
+              {project.liveUrl ? (
+                <a
+                  href={project.liveUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-lg bg-ink px-[18px] py-3 font-display text-[13px] leading-none font-semibold text-white transition-transform duration-200 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+                >
+                  {t(UI.visitSite)}
+                </a>
+              ) : null}
+              {project.githubUrl ? (
               <a
                 href={project.githubUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-6 inline-block rounded-lg border border-[var(--color-line-strong)] px-[18px] py-3 font-display text-[13px] leading-none font-semibold transition-colors hover:border-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid"
+                className="rounded-lg border border-[var(--color-line-strong)] px-[18px] py-3 font-display text-[13px] leading-none font-semibold transition-colors hover:border-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid"
               >
                 {t(UI.github)}
               </a>
-            ) : null}
+              ) : null}
+            </div>
           </aside>
         ) : null}
       </div>

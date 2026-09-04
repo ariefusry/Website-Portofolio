@@ -108,8 +108,11 @@ const mapProjects = (rows: Row[]): Project[] =>
     tech: arr(row, "tech"),
     imageUrl: publicUrl(BUCKET_ASSETS, str(row, "image_path") || null),
     githubUrl: str(row, "github_url") || null,
+    liveUrl: str(row, "live_url") || null,
     featured: bool(row, "featured"),
     hasThumb: bool(row, "has_thumb", true),
+    role: bi(row, "role"),
+    status: bi(row, "status"),
     overview: bi(row, "overview"),
     facts: Array.isArray(row.facts)
       ? (row.facts as Row[]).map(

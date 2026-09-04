@@ -93,6 +93,18 @@ Lalu salin nama berkasnya ke kolom path:
 | Thumbnail proyek | Projects → entri proyek | `Screenshot` |
 | Galeri halaman detail | Projects → entri proyek | `Galeri screenshot` — satu path per baris, baris pertama jadi gambar utama |
 
+### Catatan kolom Projects
+
+- **Tampilkan di Featured Build** — proyek yang dicentang muncul di section sorotan
+  sebelum grid, dan otomatis dikeluarkan dari grid supaya tidak tampil dua kali.
+  Judul besar di section itu diambil dari **Ringkasan panjang**.
+- **Peran** — baris di bawah judul kartu. Selama kosong, kartu memakai **Badge**.
+- **Badge status** — mis. `IN PROGRESS`. Kosong berarti tidak ditampilkan.
+- **Chip teknologi** — dirender sebagai ikon brand bila namanya dikenali
+  (`src/components/ui/TechIcons.tsx`), selebihnya jadi chip teks.
+- Beranda menampilkan 4 kartu; sisanya di `/projects`. Kontrol paginasi baru
+  muncul kalau proyek lebih dari 9.
+
 ## 7. Deploy ke Vercel
 
 1. Push repo ini ke GitHub.

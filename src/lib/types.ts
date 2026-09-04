@@ -37,9 +37,16 @@ export type Project = {
   tech: string[];
   imageUrl: string | null;
   githubUrl: string | null;
+  /** URL situs live, ditampilkan di halaman detail. */
+  liveUrl: string | null;
+  /** Tampil di section Featured Build (dan dikeluarkan dari grid). */
   featured: boolean;
   /** Kartu kecil dengan thumbnail vs kartu teks saja. */
   hasThumb: boolean;
+  /** Baris peran di bawah judul kartu, mis. "Sole fullstack developer". */
+  role: Bi;
+  /** Badge status opsional, mis. "IN PROGRESS". Kosong = tidak ditampilkan. */
+  status: Bi;
 
   /* --- Isi halaman detail. Semuanya opsional: halaman detail tetap tampil
          utuh selama field ini masih kosong. --- */
