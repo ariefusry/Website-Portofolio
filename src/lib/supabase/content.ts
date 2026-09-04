@@ -1,13 +1,13 @@
 import { SEED } from "../seed";
 import type {
   Bi,
-  CaseStudy,
+  BiList,
   Content,
   Experience,
   Lang,
-  Post,
   Profile,
   Project,
+  ProjectFact,
   Research,
   SkillGroup,
   SiteSettings,
@@ -38,6 +38,13 @@ const num = (row: Row, key: string, fallback = 0): number => {
 const arr = (row: Row, key: string): string[] => {
   const v = row[key];
   return Array.isArray(v) ? v.filter((x): x is string => typeof x === "string") : [];
+};
+
+/** Versi daftar dari `bi`: kolom `<base>_en` / `<base>_id` bertipe text[]. */
+const biList = (row: Row, base: string): BiList => {
+  const en = arr(row, `${base}_en`);
+  const id = arr(row, `${base}_id`);
+  return { en, id: id.length ? id : en };
 };
 
 /** Kolom `<base>_en` / `<base>_id` → objek bilingual, dengan ID jatuh ke EN bila kosong. */
@@ -103,30 +110,17 @@ const mapProjects = (rows: Row[]): Project[] =>
     githubUrl: str(row, "github_url") || null,
     featured: bool(row, "featured"),
     hasThumb: bool(row, "has_thumb", true),
+    overview: bi(row, "overview"),
+    facts: Array.isArray(row.facts)
+      ? (row.facts as Row[]).map(
+          (f): ProjectFact => ({ label: str(f, "label"), value: bi(f, "value") }),
+        )
+      : [],
+    imageUrls: arr(row, "image_paths")
+      .map((path) => publicUrl(BUCKET_ASSETS, path))
+      .filter((url): url is string => Boolean(url)),
+    highlights: biList(row, "highlights"),
   }));
-
-function mapCaseStudy(row: Row | null, projects: Project[]): CaseStudy {
-  if (!row) return SEED.caseStudy;
-  const slug = str(row, "project_slug", SEED.caseStudy.projectSlug);
-  const facts = Array.isArray(row.facts)
-    ? (row.facts as Row[]).map((f) => ({
-        label: str(f, "label"),
-        value: bi(f, "value"),
-      }))
-    : SEED.caseStudy.facts;
-
-  return {
-    projectSlug: slug,
-    projectTitle:
-      projects.find((p) => p.slug === slug)?.title ?? SEED.caseStudy.projectTitle,
-    heading: bi(row, "heading", SEED.caseStudy.heading),
-    facts,
-    imageUrls: (arr(row, "image_paths").length
-      ? arr(row, "image_paths")
-      : ["", "", ""]
-    ).map((p) => publicUrl(BUCKET_ASSETS, p || null)),
-  };
-}
 
 function mapResearch(row: Row | null): Research {
   if (!row) return SEED.research;
@@ -161,20 +155,10 @@ const mapSkillGroups = (rows: Row[]): SkillGroup[] =>
     accent: bool(row, "accent"),
   }));
 
-const mapPosts = (rows: Row[]): Post[] =>
-  rows.map((row) => ({
-    id: str(row, "id"),
-    category: bi(row, "category"),
-    title: bi(row, "title"),
-  }));
-
 function mapSettings(row: Row | null): SiteSettings {
   if (!row) return SEED.settings;
   const lang = str(row, "default_lang", SEED.settings.defaultLang);
-  return {
-    showBlog: bool(row, "show_blog", SEED.settings.showBlog),
-    defaultLang: (lang === "ID" ? "ID" : "EN") as Lang,
-  };
+  return { defaultLang: (lang === "ID" ? "ID" : "EN") as Lang };
 }
 
 /**
@@ -196,22 +180,18 @@ export async function fetchContentFromSupabase(): Promise<Content | null> {
     statsRes,
     tracksRes,
     projectsRes,
-    caseStudyRes,
     researchRes,
     experiencesRes,
     skillsRes,
-    postsRes,
     settingsRes,
   ] = await Promise.all([
     db.from("profile").select("*").eq("id", 1).maybeSingle(),
     db.from("stats").select("*").order("sort"),
     db.from("tracks").select("*").order("sort"),
     db.from("projects").select("*").order("sort"),
-    db.from("case_study").select("*").eq("id", 1).maybeSingle(),
     db.from("research").select("*").eq("id", 1).maybeSingle(),
     db.from("experiences").select("*").order("sort"),
     db.from("skill_groups").select("*").order("sort"),
-    db.from("posts").select("*").eq("published", true).order("sort"),
     db.from("site_settings").select("*").eq("id", 1).maybeSingle(),
   ]);
 
@@ -222,18 +202,15 @@ export async function fetchContentFromSupabase(): Promise<Content | null> {
   const tracks = mapTracks(rows(tracksRes));
   const experiences = mapExperiences(rows(experiencesRes));
   const skillGroups = mapSkillGroups(rows(skillsRes));
-  const posts = mapPosts(rows(postsRes));
 
   return {
     profile: mapProfile(one(profileRes)),
     stats: stats.length ? stats : SEED.stats,
     tracks: tracks.length ? tracks : SEED.tracks,
     projects: resolvedProjects,
-    caseStudy: mapCaseStudy(one(caseStudyRes), resolvedProjects),
     research: mapResearch(one(researchRes)),
     experiences: experiences.length ? experiences : SEED.experiences,
     skillGroups: skillGroups.length ? skillGroups : SEED.skillGroups,
-    posts: posts.length ? posts : SEED.posts,
     settings: mapSettings(one(settingsRes)),
   };
 }

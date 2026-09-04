@@ -1,37 +1,36 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useLang } from "@/lib/lang-context";
 import { UI } from "@/lib/i18n";
 
 const NAV = [
   { id: "about", label: UI.nav.about },
-  { id: "work", label: UI.nav.work },
+  { id: "projects", label: UI.nav.projects },
   { id: "research", label: UI.nav.research },
   { id: "experience", label: UI.nav.experience },
-  { id: "writing", label: UI.nav.writing },
 ] as const;
 
-export function Header({
-  name,
-  email,
-  showBlog,
-}: {
-  name: string;
-  email: string;
-  showBlog: boolean;
-}) {
+export function Header({ name, email }: { name: string; email: string }) {
   const { lang, setLang, t } = useLang();
-  const [active, setActive] = useState<string>("");
+  const pathname = usePathname();
+  const onHome = pathname === "/";
+  const [observed, setObserved] = useState<string>("");
+  // Sorotan nav hanya berlaku di beranda — diturunkan saat render, bukan
+  // di-reset lewat setState di dalam effect.
+  const active = onHome ? observed : "";
   const [open, setOpen] = useState(false);
 
-  const items = useMemo(
-    () => NAV.filter((n) => n.id !== "writing" || showBlog),
-    [showBlog],
-  );
+  const items = useMemo(() => NAV, []);
 
-  // Satu observer untuk semua section; yang paling atas dan terlihat jadi active.
+  // Di luar beranda, anchor harus menyeberang halaman dulu ("/#about"),
+  // kalau tidak link-nya tidak menuju ke mana-mana.
+  const hrefFor = (id: string) => (onHome ? `#${id}` : `/#${id}`);
+
   useEffect(() => {
+    if (!onHome) return;
     const sections = items
       .map((n) => document.getElementById(n.id))
       .filter((el): el is HTMLElement => el !== null);
@@ -42,16 +41,15 @@ export function Header({
         const visible = entries
           .filter((e) => e.isIntersecting)
           .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
-        if (visible[0]) setActive(visible[0].target.id);
+        if (visible[0]) setObserved(visible[0].target.id);
       },
       { rootMargin: "-30% 0px -55% 0px", threshold: 0 },
     );
 
     sections.forEach((el) => observer.observe(el));
     return () => observer.disconnect();
-  }, [items]);
+  }, [items, onHome]);
 
-  // Kunci scroll body saat drawer mobile terbuka.
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
     return () => {
@@ -70,7 +68,7 @@ export function Header({
         type="button"
         onClick={() => setLang(other)}
         aria-label={`${t(UI.switchLang)}: ${other}`}
-        className="cursor-pointer rounded-full px-[9px] py-[5px] text-[#5b6570] transition-colors hover:text-ink"
+        className="cursor-pointer rounded-full px-[9px] py-[5px] text-[#5b6570] transition-colors hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid"
       >
         {other}
       </button>
@@ -80,7 +78,7 @@ export function Header({
   const hireBtn = (
     <a
       href={`mailto:${email}`}
-      className="rounded-full bg-ink px-[15px] py-2 font-semibold text-white transition-transform duration-200 hover:-translate-y-[1px]"
+      className="rounded-full bg-ink px-[15px] py-2 font-semibold text-white transition-transform duration-200 hover:-translate-y-[1px] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid"
     >
       {t(UI.hire)}
     </a>
@@ -89,32 +87,30 @@ export function Header({
   return (
     <header className="sticky top-0 z-30 border-b border-[var(--color-line-soft)] bg-white/70 backdrop-blur-md">
       <div className="section-x flex items-center justify-between py-[18px]">
-        <a
-          href="#top"
-          className="font-display text-[15px] leading-none font-semibold tracking-[-0.01em]"
+        <Link
+          href="/"
+          className="rounded font-display text-[15px] leading-none font-semibold tracking-[-0.01em] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid"
         >
           {name}
-        </a>
+        </Link>
 
-        {/* Desktop */}
         <nav className="hidden items-center gap-7 font-body text-[13px] leading-none font-medium text-[#5b6570] lg:flex">
           {items.map((n) => (
-            <a
+            <Link
               key={n.id}
-              href={`#${n.id}`}
+              href={hrefFor(n.id)}
               aria-current={active === n.id ? "true" : undefined}
-              className={`transition-colors hover:text-ink ${
+              className={`rounded transition-colors hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid ${
                 active === n.id ? "text-ink" : ""
               }`}
             >
               {t(n.label)}
-            </a>
+            </Link>
           ))}
           {langToggle}
           {hireBtn}
         </nav>
 
-        {/* Mobile */}
         <div className="flex items-center gap-3 font-body text-[13px] leading-none font-medium lg:hidden">
           {langToggle}
           <button
@@ -122,7 +118,7 @@ export function Header({
             onClick={() => setOpen(true)}
             aria-label={t(UI.menu)}
             aria-expanded={open}
-            className="rounded-lg border border-[var(--color-line-strong)] px-3 py-2 font-semibold"
+            className="rounded-lg border border-[var(--color-line-strong)] px-3 py-2 font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid"
           >
             {t(UI.menu)}
           </button>
@@ -139,21 +135,21 @@ export function Header({
               type="button"
               onClick={() => setOpen(false)}
               aria-label={t(UI.closeMenu)}
-              className="rounded-lg border border-[var(--color-line-strong)] px-3 py-2 font-body text-[13px] leading-none font-semibold"
+              className="rounded-lg border border-[var(--color-line-strong)] px-3 py-2 font-body text-[13px] leading-none font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid"
             >
               ✕
             </button>
           </div>
           <nav className="section-x flex flex-col gap-1 py-6">
             {items.map((n) => (
-              <a
+              <Link
                 key={n.id}
-                href={`#${n.id}`}
+                href={hrefFor(n.id)}
                 onClick={() => setOpen(false)}
                 className="border-b border-[var(--color-line)] py-4 font-display text-2xl font-semibold tracking-[-0.02em]"
               >
                 {t(n.label)}
-              </a>
+              </Link>
             ))}
             <a
               href={`mailto:${email}`}

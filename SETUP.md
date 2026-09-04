@@ -9,7 +9,7 @@ Langkah 2–5 **sudah dijalankan** pada project Supabase `Website-Portofolio`
 (`fmlehahvxqpaqhntddxt`, region Singapore):
 
 - [x] Project dibuat
-- [x] `schema.sql` dan `seed.sql` diterapkan — 11 tabel, RLS aktif, bucket `assets` dan `documents` dibuat
+- [x] `schema.sql` dan `seed.sql` diterapkan — RLS aktif di semua tabel, bucket `assets` dan `documents` dibuat
 - [x] User admin `ariefusry0@gmail.com` dibuat dan terdaftar di tabel `admins`
 - [x] `.env.local` terisi (tidak masuk repo)
 - [ ] **Langkah 6** — unggah foto profil, screenshot INDETA, dan `cv.pdf` lewat `/admin/assets`
@@ -90,8 +90,8 @@ Lalu salin nama berkasnya ke kolom path:
 |---|---|---|
 | Foto profil | Profil & hero | `Foto profil` |
 | CV PDF | Profil & hero | `CV (PDF)` |
-| Screenshot proyek | Selected work → entri proyek | `Screenshot` |
-| Screenshot case study | Case study | `Screenshot (3 path)` — baris 1 gambar besar, baris 2–3 thumbnail |
+| Thumbnail proyek | Projects → entri proyek | `Screenshot` |
+| Galeri halaman detail | Projects → entri proyek | `Galeri screenshot` — satu path per baris, baris pertama jadi gambar utama |
 
 ## 7. Deploy ke Vercel
 

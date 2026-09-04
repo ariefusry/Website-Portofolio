@@ -83,7 +83,6 @@ export const TABLES: TableDef[] = [
     label: "Pengaturan situs",
     kind: "singleton",
     fields: [
-      { name: "show_blog", label: "Tampilkan section Writing", type: "bool" },
       {
         name: "default_lang",
         label: "Bahasa default",
@@ -127,7 +126,7 @@ export const TABLES: TableDef[] = [
   {
     key: "projects",
     table: "projects",
-    label: "Selected work",
+    label: "Projects",
     kind: "collection",
     titleField: "title",
     fields: [
@@ -146,29 +145,21 @@ export const TABLES: TableDef[] = [
       { name: "github_url", label: "URL GitHub", type: "text" },
       { name: "featured", label: "Kartu unggulan (lebar penuh)", type: "bool" },
       { name: "has_thumb", label: "Punya thumbnail", type: "bool" },
-      { name: "sort", label: "Urutan", type: "number" },
-    ],
-  },
-  {
-    key: "case-study",
-    table: "case_study",
-    label: "Case study",
-    kind: "singleton",
-    fields: [
-      { name: "project_slug", label: "Slug proyek", type: "text" },
-      bi("heading", "Judul", "textarea"),
+      bi("overview", "Ringkasan panjang (halaman detail)", "textarea"),
       {
         name: "facts",
-        label: "Fakta",
+        label: "Fakta ringkas",
         type: "json",
         hint: '[{"label":"ROLE","value_en":"…","value_id":"…"}]',
       },
       {
         name: "image_paths",
-        label: "Screenshot (3 path)",
+        label: "Galeri screenshot",
         type: "array",
-        hint: "Baris 1 = gambar besar, baris 2-3 = thumbnail",
+        hint: "Satu path per baris; baris pertama jadi gambar utama",
       },
+      bi("highlights", "Poin kontribusi", "array"),
+      { name: "sort", label: "Urutan", type: "number" },
     ],
   },
   {
@@ -211,19 +202,6 @@ export const TABLES: TableDef[] = [
       bi("name", "Nama grup"),
       { name: "items", label: "Item", type: "array" },
       { name: "accent", label: "Chip beraksen", type: "bool" },
-      { name: "sort", label: "Urutan", type: "number" },
-    ],
-  },
-  {
-    key: "posts",
-    table: "posts",
-    label: "Writing",
-    kind: "collection",
-    titleField: "title_en",
-    fields: [
-      bi("category", "Kategori"),
-      bi("title", "Judul"),
-      { name: "published", label: "Tampilkan", type: "bool" },
       { name: "sort", label: "Urutan", type: "number" },
     ],
   },

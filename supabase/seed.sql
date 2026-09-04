@@ -40,8 +40,8 @@ on conflict (id) do update set
   email = excluded.email, phone = excluded.phone,
   linkedin = excluded.linkedin, github = excluded.github;
 
-insert into public.site_settings (id, show_blog, default_lang)
-values (1, true, 'EN')
+insert into public.site_settings (id, default_lang)
+values (1, 'EN')
 on conflict (id) do nothing;
 
 insert into public.stats (id, value, is_numeric, decimals, label_en, label_id, sort) values
@@ -68,51 +68,44 @@ on conflict (id) do update set
   chips = excluded.chips, accent = excluded.accent, sort = excluded.sort;
 
 insert into public.projects
-  (id, slug, title, summary_en, summary_id, badges, accent_badge, tech, featured, has_thumb, sort)
+  (id, slug, title, summary_en, summary_id, badges, accent_badge, tech,
+   featured, has_thumb, overview_en, overview_id, facts, sort)
 values
   ('indeta', 'indeta', 'INDETA',
    'Tourism & UMKM platform: destinations, products, UMKM directories, travel packages, plus an admin dashboard. Schema design through deployment.',
    'Platform pariwisata & UMKM: destinasi, produk, direktori UMKM, paket wisata, plus dashboard admin. Dari desain skema sampai deployment.',
-   array['PAID CLIENT','SOLO FULLSTACK'], true, array['Laravel','Tailwind','Vite','Vercel'], true, true, 1),
+   array['PAID CLIENT','SOLO FULLSTACK'], true, array['Laravel','Tailwind','Vite','Vercel'],
+   true, true,
+   'Built solo. Paid for. Live on Vercel.',
+   'Dibangun sendiri. Dibayar. Live di Vercel.',
+   '[{"label":"ROLE","value_en":"Sole fullstack developer","value_id":"Fullstack developer tunggal"},
+     {"label":"SCOPE","value_en":"Public site + admin CMS","value_id":"Situs publik + CMS admin"},
+     {"label":"STACK","value_en":"Laravel · Tailwind · Vite","value_id":"Laravel · Tailwind · Vite"},
+     {"label":"OUTCOME","value_en":"Delivered and deployed","value_id":"Selesai dan ter-deploy"}]'::jsonb,
+   1),
   ('sugih', 'sugih', 'SUGIH',
    'Kretek brand company profile. Laravel + Supabase backend for company, product and article data.',
    'Company profile merek kretek. Backend Laravel + Supabase untuk data perusahaan, produk, dan artikel.',
-   array['PAID CLIENT · 2 DEVS'], true, array[]::text[], false, true, 2),
+   array['PAID CLIENT · 2 DEVS'], true, array[]::text[], false, true, '', '', '[]'::jsonb, 2),
   ('meeting-room', 'meeting-room-management', 'Meeting Room Management',
    'Real-time reservations for the Cilaki and Banda offices. Flutter + Supabase.',
    'Reservasi real-time untuk kantor Cilaki dan Banda. Flutter + Supabase.',
-   array['PT POS INDONESIA'], false, array[]::text[], false, true, 3),
+   array['PT POS INDONESIA'], false, array[]::text[], false, true, '', '', '[]'::jsonb, 3),
   ('autentik', 'autentik', 'AUTENTIK',
    'Certificate verification with text detection and matching on Mantranet-based infrastructure.',
    'Verifikasi sertifikat dengan deteksi dan pencocokan teks di atas infrastruktur berbasis Mantranet.',
-   array['PROJECT MANAGER'], false, array[]::text[], false, false, 4),
+   array['PROJECT MANAGER'], false, array[]::text[], false, false, '', '', '[]'::jsonb, 4),
   ('flexitask', 'flexitask', 'FlexiTask',
    'To-do app with a Llama-powered chatbot assistant.',
    'Aplikasi to-do dengan asisten chatbot berbasis Llama.',
-   array['TEAM · 2025'], false, array[]::text[], false, false, 5)
+   array['TEAM · 2025'], false, array[]::text[], false, false, '', '', '[]'::jsonb, 5)
 on conflict (id) do update set
   slug = excluded.slug, title = excluded.title,
   summary_en = excluded.summary_en, summary_id = excluded.summary_id,
   badges = excluded.badges, accent_badge = excluded.accent_badge, tech = excluded.tech,
-  featured = excluded.featured, has_thumb = excluded.has_thumb, sort = excluded.sort;
-
-insert into public.case_study (id, project_slug, heading_en, heading_id, facts, image_paths)
-values (
-  1, 'indeta',
-  'Built solo. Paid for. Live on Vercel.',
-  'Dibangun sendiri. Dibayar. Live di Vercel.',
-  '[
-    {"label":"ROLE","value_en":"Sole fullstack developer","value_id":"Fullstack developer tunggal"},
-    {"label":"SCOPE","value_en":"Public site + admin CMS","value_id":"Situs publik + CMS admin"},
-    {"label":"STACK","value_en":"Laravel · Tailwind · Vite","value_id":"Laravel · Tailwind · Vite"},
-    {"label":"OUTCOME","value_en":"Delivered and deployed","value_id":"Selesai dan ter-deploy"}
-  ]'::jsonb,
-  array['','','']
-)
-on conflict (id) do update set
-  project_slug = excluded.project_slug,
-  heading_en = excluded.heading_en, heading_id = excluded.heading_id,
-  facts = excluded.facts;
+  featured = excluded.featured, has_thumb = excluded.has_thumb,
+  overview_en = excluded.overview_en, overview_id = excluded.overview_id,
+  facts = excluded.facts, sort = excluded.sort;
 
 insert into public.research (id, badge, title, body_en, body_id, metrics)
 values (
@@ -167,17 +160,3 @@ on conflict (id) do update set
   name_en = excluded.name_en, name_id = excluded.name_id,
   items = excluded.items, accent = excluded.accent, sort = excluded.sort;
 
-insert into public.posts (id, category_en, category_id, title_en, title_id, published, sort) values
-  ('sync', 'ENGINEERING', 'ENGINEERING',
-   'Keeping Flutter and Laravel in sync on one Supabase project',
-   'Menjaga Flutter dan Laravel tetap sinkron di satu project Supabase', true, 1),
-  ('resampling', 'MACHINE LEARNING', 'MACHINE LEARNING',
-   'Resampling inside the training split, and nowhere else',
-   'Resampling hanya di dalam data latih, tidak di tempat lain', true, 2),
-  ('freelance', 'FREELANCE', 'FREELANCE',
-   'Shipping a client platform alone: scope, schema, deploy',
-   'Merilis platform klien sendirian: scope, skema, deploy', true, 3)
-on conflict (id) do update set
-  category_en = excluded.category_en, category_id = excluded.category_id,
-  title_en = excluded.title_en, title_id = excluded.title_id,
-  published = excluded.published, sort = excluded.sort;
