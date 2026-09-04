@@ -3,6 +3,21 @@
 Situs ini jalan tanpa Supabase (konten diambil dari `src/lib/seed.ts`). Supabase
 dipakai supaya konten dan aset bisa diubah lewat dashboard `/admin` tanpa deploy ulang.
 
+## Status
+
+Langkah 2–5 **sudah dijalankan** pada project Supabase `Website-Portofolio`
+(`fmlehahvxqpaqhntddxt`, region Singapore):
+
+- [x] Project dibuat
+- [x] `schema.sql` dan `seed.sql` diterapkan — 11 tabel, RLS aktif, bucket `assets` dan `documents` dibuat
+- [x] User admin `ariefusry0@gmail.com` dibuat dan terdaftar di tabel `admins`
+- [x] `.env.local` terisi (tidak masuk repo)
+- [ ] **Langkah 6** — unggah foto profil, screenshot INDETA, dan `cv.pdf` lewat `/admin/assets`
+- [ ] **Langkah 7** — deploy ke Vercel
+
+Panduan lengkap di bawah tetap disimpan untuk keperluan setup ulang atau
+membuat environment kedua (mis. project staging).
+
 ## 1. Jalankan lokal
 
 ```bash
