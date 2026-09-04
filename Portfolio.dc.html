@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/framer-motion@11.11.17/dist/framer-motion.js"></script>
+<style>
+body{margin:0}
+.hero-anim{opacity:0}
+a{color:#2a78d6}a:hover{color:#1b5aa8}
+</style>
+</helmet>
+
+<div style="background:#f2f4f6;font-family:'Instrument Sans',system-ui,sans-serif;color:#14171a;min-height:100vh">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 48px;border-bottom:1px solid rgba(0,0,0,.08);background:rgba(255,255,255,.7);position:sticky;top:0;z-index:2">
+    <div style="font:600 15px/1 'Instrument Sans',sans-serif;letter-spacing:-.01em">Arief M. Usry</div>
+    <div style="display:flex;gap:28px;align-items:center;font:500 13px/1 'Manrope',sans-serif;color:#5b6570">
+      <span>About</span><span>Work</span><span>Research</span><span>Experience</span><span>Writing</span>
+      <div style="display:flex;gap:2px;padding:3px;background:rgba(0,0,0,.06);border-radius:999px;font:600 11px/1 'JetBrains Mono',monospace">
+        <span style="padding:5px 9px;border-radius:999px;background:#14171a;color:#fff">{{ langOn }}</span>
+        <span style="padding:5px 9px;border-radius:999px;color:#5b6570;cursor:pointer" onClick="{{ toggleLang }}">{{ langOff }}</span>
+      </div>
+      <span style="padding:8px 15px;border-radius:999px;background:#14171a;color:#fff;font-weight:600">Hire me</span>
+    </div>
+  </div>
+
+  <div ref="{{ heroRoot }}" style="padding:84px 48px 68px;display:grid;grid-template-columns:1.35fr .8fr;gap:56px;align-items:start;position:relative;overflow:hidden">
+    <div ref="{{ heroGlow }}" style="position:absolute;top:-140px;left:-90px;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,oklch(0.88 0.08 45 / .55) 0%,oklch(0.88 0.08 45 / 0) 68%);pointer-events:none;opacity:0"></div>
+    <div style="position:relative">
+      <div class="hero-anim" data-hero="1" style="display:inline-flex;align-items:center;gap:8px;padding:7px 13px;border-radius:999px;background:oklch(0.93 0.05 45);color:oklch(0.42 0.09 45);font:600 11.5px/1.1 'JetBrains Mono',monospace;white-space:nowrap;margin-bottom:30px">
+        <span ref="{{ heroDot }}" style="width:6px;height:6px;border-radius:50%;background:oklch(0.62 0.14 45);flex:none"></span>{{ t.badge2 }}
+      </div>
+      <h1 ref="{{ heroTitle }}" class="hero-anim" data-hero="2" style="margin:0 0 24px;max-width:640px;font:600 60px/1.04 'Instrument Sans',sans-serif;letter-spacing:-.035em;text-wrap:pretty">{{ t.hero2 }}</h1>
+      <p class="hero-anim" data-hero="3" style="margin:0 0 34px;max-width:520px;font:400 17px/1.65 'Manrope',sans-serif;color:#4a545f;text-wrap:pretty">{{ t.sub2 }}</p>
+      <div class="hero-anim" data-hero="4" style="display:flex;gap:12px;flex-wrap:wrap">
+        <span style="padding:13px 22px;border-radius:8px;background:#14171a;color:#fff;font:600 14px/1 'Instrument Sans',sans-serif;cursor:pointer;transition:transform .18s ease" style-hover="transform:translateY(-2px)">{{ t.ctaWork }}</span>
+        <span style="padding:13px 22px;border-radius:8px;border:1px solid rgba(0,0,0,.16);font:600 14px/1 'Instrument Sans',sans-serif;cursor:pointer;transition:transform .18s ease" style-hover="transform:translateY(-2px)">{{ t.ctaCv }}</span>
+      </div>
+    </div>
+    <div class="hero-anim" data-hero="5" style="height:360px;border-radius:12px;border:1px solid rgba(0,0,0,.1);background:repeating-linear-gradient(135deg,#e6e9ec 0 6px,#eef1f3 6px 12px);display:flex;align-items:flex-end;padding:16px;position:relative">
+      <span style="font:400 11px/1 'JetBrains Mono',monospace;color:#7c868f">[ foto profil — 4:5 ]</span>
+    </div>
+  </div>
+
+  <div ref="{{ statRoot }}" style="display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid rgba(0,0,0,.09);border-bottom:1px solid rgba(0,0,0,.09);background:#fff">
+    <div class="hero-anim" data-hero="6" style="padding:26px 30px;border-right:1px solid rgba(0,0,0,.08)"><div style="font:600 28px/1 'Instrument Sans',sans-serif">{{ stat1 }}</div><div style="font:500 12px/1.4 'Manrope',sans-serif;color:#6b757f;margin-top:8px">{{ t.statClients }}</div></div>
+    <div class="hero-anim" data-hero="7" style="padding:26px 30px;border-right:1px solid rgba(0,0,0,.08)"><div style="font:600 28px/1 'Instrument Sans',sans-serif">{{ stat2 }}</div><div style="font:500 12px/1.4 'Manrope',sans-serif;color:#6b757f;margin-top:8px">GPA / 4.00 — Telkom University</div></div>
+    <div class="hero-anim" data-hero="8" style="padding:26px 30px;border-right:1px solid rgba(0,0,0,.08)"><div style="font:600 28px/1 'Instrument Sans',sans-serif">IC2IE 2026</div><div style="font:500 12px/1.4 'Manrope',sans-serif;color:#6b757f;margin-top:8px">{{ t.statPaper }}</div></div>
+    <div class="hero-anim" data-hero="9" style="padding:26px 30px"><div style="font:600 28px/1 'Instrument Sans',sans-serif">{{ stat3 }}</div><div style="font:500 12px/1.4 'Manrope',sans-serif;color:#6b757f;margin-top:8px">{{ t.projWord }} 2024—2026</div></div>
+  </div>
+
+  <div style="padding:56px 48px">
+    <div style="display:grid;grid-template-columns:200px 1fr;gap:48px">
+      <div style="font:600 12px/1 'JetBrains Mono',monospace;color:#8b949c;padding-top:6px">ABOUT / TENTANG</div>
+      <div>
+        <p style="margin:0 0 32px;max-width:700px;font:400 17.5px/1.7 'Manrope',sans-serif;color:#2b333b;text-wrap:pretty">{{ t.about2 }}</p>
+        <div style="font:600 12px/1 'JetBrains Mono',monospace;color:#8b949c;margin-bottom:14px">{{ t.trackLabel }}</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:760px">
+          <div style="padding:24px;border-radius:12px;background:#fff;border:1px solid rgba(0,0,0,.09)">
+            <div style="font:600 17px/1.25 'Instrument Sans',sans-serif;margin-bottom:10px">{{ t.track1Title }}</div>
+            <p style="margin:0 0 16px;font:400 14px/1.6 'Manrope',sans-serif;color:#4a545f">{{ t.track1Body }}</p>
+            <div style="display:flex;flex-wrap:wrap;gap:6px"><span style="padding:5px 10px;border-radius:5px;background:#f2f4f6;font:500 11.5px/1 'Manrope',sans-serif">Flutter</span><span style="padding:5px 10px;border-radius:5px;background:#f2f4f6;font:500 11.5px/1 'Manrope',sans-serif">Laravel</span><span style="padding:5px 10px;border-radius:5px;background:#f2f4f6;font:500 11.5px/1 'Manrope',sans-serif">Supabase</span><span style="padding:5px 10px;border-radius:5px;background:#f2f4f6;font:500 11.5px/1 'Manrope',sans-serif">PostgreSQL</span></div>
+          </div>
+          <div style="padding:24px;border-radius:12px;background:#fff;border:1px solid oklch(0.88 0.05 45)">
+            <div style="font:600 17px/1.25 'Instrument Sans',sans-serif;margin-bottom:10px">{{ t.track2Title }}</div>
+            <p style="margin:0 0 16px;font:400 14px/1.6 'Manrope',sans-serif;color:#4a545f">{{ t.track2Body }}</p>
+            <div style="display:flex;flex-wrap:wrap;gap:6px"><span style="padding:5px 10px;border-radius:5px;background:oklch(0.95 0.03 45);font:500 11.5px/1 'Manrope',sans-serif">TensorFlow</span><span style="padding:5px 10px;border-radius:5px;background:oklch(0.95 0.03 45);font:500 11.5px/1 'Manrope',sans-serif">Scikit-learn</span><span style="padding:5px 10px;border-radius:5px;background:oklch(0.95 0.03 45);font:500 11.5px/1 'Manrope',sans-serif">Pandas</span><span style="padding:5px 10px;border-radius:5px;background:oklch(0.95 0.03 45);font:500 11.5px/1 'Manrope',sans-serif">RDKit</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="padding:56px 48px;background:#fff;border-top:1px solid rgba(0,0,0,.08)">
+    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:26px">
+      <h2 style="margin:0;font:600 30px/1.1 'Instrument Sans',sans-serif;letter-spacing:-.025em">{{ t.projTitle }}</h2>
+      <span style="font:500 13px/1 'Manrope',sans-serif;color:#6b757f">2024 — 2026</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+      <div style="grid-column:span 2;display:grid;grid-template-columns:1fr 1fr;border-radius:14px;overflow:hidden;background:#f2f4f6;border:1px solid rgba(0,0,0,.09)">
+        <div style="background:repeating-linear-gradient(135deg,#e6e9ec 0 6px,#eef1f3 6px 12px);min-height:280px;display:flex;align-items:flex-end;padding:16px">
+          <span style="font:400 11px/1 'JetBrains Mono',monospace;color:#7c868f">[ screenshot INDETA ]</span>
+        </div>
+        <div style="padding:34px">
+          <div style="display:flex;gap:8px;margin-bottom:16px">
+            <span style="padding:5px 10px;border-radius:5px;background:oklch(0.93 0.05 45);color:oklch(0.42 0.09 45);font:600 10.5px/1 'JetBrains Mono',monospace">PAID CLIENT</span>
+            <span style="padding:5px 10px;border-radius:5px;background:rgba(0,0,0,.06);color:#5b6570;font:600 10.5px/1 'JetBrains Mono',monospace">SOLO FULLSTACK</span>
+          </div>
+          <h3 style="margin:0 0 10px;font:600 24px/1.2 'Instrument Sans',sans-serif;letter-spacing:-.02em">INDETA</h3>
+          <p style="margin:0 0 20px;font:400 14.5px/1.65 'Manrope',sans-serif;color:#4a545f">Tourism &amp; UMKM platform: destinations, products, UMKM directories, travel packages, plus an admin dashboard. Schema design through deployment.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:22px"><span style="padding:5px 10px;border-radius:5px;border:1px solid rgba(0,0,0,.12);font:500 11.5px/1 'Manrope',sans-serif">Laravel</span><span style="padding:5px 10px;border-radius:5px;border:1px solid rgba(0,0,0,.12);font:500 11.5px/1 'Manrope',sans-serif">Tailwind</span><span style="padding:5px 10px;border-radius:5px;border:1px solid rgba(0,0,0,.12);font:500 11.5px/1 'Manrope',sans-serif">Vite</span><span style="padding:5px 10px;border-radius:5px;border:1px solid rgba(0,0,0,.12);font:500 11.5px/1 'Manrope',sans-serif">Vercel</span></div>
+          <div style="display:flex;gap:18px;font:600 13px/1 'Instrument Sans',sans-serif"><span style="border-bottom:1px solid currentColor;padding-bottom:2px">{{ t.caseStudy }}</span><span style="color:#6b757f">GitHub ↗</span></div>
+        </div>
+      </div>
+      <div style="border-radius:14px;overflow:hidden;background:#f2f4f6;border:1px solid rgba(0,0,0,.09)">
+        <div style="height:150px;background:repeating-linear-gradient(135deg,#e6e9ec 0 6px,#eef1f3 6px 12px)"></div>
+        <div style="padding:22px"><div style="font:600 10.5px/1 'JetBrains Mono',monospace;color:oklch(0.42 0.09 45);margin-bottom:10px">PAID CLIENT · 2 DEVS</div><h3 style="margin:0 0 8px;font:600 19px/1.2 'Instrument Sans',sans-serif">SUGIH</h3><p style="margin:0;font:400 13.5px/1.6 'Manrope',sans-serif;color:#4a545f">Kretek brand company profile. Laravel + Supabase backend for company, product and article data.</p></div>
+      </div>
+      <div style="border-radius:14px;overflow:hidden;background:#f2f4f6;border:1px solid rgba(0,0,0,.09)">
+        <div style="height:150px;background:repeating-linear-gradient(135deg,#e6e9ec 0 6px,#eef1f3 6px 12px)"></div>
+        <div style="padding:22px"><div style="font:600 10.5px/1 'JetBrains Mono',monospace;color:#8b949c;margin-bottom:10px">PT POS INDONESIA</div><h3 style="margin:0 0 8px;font:600 19px/1.2 'Instrument Sans',sans-serif">Meeting Room Management</h3><p style="margin:0;font:400 13.5px/1.6 'Manrope',sans-serif;color:#4a545f">Real-time reservations for the Cilaki and Banda offices. Flutter + Supabase.</p></div>
+      </div>
+      <div style="border-radius:14px;background:#f2f4f6;border:1px solid rgba(0,0,0,.09);padding:22px"><div style="font:600 10.5px/1 'JetBrains Mono',monospace;color:#8b949c;margin-bottom:10px">PROJECT MANAGER</div><h3 style="margin:0 0 8px;font:600 19px/1.2 'Instrument Sans',sans-serif">AUTENTIK</h3><p style="margin:0;font:400 13.5px/1.6 'Manrope',sans-serif;color:#4a545f">Certificate verification with text detection and matching on Mantranet-based infrastructure.</p></div>
+      <div style="border-radius:14px;background:#f2f4f6;border:1px solid rgba(0,0,0,.09);padding:22px"><div style="font:600 10.5px/1 'JetBrains Mono',monospace;color:#8b949c;margin-bottom:10px">TEAM · 2025</div><h3 style="margin:0 0 8px;font:600 19px/1.2 'Instrument Sans',sans-serif">FlexiTask</h3><p style="margin:0;font:400 13.5px/1.6 'Manrope',sans-serif;color:#4a545f">To-do app with a Llama-powered chatbot assistant.</p></div>
+    </div>
+  </div>
+
+  <div style="padding:56px 48px;background:#14171a;color:#f2f4f6">
+    <div style="font:600 12px/1 'JetBrains Mono',monospace;color:oklch(0.72 0.11 45);margin-bottom:24px">{{ t.caseStudy }} — INDETA</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start">
+      <div>
+        <h2 style="margin:0 0 26px;font:600 34px/1.12 'Instrument Sans',sans-serif;letter-spacing:-.028em">Built solo. Paid for. Live on Vercel.</h2>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div style="padding:18px;border:1px solid rgba(255,255,255,.14);border-radius:10px"><div style="font:600 11px/1 'JetBrains Mono',monospace;color:#8b949c;margin-bottom:8px">ROLE</div><div style="font:500 14px/1.5 'Manrope',sans-serif">Sole fullstack developer</div></div>
+          <div style="padding:18px;border:1px solid rgba(255,255,255,.14);border-radius:10px"><div style="font:600 11px/1 'JetBrains Mono',monospace;color:#8b949c;margin-bottom:8px">SCOPE</div><div style="font:500 14px/1.5 'Manrope',sans-serif">Public site + admin CMS</div></div>
+          <div style="padding:18px;border:1px solid rgba(255,255,255,.14);border-radius:10px"><div style="font:600 11px/1 'JetBrains Mono',monospace;color:#8b949c;margin-bottom:8px">STACK</div><div style="font:500 14px/1.5 'Manrope',sans-serif">Laravel · Tailwind · Vite</div></div>
+          <div style="padding:18px;border:1px solid rgba(255,255,255,.14);border-radius:10px"><div style="font:600 11px/1 'JetBrains Mono',monospace;color:#8b949c;margin-bottom:8px">OUTCOME</div><div style="font:500 14px/1.5 'Manrope',sans-serif">Delivered and deployed</div></div>
+        </div>
+      </div>
+      <div style="display:grid;gap:12px">
+        <div style="height:200px;border-radius:10px;background:repeating-linear-gradient(135deg,#23272b 0 6px,#2b3035 6px 12px);display:flex;align-items:flex-end;padding:14px"><span style="font:400 11px/1 'JetBrains Mono',monospace;color:#7c868f">[ screenshot — admin dashboard ]</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px"><div style="height:110px;border-radius:10px;background:repeating-linear-gradient(135deg,#23272b 0 6px,#2b3035 6px 12px)"></div><div style="height:110px;border-radius:10px;background:repeating-linear-gradient(135deg,#23272b 0 6px,#2b3035 6px 12px)"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="padding:56px 48px;background:#fff">
+    <div style="display:grid;grid-template-columns:200px 1fr;gap:48px">
+      <div style="font:600 12px/1 'JetBrains Mono',monospace;color:#8b949c;padding-top:6px">RESEARCH / RISET</div>
+      <div style="display:grid;grid-template-columns:1.15fr .85fr;gap:32px;align-items:start">
+        <div>
+          <div style="display:inline-flex;padding:5px 10px;border-radius:5px;background:oklch(0.62 0.14 45);color:#fff;font:600 10.5px/1 'JetBrains Mono',monospace;margin-bottom:16px">ACCEPTED — IC2IE 2026</div>
+          <h3 style="margin:0 0 12px;font:600 24px/1.25 'Instrument Sans',sans-serif;letter-spacing:-.02em">Prediction of ER-LBD Toxicity using an ANN Optimized by Grey Wolf Optimizer</h3>
+          <p style="margin:0;font:400 15px/1.7 'Manrope',sans-serif;color:#4a545f;max-width:560px">Tox21 dataset, 8,751 compounds at 18.6:1 imbalance. Morgan fingerprints and physicochemical descriptors reduced to 500 features by Mutual Information; SMOTETomek applied only inside the training split.</p>
+        </div>
+        <div style="display:grid;gap:0;border-top:1px solid rgba(0,0,0,.12)">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;padding:14px 0;border-bottom:1px solid rgba(0,0,0,.09)"><span style="font:500 12px/1 'JetBrains Mono',monospace;color:#8b949c">F1-SCORE</span><span style="font:600 18px/1 'Instrument Sans',sans-serif">0.5809 → 0.5946</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;padding:14px 0;border-bottom:1px solid rgba(0,0,0,.09)"><span style="font:500 12px/1 'JetBrains Mono',monospace;color:#8b949c">FALSE POSITIVES</span><span style="font:600 18px/1 'Instrument Sans',sans-serif">37 → 22</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;padding:14px 0;border-bottom:1px solid rgba(0,0,0,.09)"><span style="font:500 12px/1 'JetBrains Mono',monospace;color:#8b949c">ARCHITECTURE</span><span style="font:600 18px/1 'Instrument Sans',sans-serif">54-32-128</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;padding:14px 0"><span style="font:500 12px/1 'JetBrains Mono',monospace;color:#8b949c">FEATURES</span><span style="font:600 18px/1 'Instrument Sans',sans-serif">500 via MI</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="padding:56px 48px;border-top:1px solid rgba(0,0,0,.08)">
+    <div style="display:grid;grid-template-columns:200px 1fr;gap:48px">
+      <div style="font:600 12px/1 'JetBrains Mono',monospace;color:#8b949c;padding-top:6px">EXPERIENCE / PENGALAMAN</div>
+      <div>
+        <div style="display:grid;grid-template-columns:150px 1fr;gap:28px;padding:22px 0;border-top:1px solid rgba(0,0,0,.09)">
+          <div style="font:500 12.5px/1.5 'JetBrains Mono',monospace;color:#6b757f">Jun — Sep 2025</div>
+          <div><div style="font:600 18px/1.3 'Instrument Sans',sans-serif;margin-bottom:6px">Fullstack Developer, Intern — PT Pos Indonesia (Persero)</div><p style="margin:0;font:400 14.5px/1.65 'Manrope',sans-serif;color:#4a545f;max-width:640px">Flutter mobile app and Laravel web companion with feature parity on one Supabase backend, synced in real time. Mobile shipped test-ready; web at ~70%.</p></div>
+        </div>
+        <div style="display:grid;grid-template-columns:150px 1fr;gap:28px;padding:22px 0;border-top:1px solid rgba(0,0,0,.09)">
+          <div style="font:500 12.5px/1.5 'JetBrains Mono',monospace;color:#6b757f">Feb 2025 — Jan 2026</div>
+          <div><div style="font:600 18px/1.3 'Instrument Sans',sans-serif;margin-bottom:6px">Operating System Lab Assistant — Telkom University</div><p style="margin:0;font:400 14.5px/1.65 'Manrope',sans-serif;color:#4a545f;max-width:640px">Led labs on process management, memory, file systems and synchronization; evaluated assignments and projects.</p></div>
+        </div>
+        <div style="display:grid;grid-template-columns:150px 1fr;gap:28px;padding:22px 0;border-top:1px solid rgba(0,0,0,.09);border-bottom:1px solid rgba(0,0,0,.09)">
+          <div style="font:500 12.5px/1.5 'JetBrains Mono',monospace;color:#6b757f">Jun — Sep 2024</div>
+          <div><div style="font:600 18px/1.3 'Instrument Sans',sans-serif;margin-bottom:6px">Evaluation Team — PKKMB 2024 Committee</div><p style="margin:0;font:400 14.5px/1.65 'Manrope',sans-serif;color:#4a545f;max-width:640px">Student grouping and liaison assignment, Convention Hall seating plan, Student Fair timetable.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="padding:56px 48px;background:#fff;border-top:1px solid rgba(0,0,0,.08)">
+    <div style="display:grid;grid-template-columns:200px 1fr;gap:48px">
+      <div style="font:600 12px/1 'JetBrains Mono',monospace;color:#8b949c;padding-top:6px">SKILLS &amp; TOOLS</div>
+      <div style="display:grid;gap:20px">
+        <div><div style="font:600 13px/1 'Instrument Sans',sans-serif;margin-bottom:10px">Engineering</div><div style="display:flex;flex-wrap:wrap;gap:6px"><span style="padding:5px 10px;border-radius:5px;background:#f2f4f6;font:500 12px/1 'Manrope',sans-serif">Flutter</span><span style="padding:5px 10px;border-radius:5px;background:#f2f4f6;font:500 12px/1 'Manrope',sans-serif">Dart</span><span style="padding:5px 10px;border-radius:5px;background:#f2f4f6;font:500 12px/1 'Manrope',sans-serif">Laravel</span><span style="padding:5px 10px;border-radius:5px;background:#f2f4f6;font:500 12px/1 'Manrope',sans-serif">PHP</span><span style="padding:5px 10px;border-radius:5px;background:#f2f4f6;font:500 12px/1 'Manrope',sans-serif">Supabase</span><span style="padding:5px 10px;border-radius:5px;background:#f2f4f6;font:500 12px/1 'Manrope',sans-serif">PostgreSQL</span><span style="padding:5px 10px;border-radius:5px;background:#f2f4f6;font:500 12px/1 'Manrope',sans-serif">MySQL</span><span style="padding:5px 10px;border-radius:5px;background:#f2f4f6;font:500 12px/1 'Manrope',sans-serif">REST API</span><span style="padding:5px 10px;border-radius:5px;background:#f2f4f6;font:500 12px/1 'Manrope',sans-serif">Golang</span><span style="padding:5px 10px;border-radius:5px;background:#f2f4f6;font:500 12px/1 'Manrope',sans-serif">Git</span><span style="padding:5px 10px;border-radius:5px;background:#f2f4f6;font:500 12px/1 'Manrope',sans-serif">Linux</span></div></div>
+        <div><div style="font:600 13px/1 'Instrument Sans',sans-serif;margin-bottom:10px">Data &amp; machine learning</div><div style="display:flex;flex-wrap:wrap;gap:6px"><span style="padding:5px 10px;border-radius:5px;background:oklch(0.95 0.03 45);font:500 12px/1 'Manrope',sans-serif">Python</span><span style="padding:5px 10px;border-radius:5px;background:oklch(0.95 0.03 45);font:500 12px/1 'Manrope',sans-serif">TensorFlow / Keras</span><span style="padding:5px 10px;border-radius:5px;background:oklch(0.95 0.03 45);font:500 12px/1 'Manrope',sans-serif">Scikit-learn</span><span style="padding:5px 10px;border-radius:5px;background:oklch(0.95 0.03 45);font:500 12px/1 'Manrope',sans-serif">Pandas</span><span style="padding:5px 10px;border-radius:5px;background:oklch(0.95 0.03 45);font:500 12px/1 'Manrope',sans-serif">NumPy</span><span style="padding:5px 10px;border-radius:5px;background:oklch(0.95 0.03 45);font:500 12px/1 'Manrope',sans-serif">RDKit</span><span style="padding:5px 10px;border-radius:5px;background:oklch(0.95 0.03 45);font:500 12px/1 'Manrope',sans-serif">NiaPy</span></div></div>
+        <div><div style="font:600 13px/1 'Instrument Sans',sans-serif;margin-bottom:10px">Tools</div><div style="display:flex;flex-wrap:wrap;gap:6px"><span style="padding:5px 10px;border-radius:5px;background:#f2f4f6;font:500 12px/1 'Manrope',sans-serif">Figma</span><span style="padding:5px 10px;border-radius:5px;background:#f2f4f6;font:500 12px/1 'Manrope',sans-serif">VS Code</span><span style="padding:5px 10px;border-radius:5px;background:#f2f4f6;font:500 12px/1 'Manrope',sans-serif">Android Studio</span><span style="padding:5px 10px;border-radius:5px;background:#f2f4f6;font:500 12px/1 'Manrope',sans-serif">Vercel</span><span style="padding:5px 10px;border-radius:5px;background:#f2f4f6;font:500 12px/1 'Manrope',sans-serif">Jupyter</span><span style="padding:5px 10px;border-radius:5px;background:#f2f4f6;font:500 12px/1 'Manrope',sans-serif">Claude Code</span><span style="padding:5px 10px;border-radius:5px;background:#f2f4f6;font:500 12px/1 'Manrope',sans-serif">Cursor</span><span style="padding:5px 10px;border-radius:5px;background:#f2f4f6;font:500 12px/1 'Manrope',sans-serif">Copilot</span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <sc-if value="{{ showBlog }}" hint-placeholder-val="{{ true }}">
+  <div style="padding:56px 48px;border-top:1px solid rgba(0,0,0,.08)">
+    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:24px">
+      <h2 style="margin:0;font:600 26px/1.1 'Instrument Sans',sans-serif;letter-spacing:-.02em">{{ t.writingTitle }}</h2>
+      <span style="font:500 13px/1 'Manrope',sans-serif;color:#6b757f">{{ t.writingNote }}</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px">
+      <div style="padding:22px;border:1px solid rgba(0,0,0,.09);border-radius:12px;background:#fff"><div style="font:500 11.5px/1 'JetBrains Mono',monospace;color:#8b949c;margin-bottom:12px">ENGINEERING</div><div style="font:600 16px/1.35 'Instrument Sans',sans-serif">Keeping Flutter and Laravel in sync on one Supabase project</div></div>
+      <div style="padding:22px;border:1px solid rgba(0,0,0,.09);border-radius:12px;background:#fff"><div style="font:500 11.5px/1 'JetBrains Mono',monospace;color:#8b949c;margin-bottom:12px">MACHINE LEARNING</div><div style="font:600 16px/1.35 'Instrument Sans',sans-serif">Resampling inside the training split, and nowhere else</div></div>
+      <div style="padding:22px;border:1px solid rgba(0,0,0,.09);border-radius:12px;background:#fff"><div style="font:500 11.5px/1 'JetBrains Mono',monospace;color:#8b949c;margin-bottom:12px">FREELANCE</div><div style="font:600 16px/1.35 'Instrument Sans',sans-serif">Shipping a client platform alone: scope, schema, deploy</div></div>
+    </div>
+  </div>
+  </sc-if>
+
+  <div style="padding:64px 48px;background:#14171a;color:#f2f4f6;display:flex;align-items:flex-end;justify-content:space-between;gap:40px;flex-wrap:wrap">
+    <div>
+      <h2 style="margin:0 0 14px;max-width:620px;font:600 40px/1.1 'Instrument Sans',sans-serif;letter-spacing:-.03em">{{ t.contact2 }}</h2>
+      <p style="margin:0;font:400 15.5px/1.6 'Manrope',sans-serif;color:#b3bcc4">{{ t.contactNote2 }}</p>
+    </div>
+    <div style="display:grid;gap:10px;font:500 14px/1 'JetBrains Mono',monospace">
+      <span>ariefusry0@gmail.com</span>
+      <span style="color:#b3bcc4">+62 858-1300-5651</span>
+      <span style="color:#b3bcc4">linkedin.com/in/ariefusry</span>
+      <span style="color:#b3bcc4">github.com/ariefusry</span>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;defaultLang&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;English&quot;,&quot;Indonesia&quot;],&quot;default&quot;:&quot;English&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Content&quot;},&quot;heroAnimation&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Motion&quot;},&quot;showBlog&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;}}">
+const STR = {
+  EN: {
+    hero2: "Fullstack engineer, with a second track in data and machine learning.",
+    sub2: "Flutter, Laravel and Supabase in production. Two paid client platforms live, an internship at PT Pos Indonesia, and a thesis accepted at IC2IE 2026.",
+    badge2: "OPEN TO ROLES — FULLSTACK · DATA · ML",
+    ctaWork: "View selected work",
+    ctaCv: "Download CV (PDF)",
+    caseStudy: "Read case study",
+    projTitle: "Selected work",
+    projWord: "projects",
+    statClients: "Paid client platforms shipped",
+    statPaper: "Paper accepted, IC2IE 2026",
+    about2: "Informatics graduate from Telkom University, GPA 3.77. I shipped a Flutter app and its Laravel web companion on one Supabase backend at PT Pos Indonesia, delivered a tourism platform alone for a paying client, and built a company profile site with one other developer. Alongside that: a year teaching operating systems labs, and a thesis on optimizing neural network architecture with the Grey Wolf Optimizer.",
+    trackLabel: "Two tracks",
+    track1Title: "Fullstack engineering",
+    track1Body: "Flutter and Laravel apps on Supabase. Schema design, admin dashboards, deployment.",
+    track2Title: "Data & machine learning",
+    track2Body: "Applied ML on the Tox21 dataset with TensorFlow, Scikit-learn and RDKit. Metaheuristic architecture search.",
+    writingTitle: "Writing",
+    writingNote: "Notes on building, in progress",
+    contact2: "Open to fullstack, data and ML roles.",
+    contactNote2: "Bekasi, Indonesia · available immediately"
+  },
+  ID: {
+    hero2: "Fullstack engineer, dengan jalur kedua di data dan machine learning.",
+    sub2: "Flutter, Laravel, dan Supabase di produksi. Dua platform klien berbayar sudah live, magang di PT Pos Indonesia, dan skripsi diterima di IC2IE 2026.",
+    badge2: "TERBUKA UNTUK — FULLSTACK · DATA · ML",
+    ctaWork: "Lihat karya terpilih",
+    ctaCv: "Unduh CV (PDF)",
+    caseStudy: "Baca studi kasus",
+    projTitle: "Karya terpilih",
+    projWord: "proyek",
+    statClients: "Platform klien berbayar dirilis",
+    statPaper: "Paper diterima, IC2IE 2026",
+    about2: "Lulusan Informatika Telkom University, IPK 3.77. Saya merilis aplikasi Flutter beserta web Laravel-nya di satu backend Supabase untuk PT Pos Indonesia, mengerjakan platform pariwisata sendiri untuk klien berbayar, dan membangun situs company profile bersama satu developer lain. Di samping itu: setahun mengajar praktikum Sistem Operasi, dan skripsi optimasi arsitektur neural network dengan Grey Wolf Optimizer.",
+    trackLabel: "Dua jalur",
+    track1Title: "Fullstack engineering",
+    track1Body: "Aplikasi Flutter dan Laravel di atas Supabase. Desain skema, dashboard admin, deployment.",
+    track2Title: "Data & machine learning",
+    track2Body: "ML terapan pada dataset Tox21 dengan TensorFlow, Scikit-learn, dan RDKit. Pencarian arsitektur metaheuristik.",
+    writingTitle: "Tulisan",
+    writingNote: "Catatan proses membangun, berjalan",
+    contact2: "Terbuka untuk posisi fullstack, data, dan ML.",
+    contactNote2: "Bekasi, Indonesia · bisa mulai segera"
+  }
+};
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { lang: props.defaultLang === "Indonesia" ? "ID" : "EN", stat1: "2", stat2: "3.77", stat3: "6" };
+    this.heroRoot = React.createRef();
+    this.heroGlow = React.createRef();
+    this.heroTitle = React.createRef();
+    this.heroDot = React.createRef();
+    this.statRoot = React.createRef();
+    this._words = null;
+  }
+
+  componentDidMount() { this.waitForMotion(); }
+
+  waitForMotion(tries = 0) {
+    if (window.Motion && window.Motion.animate) return this.runHero();
+    if (tries > 60) return this.fallbackHero();
+    setTimeout(() => this.waitForMotion(tries + 1), 100);
+  }
+
+  fallbackHero() {
+    (this.heroRoot.current ? this.heroRoot.current.parentNode.querySelectorAll(".hero-anim") : []).forEach(el => { el.style.opacity = "1"; });
+  }
+
+  splitTitle() {
+    const h = this.heroTitle.current;
+    if (!h || this._words) return this._words || [];
+    const text = h.textContent;
+    h.textContent = "";
+    this._words = text.split(/\s+/).filter(Boolean).map((w, i) => {
+      if (i > 0) h.appendChild(document.createTextNode(" "));
+      const outer = document.createElement("span");
+      outer.style.cssText = "display:inline-block;overflow:hidden;vertical-align:bottom;padding-bottom:0.14em;margin-bottom:-0.14em";
+      const inner = document.createElement("span");
+      inner.style.cssText = "display:inline-block;white-space:pre;will-change:transform,opacity";
+      inner.textContent = w;
+      outer.appendChild(inner);
+      h.appendChild(outer);
+      return inner;
+    });
+    h.style.opacity = "1";
+    return this._words;
+  }
+
+  runHero() {
+    if (this.props.heroAnimation === false) return this.fallbackHero();
+    const M = window.Motion;
+    const scope = this.heroRoot.current && this.heroRoot.current.parentNode;
+    if (!M || !scope) return;
+    const pick = n => scope.querySelector('[data-hero="' + n + '"]');
+    const ease = [0.16, 1, 0.3, 1];
+
+    if (this.heroGlow.current) {
+      M.animate(this.heroGlow.current, { opacity: [0, 1], scale: [0.8, 1] }, { duration: 1.6, ease: "easeOut" });
+      M.animate(this.heroGlow.current, { x: [0, 26, 0], y: [0, -18, 0] }, { duration: 14, repeat: Infinity, ease: "easeInOut" });
+    }
+    M.animate(pick(1), { opacity: [0, 1], y: [14, 0] }, { duration: 0.6, delay: 0.05, ease });
+    if (this.heroDot.current) {
+      M.animate(this.heroDot.current, { scale: [1, 1.65, 1], opacity: [1, 0.45, 1] }, { duration: 1.8, repeat: Infinity, ease: "easeInOut", delay: 0.8 });
+    }
+
+    const words = this.splitTitle();
+    if (words.length) {
+      M.animate(words, { opacity: [0, 1], y: ["105%", "0%"] }, { duration: 0.85, delay: M.stagger(0.045, { startDelay: 0.18 }), ease });
+    } else {
+      M.animate(pick(2), { opacity: [0, 1], y: [20, 0] }, { duration: 0.7, delay: 0.18, ease });
+    }
+
+    M.animate(pick(3), { opacity: [0, 1], y: [16, 0] }, { duration: 0.7, delay: 0.55, ease });
+    M.animate(pick(4), { opacity: [0, 1], y: [16, 0] }, { duration: 0.7, delay: 0.68, ease });
+    M.animate(pick(5), { opacity: [0, 1], y: [28, 0], scale: [0.97, 1] }, { duration: 1, delay: 0.3, ease });
+
+    const stats = [6, 7, 8, 9].map(pick).filter(Boolean);
+    if (stats.length) {
+      M.animate(stats, { opacity: [0, 1], y: [18, 0] }, { duration: 0.6, delay: M.stagger(0.08, { startDelay: 0.85 }), ease });
+    }
+    this.countUp();
+  }
+
+  countUp() {
+    const M = window.Motion;
+    if (!M || !M.animate) return;
+    const targets = [
+      { to: 2, key: "stat1", dp: 0 },
+      { to: 3.77, key: "stat2", dp: 2 },
+      { to: 6, key: "stat3", dp: 0 }
+    ];
+    targets.forEach(({ to, key, dp }) => {
+      M.animate(0, to, {
+        duration: 1.1, delay: 0.95, ease: "easeOut",
+        onUpdate: v => this.setState({ [key]: v.toFixed(dp) })
+      });
+    });
+  }
+
+  renderVals() {
+    const lang = this.state.lang;
+    return {
+      t: STR[lang],
+      heroRoot: this.heroRoot,
+      heroGlow: this.heroGlow,
+      heroTitle: this.heroTitle,
+      heroDot: this.heroDot,
+      statRoot: this.statRoot,
+      stat1: this.state.stat1,
+      stat2: this.state.stat2,
+      stat3: this.state.stat3,
+      langOn: lang,
+      langOff: lang === "EN" ? "ID" : "EN",
+      toggleLang: () => this.setState(s => ({ lang: s.lang === "EN" ? "ID" : "EN" })),
+      showBlog: this.props.showBlog ?? true
+    };
+  }
+}
+
+</script>
+</body>
+</html>
