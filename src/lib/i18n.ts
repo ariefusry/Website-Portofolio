@@ -57,6 +57,12 @@ export const UI = {
   screenshotOf: { en: "screenshot", id: "screenshot" },
   adminDashboard: { en: "admin dashboard", id: "dashboard admin" },
   switchLang: { en: "Switch language", id: "Ganti bahasa" },
+  footerNavigate: { en: "Navigate", id: "Navigasi" },
+  footerContact: { en: "Contact", id: "Kontak" },
+  footerElsewhere: { en: "Elsewhere", id: "Tautan lain" },
+  emailLabel: { en: "Email", id: "Email" },
+  phoneLabel: { en: "Phone", id: "Telepon" },
+  rightsReserved: { en: "All rights reserved.", id: "Hak cipta dilindungi." },
 } satisfies Record<string, Bi | Record<string, Bi>>;
 
 export type Ui = typeof UI;
