@@ -5,6 +5,8 @@ import { motion, useReducedMotion } from "framer-motion";
 import { useLang } from "@/lib/lang-context";
 import { UI } from "@/lib/i18n";
 import { SmartImage } from "@/components/ui/SmartImage";
+import { ShimmerLink } from "@/components/ui/shimmer-button";
+import { cn } from "@/lib/utils";
 import type { Profile } from "@/lib/types";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
@@ -143,23 +145,34 @@ export function Hero({ profile }: { profile: Profile }) {
 
           {/* 6. Tombol CTA */}
           <motion.div className="flex flex-wrap gap-3" {...fade(0.68)}>
-            <a
-              href="#work"
-              className="rounded-lg bg-ink px-[22px] py-[13px] font-display text-sm leading-none font-semibold text-white transition-transform duration-200 hover:-translate-y-0.5"
+            {/* Primer: gelap, kilau putih */}
+            <ShimmerLink
+              href="#projects"
+              background="#14171a"
+              borderRadius="8px"
+              shimmerDuration="3s"
+              className="border-white/10 px-[22px] py-[13px] font-display text-sm leading-none font-semibold hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid motion-reduce:transition-none motion-reduce:hover:translate-y-0"
             >
               {t(UI.ctaWork)}
-            </a>
-            <a
+            </ShimmerLink>
+
+            {/* Sekunder: terang, kilau warna aksen supaya tetap terlihat */}
+            <ShimmerLink
               href={profile.cvUrl ?? "#"}
               {...(profile.cvUrl
                 ? { target: "_blank", rel: "noopener noreferrer" }
                 : { "aria-disabled": true })}
-              className={`rounded-lg border border-black/[0.16] px-[22px] py-[13px] font-display text-sm leading-none font-semibold transition-transform duration-200 hover:-translate-y-0.5 ${
-                profile.cvUrl ? "" : "opacity-60"
-              }`}
+              background="#f2f4f6"
+              shimmerColor="oklch(0.62 0.14 45)"
+              borderRadius="8px"
+              shimmerDuration="3.4s"
+              className={cn(
+                "border-black/[0.16] px-[22px] py-[13px] font-display text-sm leading-none font-semibold text-ink hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid motion-reduce:transition-none motion-reduce:hover:translate-y-0",
+                profile.cvUrl ? "" : "opacity-60",
+              )}
             >
               {t(UI.ctaCv)}
-            </a>
+            </ShimmerLink>
           </motion.div>
         </div>
 
