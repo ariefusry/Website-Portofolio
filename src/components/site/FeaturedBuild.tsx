@@ -1,0 +1,53 @@
+"use client";
+
+import Link from "next/link";
+import { useLang } from "@/lib/lang-context";
+import { UI } from "@/lib/i18n";
+import { TechIcons } from "@/components/ui/TechIcons";
+import type { Project } from "@/lib/types";
+
+/**
+ * Sorotan satu proyek unggulan, tepat sebelum grid Projects.
+ * Judulnya memakai kolom `overview` (kalimat headline yang bisa diedit di
+ * admin) dan jatuh ke nama proyek selama kolom itu masih kosong.
+ */
+export function FeaturedBuild({ project }: { project: Project | null }) {
+  const { t } = useLang();
+  if (!project) return null;
+
+  const headline = t(project.overview) || project.title;
+
+  return (
+    <section
+      id="featured-build"
+      className="scroll-anchor section-x border-t border-[var(--color-line-soft)] py-14"
+    >
+      <div className="mb-4 font-mono text-xs leading-none font-semibold text-accent-ink">
+        {t(UI.featuredBuild).toUpperCase()}
+      </div>
+
+      <h2 className="mt-0 mb-4 max-w-[760px] font-display text-[clamp(26px,4.6vw,36px)] leading-[1.12] font-semibold tracking-[-0.03em] text-pretty">
+        {headline}
+      </h2>
+
+      <p className="mt-0 mb-6 max-w-[600px] font-body text-[16px] leading-[1.7] font-normal text-body-2">
+        {t(project.summary)}
+      </p>
+
+      <TechIcons items={project.tech} size={20} className="mb-7" />
+
+      <Link
+        href={`/projects/${project.slug}`}
+        className="group inline-flex items-center rounded-lg border border-[var(--color-line-strong)] px-[18px] py-3 font-display text-[13px] leading-none font-semibold transition-colors duration-200 hover:border-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid"
+      >
+        {t(UI.readCaseStudy)}
+        <span
+          aria-hidden="true"
+          className="ml-1.5 inline-block transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0"
+        >
+          →
+        </span>
+      </Link>
+    </section>
+  );
+}

@@ -4,6 +4,7 @@ import { Header } from "@/components/site/Header";
 import { Hero } from "@/components/site/Hero";
 import { StatStrip } from "@/components/site/StatStrip";
 import { About } from "@/components/site/About";
+import { FeaturedBuild } from "@/components/site/FeaturedBuild";
 import { Projects } from "@/components/site/Projects";
 import { Research } from "@/components/site/Research";
 import { Experience } from "@/components/site/Experience";
@@ -43,6 +44,9 @@ export default async function Home() {
         <Hero profile={profile} />
         <StatStrip stats={content.stats} />
         <About profile={profile} tracks={content.tracks} />
+        <FeaturedBuild
+          project={content.projects.find((p) => p.featured) ?? null}
+        />
         <Projects projects={content.projects} />
         <Research research={content.research} />
         <Experience items={content.experiences} />

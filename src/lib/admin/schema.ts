@@ -133,7 +133,9 @@ export const TABLES: TableDef[] = [
       { name: "slug", label: "Slug", type: "text" },
       { name: "title", label: "Judul", type: "text" },
       bi("summary", "Ringkasan", "textarea"),
-      { name: "badges", label: "Badge", type: "array" },
+      bi("role", "Peran (baris di bawah judul kartu)"),
+      bi("status", "Badge status", "text"),
+      { name: "badges", label: "Badge (cadangan bila peran kosong)", type: "array" },
       { name: "accent_badge", label: "Badge beraksen", type: "bool" },
       { name: "tech", label: "Chip teknologi", type: "array" },
       {
@@ -143,7 +145,12 @@ export const TABLES: TableDef[] = [
         bucket: "assets",
       },
       { name: "github_url", label: "URL GitHub", type: "text" },
-      { name: "featured", label: "Kartu unggulan (lebar penuh)", type: "bool" },
+      { name: "live_url", label: "URL situs live", type: "text" },
+      {
+        name: "featured",
+        label: "Tampilkan di Featured Build (dikeluarkan dari grid)",
+        type: "bool",
+      },
       { name: "has_thumb", label: "Punya thumbnail", type: "bool" },
       bi("overview", "Ringkasan panjang (halaman detail)", "textarea"),
       {
