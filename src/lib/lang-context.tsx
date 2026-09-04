@@ -6,12 +6,53 @@ import {
   useContext,
   useEffect,
   useMemo,
-  useState,
+  useSyncExternalStore,
 } from "react";
 import type { Bi, Lang } from "./types";
 import { pick } from "./i18n";
 
 const STORAGE_KEY = "portfolio-lang";
+
+/**
+ * Pilihan bahasa hidup di localStorage, bukan di state React — localStorage
+ * adalah external store, jadi useSyncExternalStore-lah alatnya. Ini juga
+ * menghindari setState di dalam effect (yang memicu cascading render) dan
+ * membuat SSR tetap cocok: server memakai defaultLang, klien membaca simpanan.
+ */
+const listeners = new Set<() => void>();
+
+function emit() {
+  listeners.forEach((fn) => fn());
+}
+
+function subscribe(onChange: () => void) {
+  listeners.add(onChange);
+  // Tab lain yang mengubah bahasa ikut tersinkron.
+  window.addEventListener("storage", onChange);
+  return () => {
+    listeners.delete(onChange);
+    window.removeEventListener("storage", onChange);
+  };
+}
+
+function readStored(): Lang | null {
+  try {
+    const stored = window.localStorage.getItem(STORAGE_KEY);
+    return stored === "EN" || stored === "ID" ? stored : null;
+  } catch {
+    // localStorage bisa diblokir (private mode) — perlakukan sebagai belum diset.
+    return null;
+  }
+}
+
+function writeStored(lang: Lang) {
+  try {
+    window.localStorage.setItem(STORAGE_KEY, lang);
+  } catch {
+    // abaikan: pilihan tetap berlaku untuk sesi ini, hanya tidak bertahan.
+  }
+  emit();
+}
 
 type LangContextValue = {
   lang: Lang;
@@ -30,31 +71,17 @@ export function LangProvider({
   defaultLang: Lang;
   children: React.ReactNode;
 }) {
-  // Render pertama selalu memakai defaultLang dari server; localStorage dibaca
-  // setelah mount supaya markup server dan client cocok (tanpa hydration mismatch).
-  const [lang, setLangState] = useState<Lang>(defaultLang);
-
-  useEffect(() => {
-    try {
-      const stored = window.localStorage.getItem(STORAGE_KEY);
-      if (stored === "EN" || stored === "ID") setLangState(stored);
-    } catch {
-      // localStorage bisa diblokir (private mode) — abaikan, pakai default.
-    }
-  }, []);
+  const lang = useSyncExternalStore(
+    subscribe,
+    () => readStored() ?? defaultLang,
+    () => defaultLang,
+  );
 
   useEffect(() => {
     document.documentElement.lang = lang === "ID" ? "id" : "en";
   }, [lang]);
 
-  const setLang = useCallback((next: Lang) => {
-    setLangState(next);
-    try {
-      window.localStorage.setItem(STORAGE_KEY, next);
-    } catch {
-      // abaikan
-    }
-  }, []);
+  const setLang = useCallback((next: Lang) => writeStored(next), []);
 
   const value = useMemo<LangContextValue>(
     () => ({
