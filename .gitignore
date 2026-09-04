@@ -16,6 +16,6 @@ yarn-error.log*
 .vercel
 *.tsbuildinfo
 
-# Duplikat persis dari Portfolio.dc.html dan README.md di root.
-claude/
+# Kredensial database Supabase — jangan pernah masuk repo.
+supabase-credential/
 next-env.d.ts.timestamp
