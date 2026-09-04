@@ -17,31 +17,43 @@ function BucketPanel({ bucket }: { bucket: Bucket }) {
   const [busy, setBusy] = useState(false);
   const [copied, setCopied] = useState<string | null>(null);
 
-  const load = useCallback(async () => {
-    const supabase = createClient();
-    const { data, error } = await supabase.storage
-      .from(bucket)
-      .list("", { limit: 100, sortBy: { column: "name", order: "asc" } });
-
-    if (error) {
-      setError(error.message);
-      return;
-    }
-    setError(null);
-    setItems(
-      (data ?? [])
-        .filter((f) => f.id !== null) // buang entri folder
-        .map((f) => ({
-          name: f.name,
-          size: f.metadata?.size ?? null,
-          url: supabase.storage.from(bucket).getPublicUrl(f.name).data.publicUrl,
-        })),
-    );
-  }, [bucket]);
+  // Dinaikkan setelah unggah/hapus untuk memuat ulang daftar.
+  const [version, setVersion] = useState(0);
+  const reload = useCallback(() => setVersion((v) => v + 1), []);
 
   useEffect(() => {
-    void load();
-  }, [load]);
+    // Flag pembatalan: kalau bucket berganti atau komponen di-unmount sebelum
+    // request selesai, hasil yang basi tidak boleh menimpa daftar yang baru.
+    let cancelled = false;
+
+    (async () => {
+      const supabase = createClient();
+      const { data, error } = await supabase.storage
+        .from(bucket)
+        .list("", { limit: 100, sortBy: { column: "name", order: "asc" } });
+      if (cancelled) return;
+
+      if (error) {
+        setError(error.message);
+        return;
+      }
+      setError(null);
+      setItems(
+        (data ?? [])
+          .filter((f) => f.id !== null) // buang entri folder
+          .map((f) => ({
+            name: f.name,
+            size: f.metadata?.size ?? null,
+            url: supabase.storage.from(bucket).getPublicUrl(f.name).data
+              .publicUrl,
+          })),
+      );
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [bucket, version]);
 
   async function upload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -57,7 +69,7 @@ function BucketPanel({ bucket }: { bucket: Bucket }) {
     if (error) setError(error.message);
     e.target.value = "";
     setBusy(false);
-    await load();
+    reload();
   }
 
   async function remove(name: string) {
@@ -65,7 +77,7 @@ function BucketPanel({ bucket }: { bucket: Bucket }) {
     const supabase = createClient();
     const { error } = await supabase.storage.from(bucket).remove([name]);
     if (error) setError(error.message);
-    await load();
+    reload();
   }
 
   return (

@@ -10,26 +10,26 @@ const EASE = [0.16, 1, 0.3, 1] as const;
 /** Angka yang menghitung naik dari 0; nilai non-numerik ditampilkan apa adanya. */
 function StatValue({ stat, reduced }: { stat: Stat; reduced: boolean }) {
   const target = Number(stat.value);
-  const animatable = stat.isNumeric && Number.isFinite(target);
-  const [display, setDisplay] = useState(() =>
-    animatable && !reduced ? (0).toFixed(stat.decimals) : stat.value,
+  const animatable = stat.isNumeric && Number.isFinite(target) && !reduced;
+
+  // `null` berarti "belum/tidak dianimasikan" — nilai akhir diturunkan saat
+  // render, jadi tidak perlu setState di dalam effect untuk kasus statis.
+  const [tick, setTick] = useState<string | null>(
+    animatable ? (0).toFixed(stat.decimals) : null,
   );
 
   useEffect(() => {
-    if (!animatable || reduced) {
-      setDisplay(stat.value);
-      return;
-    }
+    if (!animatable) return;
     const controls = animate(0, target, {
       duration: 1.1,
       delay: 0.95,
       ease: "easeOut",
-      onUpdate: (v) => setDisplay(v.toFixed(stat.decimals)),
+      onUpdate: (v) => setTick(v.toFixed(stat.decimals)),
     });
     return () => controls.stop();
-  }, [animatable, reduced, target, stat.decimals, stat.value]);
+  }, [animatable, target, stat.decimals]);
 
-  return <>{display}</>;
+  return <>{tick ?? stat.value}</>;
 }
 
 export function StatStrip({ stats }: { stats: Stat[] }) {

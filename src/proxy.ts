@@ -7,9 +7,9 @@ const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";
 /**
  * Menyegarkan cookie sesi Supabase dan menjaga /admin.
  * Pemeriksaan keanggotaan admin (bukan sekadar "sudah login") dilakukan lagi
- * di app/admin/layout.tsx dan ditegakkan oleh RLS di database.
+ * di app/admin/(dash)/layout.tsx dan ditegakkan oleh RLS di database.
  */
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   let response = NextResponse.next({ request });
 
   if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
@@ -41,17 +41,30 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
+  /**
+   * getUser() di atas bisa merotasi refresh token dan menulis cookie baru ke
+   * `response`. Membuat response redirect yang baru akan membuang cookie itu,
+   * sehingga token lama yang sudah terpakai jadi satu-satunya yang dikirim
+   * browser — sesi lalu putus di request berikutnya. Jadi cookie apa pun yang
+   * sempat ditulis harus ikut dibawa ke response redirect.
+   */
+  const redirectTo = (url: URL) => {
+    const redirect = NextResponse.redirect(url);
+    response.cookies.getAll().forEach((cookie) => redirect.cookies.set(cookie));
+    return redirect;
+  };
+
   const { pathname } = request.nextUrl;
   const isLoginPage = pathname === "/admin/login";
 
   if (pathname.startsWith("/admin") && !isLoginPage && !user) {
     const url = new URL("/admin/login", request.url);
     url.searchParams.set("next", pathname);
-    return NextResponse.redirect(url);
+    return redirectTo(url);
   }
 
   if (isLoginPage && user) {
-    return NextResponse.redirect(new URL("/admin", request.url));
+    return redirectTo(new URL("/admin", request.url));
   }
 
   return response;
