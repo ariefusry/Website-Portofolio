@@ -1,0 +1,126 @@
+@import "tailwindcss";
+
+/* Design token dari README §Design Tokens — satu-satunya tempat nilai mentah hidup. */
+@theme {
+  --color-page: #f2f4f6;
+  --color-surface: #ffffff;
+  --color-ink: #14171a;
+  --color-body: #2b333b;
+  --color-body-2: #4a545f;
+  --color-muted: #6b757f;
+  --color-muted-2: #8b949c;
+  --color-dark-bg: #14171a;
+  --color-dark-text: #f2f4f6;
+  --color-dark-2: #b3bcc4;
+
+  --color-accent-bg: oklch(0.93 0.05 45);
+  --color-accent-ink: oklch(0.42 0.09 45);
+  --color-accent-solid: oklch(0.62 0.14 45);
+  --color-accent-chip: oklch(0.95 0.03 45);
+  --color-accent-border: oklch(0.88 0.05 45);
+  --color-accent-dark: oklch(0.72 0.11 45);
+
+  --color-line: rgba(0, 0, 0, 0.09);
+  --color-line-soft: rgba(0, 0, 0, 0.08);
+  --color-line-strong: rgba(0, 0, 0, 0.12);
+  --color-line-dark: rgba(255, 255, 255, 0.14);
+
+  --font-display: var(--font-instrument-sans), system-ui, sans-serif;
+  --font-body: var(--font-manrope), system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+
+  --ease-brand: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+:root {
+  /* Tinggi header sticky (terukur 66px) — dipakai untuk scroll-margin section. */
+  --header-h: 66px;
+  color-scheme: light;
+}
+
+/*
+ * Aturan elemen harus berada di @layer base: CSS tanpa layer selalu menang atas
+ * utility Tailwind (yang hidup di @layer utilities), sehingga `a { color: inherit }`
+ * di luar layer akan menimpa `text-white` pada tombol.
+ */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    background: var(--color-page);
+    color: var(--color-ink);
+    font-family: var(--font-display);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a {
+    color: inherit;
+  }
+}
+
+/* Padding horizontal section: 48px di desktop, menyempit di layar kecil. */
+.section-x {
+  padding-inline: clamp(20px, 5vw, 48px);
+}
+
+/* Target scroll nav supaya judul tidak tertutup header sticky. */
+.scroll-anchor {
+  scroll-margin-top: calc(var(--header-h) + 12px);
+}
+
+/*
+ * Stat strip: 2 kolom di mobile, 4 di desktop. Pembatas hanya di antara sel,
+ * tidak pernah di tepi grid — lebih mudah dibaca sebagai aturan nth-child.
+ */
+.stat-cell {
+  border-color: var(--color-line-soft);
+}
+.stat-cell:nth-child(odd) {
+  border-inline-end: 1px solid var(--color-line-soft);
+}
+.stat-cell:not(:nth-last-child(-n + 2)) {
+  border-block-end: 1px solid var(--color-line-soft);
+}
+@media (width >= 64rem) {
+  .stat-cell:nth-child(n) {
+    border-block-end: 0;
+    border-inline-end: 1px solid var(--color-line-soft);
+  }
+  .stat-cell:last-child {
+    border-inline-end: 0;
+  }
+}
+
+/* Elemen yang dianimasikan mulai dari transparan; JS/CSS fallback menaikkannya. */
+.hero-anim {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  /* Kalau motion dimatikan, pastikan tidak ada yang tersangkut transparan. */
+  .hero-anim {
+    opacity: 1;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* Fallback terakhir: kalau JS gagal, konten tetap terlihat. */
+@media (scripting: none) {
+  .hero-anim {
+    opacity: 1;
+  }
+}

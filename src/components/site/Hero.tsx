@@ -1,0 +1,189 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { motion, useReducedMotion } from "framer-motion";
+import { useLang } from "@/lib/lang-context";
+import { UI } from "@/lib/i18n";
+import { SmartImage } from "@/components/ui/SmartImage";
+import type { Profile } from "@/lib/types";
+
+const EASE = [0.16, 1, 0.3, 1] as const;
+
+/** Bungkus tiap kata dalam mask overflow-hidden untuk reveal per kata. */
+function WordReveal({
+  text,
+  animateIn,
+}: {
+  text: string;
+  animateIn: boolean;
+}) {
+  const words = text.split(/\s+/).filter(Boolean);
+
+  // Setelah animasi masuk selesai, ganti bahasa hanya menukar teks — tidak memutar ulang.
+  if (!animateIn) return <>{text}</>;
+
+  return (
+    <>
+      {words.map((word, i) => (
+        <span key={`${word}-${i}`}>
+          {i > 0 ? " " : null}
+          <span className="inline-block overflow-hidden align-bottom pb-[0.14em] -mb-[0.14em]">
+            <motion.span
+              className="inline-block whitespace-pre will-change-transform"
+              initial={{ opacity: 0, y: "105%" }}
+              animate={{ opacity: 1, y: "0%" }}
+              transition={{ duration: 0.85, delay: 0.18 + i * 0.045, ease: EASE }}
+            >
+              {word}
+            </motion.span>
+          </span>
+        </span>
+      ))}
+    </>
+  );
+}
+
+export function Hero({ profile }: { profile: Profile }) {
+  const { lang, t } = useLang();
+  const reduced = useReducedMotion() ?? false;
+
+  // Animasi masuk berjalan sekali per load; setelah selesai, toggle bahasa
+  // hanya menukar teks tanpa memutar ulang reveal.
+  const [introDone, setIntroDone] = useState(false);
+  useEffect(() => {
+    const id = window.setTimeout(() => setIntroDone(true), 1400);
+    return () => window.clearTimeout(id);
+  }, []);
+
+  // Kunci mount: animasi hero dijalankan sekali saat load, bukan tiap ganti bahasa.
+  const fade = (delay: number, y = 16, extra: Record<string, number> = {}) =>
+    reduced
+      ? { initial: false as const, animate: { opacity: 1, y: 0, ...extra } }
+      : {
+          initial: { opacity: 0, y, ...extra },
+          animate: { opacity: 1, y: 0, scale: 1 },
+          transition: { duration: 0.7, delay, ease: EASE },
+        };
+
+  return (
+    <section
+      id="top"
+      className="section-x relative overflow-hidden pt-14 pb-16 md:pt-[84px] md:pb-[68px]"
+    >
+      {/* Glow dekoratif */}
+      {!reduced ? (
+        <motion.div
+          aria-hidden="true"
+          className="pointer-events-none absolute -top-[140px] -left-[90px] h-[520px] w-[520px] rounded-full"
+          style={{
+            background:
+              "radial-gradient(circle, oklch(0.88 0.08 45 / .55) 0%, oklch(0.88 0.08 45 / 0) 68%)",
+          }}
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1, x: [0, 26, 0], y: [0, -18, 0] }}
+          transition={{
+            opacity: { duration: 1.6, ease: "easeOut" },
+            scale: { duration: 1.6, ease: "easeOut" },
+            x: { duration: 14, repeat: Infinity, ease: "easeInOut" },
+            y: { duration: 14, repeat: Infinity, ease: "easeInOut" },
+          }}
+        />
+      ) : null}
+
+      <div className="grid items-start gap-10 md:grid-cols-[1.35fr_.8fr] md:gap-14">
+        <div className="relative">
+          {/* 2. Status badge */}
+          <motion.div
+            className="mb-[30px] inline-flex items-center gap-2 rounded-full bg-accent-bg px-[13px] py-[7px] font-mono text-[11.5px] leading-[1.1] font-semibold whitespace-nowrap text-accent-ink"
+            {...(reduced
+              ? { initial: false as const, animate: { opacity: 1, y: 0 } }
+              : {
+                  initial: { opacity: 0, y: 14 },
+                  animate: { opacity: 1, y: 0 },
+                  transition: { duration: 0.6, delay: 0.05, ease: EASE },
+                })}
+          >
+            {/* 3. Dot berdenyut */}
+            <motion.span
+              className="h-1.5 w-1.5 flex-none rounded-full bg-accent-solid"
+              animate={
+                reduced ? undefined : { scale: [1, 1.65, 1], opacity: [1, 0.45, 1] }
+              }
+              transition={
+                reduced
+                  ? undefined
+                  : {
+                      duration: 1.8,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                      delay: 0.8,
+                    }
+              }
+            />
+            {t(profile.badge)}
+          </motion.div>
+
+          {/* 4. H1 reveal per kata */}
+          <h1 className="mt-0 mb-6 max-w-[640px] font-display font-semibold tracking-[-0.035em] text-pretty text-[clamp(34px,7vw,60px)] leading-[1.04]">
+            <WordReveal
+              // Re-split saat bahasa berganti; animasinya sendiri hanya jalan sekali.
+              key={lang}
+              text={t(profile.heroTitle)}
+              animateIn={!reduced && !introDone}
+            />
+          </h1>
+
+          {/* 5. Subhead */}
+          <motion.p
+            className="mt-0 mb-[34px] max-w-[520px] font-body text-[17px] leading-[1.65] font-normal text-body-2 text-pretty"
+            {...fade(0.55)}
+          >
+            {t(profile.heroSub)}
+          </motion.p>
+
+          {/* 6. Tombol CTA */}
+          <motion.div className="flex flex-wrap gap-3" {...fade(0.68)}>
+            <a
+              href="#work"
+              className="rounded-lg bg-ink px-[22px] py-[13px] font-display text-sm leading-none font-semibold text-white transition-transform duration-200 hover:-translate-y-0.5"
+            >
+              {t(UI.ctaWork)}
+            </a>
+            <a
+              href={profile.cvUrl ?? "#"}
+              {...(profile.cvUrl
+                ? { target: "_blank", rel: "noopener noreferrer" }
+                : { "aria-disabled": true })}
+              className={`rounded-lg border border-black/[0.16] px-[22px] py-[13px] font-display text-sm leading-none font-semibold transition-transform duration-200 hover:-translate-y-0.5 ${
+                profile.cvUrl ? "" : "opacity-60"
+              }`}
+            >
+              {t(UI.ctaCv)}
+            </a>
+          </motion.div>
+        </div>
+
+        {/* 7. Foto profil */}
+        <motion.div
+          className="overflow-hidden rounded-xl border border-black/10"
+          {...(reduced
+            ? { initial: false as const, animate: { opacity: 1, y: 0, scale: 1 } }
+            : {
+                initial: { opacity: 0, y: 28, scale: 0.97 },
+                animate: { opacity: 1, y: 0, scale: 1 },
+                transition: { duration: 1, delay: 0.3, ease: EASE },
+              })}
+        >
+          <SmartImage
+            src={profile.photoUrl}
+            alt={`${t(UI.photoAlt)} — ${profile.name}`}
+            label={t(UI.photoPlaceholder)}
+            priority
+            sizes="(max-width: 768px) 100vw, 360px"
+            className="h-[360px] w-full"
+          />
+        </motion.div>
+      </div>
+    </section>
+  );
+}
