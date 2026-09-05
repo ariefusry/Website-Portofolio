@@ -90,7 +90,7 @@ export function Hero({ profile }: { profile: Profile }) {
         dan karena ia meregang setinggi section, dasarnya tepat di garis pemisah
         dengan About. Section sengaja tanpa padding bawah supaya batas itu benar.
       */}
-      <div className="relative mx-auto flex w-full max-w-[1180px] flex-1 flex-col">
+      <div className="section-inner relative flex flex-1 flex-col">
         {/*
           Track kedua dipatok lebar tetap, bukan pecahan: judulnya sendiri sudah
           dibatasi 640px, jadi memberi kolom teks porsi lebih besar hanya

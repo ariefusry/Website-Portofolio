@@ -22,6 +22,7 @@ export function Projects({ projects }: { projects: Project[] }) {
       id="projects"
       className="scroll-anchor section-x border-t border-[var(--color-line-soft)] bg-page py-14"
     >
+      <div className="section-inner">
       <div className="mb-6">
         <div className="flex items-baseline justify-between gap-4">
           <h2 className="m-0 font-display text-[clamp(24px,4vw,30px)] leading-[1.1] font-semibold tracking-[-0.025em]">
@@ -50,6 +51,7 @@ export function Projects({ projects }: { projects: Project[] }) {
           </CtaLink>
         </div>
       ) : null}
+      </div>
     </section>
   );
 }

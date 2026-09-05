@@ -257,6 +257,21 @@
   padding-inline: clamp(20px, 5vw, 48px);
 }
 
+/*
+ * Lebar isi section. Dipasang di pembungkus DI DALAM section, bukan di
+ * section-nya: beberapa section punya latar sendiri (bg-page, bg-surface) yang
+ * harus tetap selebar layar, sementara isinya tidak boleh ikut melar sampai
+ * tepi di monitor lebar.
+ *
+ * Nilainya sama dengan pembungkus hero, jadi teks, kartu, dan foto berdiri di
+ * garis vertikal yang sama sepanjang halaman.
+ */
+.section-inner {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 1180px;
+}
+
 /* Target scroll nav supaya judul tidak tertutup header sticky. */
 .scroll-anchor {
   scroll-margin-top: calc(var(--header-h) + 12px);
