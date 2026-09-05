@@ -41,18 +41,22 @@ const VARIANT: Record<
   },
 };
 
-export function CtaLink({
-  variant = "dark",
-  className,
-  children,
-  ...props
-}: Omit<ShimmerLinkProps, "background" | "borderRadius" | "shimmerDuration"> & {
-  variant?: CtaVariant;
-}) {
+/**
+ * forwardRef, bukan komponen fungsi biasa: pembungkus seperti Radix
+ * `Trigger asChild` menitipkan ref ke anaknya, dan tanpa diteruskan ke <a> yang
+ * sebenarnya, pemicu hover-nya tidak pernah menempel ke apa pun.
+ */
+export const CtaLink = React.forwardRef<
+  HTMLAnchorElement,
+  Omit<ShimmerLinkProps, "background" | "borderRadius" | "shimmerDuration"> & {
+    variant?: CtaVariant;
+  }
+>(function CtaLink({ variant = "dark", className, children, ...props }, ref) {
   const v = VARIANT[variant];
 
   return (
     <ShimmerLink
+      ref={ref}
       background={v.background}
       shimmerColor={v.shimmer}
       borderRadius="8px"
@@ -63,7 +67,7 @@ export function CtaLink({
       {children}
     </ShimmerLink>
   );
-}
+});
 
 /** Panah `→` yang bergeser saat hover, dan diam saat reduced-motion. */
 export function CtaArrow() {

@@ -5,6 +5,7 @@ import { useLang } from "@/lib/lang-context";
 import { UI } from "@/lib/i18n";
 import { externalHref } from "@/lib/utils";
 import { CtaLink } from "@/components/ui/CtaLink";
+import { HoverPeek } from "@/components/ui/link-preview";
 import { TagPill } from "@/components/ui/Primitives";
 import { TechIcons } from "@/components/ui/TechIcons";
 import { SmartImage } from "@/components/ui/SmartImage";
@@ -19,6 +20,9 @@ export function ProjectDetail({ project }: { project: Project }) {
   const { lang, t } = useLang();
   const highlights = lang === "ID" ? project.highlights.id : project.highlights.en;
   const [heroImage, ...restImages] = project.imageUrls;
+  // Gambar untuk pratinjau hover: screenshot utama proyek, dengan thumbnail
+  // kartu sebagai cadangan kalau galerinya belum diisi.
+  const previewImage = heroImage ?? project.imageUrl;
 
   return (
     <article className="section-x section-inner py-12 md:py-16">
@@ -146,13 +150,27 @@ export function ProjectDetail({ project }: { project: Project }) {
             */}
             <div className="mt-6 flex flex-wrap gap-2.5">
               {project.liveUrl ? (
-                <CtaLink
-                  href={externalHref(project.liveUrl)}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                /*
+                 * Pratinjau memakai screenshot proyek yang sudah ada, bukan
+                 * layanan screenshot pihak ketiga seperti bawaan komponennya.
+                 * Gambarnya sudah kita punya dan sudah dipilih sendiri, jadi
+                 * memanggil layanan luar tiap kali ada yang hover hanya
+                 * menambah kuota, keterlambatan, dan alamat IP pengunjung yang
+                 * dikirim ke pihak lain — tanpa hasil yang lebih baik.
+                 */
+                <HoverPeek
+                  url={externalHref(project.liveUrl)}
+                  isStatic
+                  imageSrc={previewImage ?? ""}
                 >
-                  {t(UI.visitSite)}
-                </CtaLink>
+                  <CtaLink
+                    href={externalHref(project.liveUrl)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {t(UI.visitSite)}
+                  </CtaLink>
+                </HoverPeek>
               ) : null}
               {project.githubUrl ? (
                 <CtaLink
