@@ -19,17 +19,19 @@ const ROWS = [
   { speed: "36s", reverse: false },
 ];
 
-/** Satu skill: logo brand bila ada, plus namanya — di sini nama itu isi utamanya. */
-function SkillPill({ label, accent }: { label: string; accent: boolean }) {
+/**
+ * Satu skill: logo brand bila ada, plus namanya — di sini nama itu isi utamanya.
+ *
+ * Semua grup memakai latar abu yang sama. Sebelumnya grup non-aksen memakai
+ * `bg-page`, yang di tema gelap berarti hitam pekat — lambang brand yang juga
+ * hitam jadi tenggelam di dalamnya.
+ */
+function SkillPill({ label }: { label: string }) {
   const icon = techIcon(label);
 
   return (
     <span
-      className={`inline-flex shrink-0 items-center gap-2 rounded-lg border px-3 py-2 font-body text-[13px] leading-none font-medium whitespace-nowrap ${
-        accent
-          ? "border-accent-border bg-accent-chip"
-          : "border-[var(--color-line)] bg-page"
-      }`}
+      className="inline-flex shrink-0 items-center gap-2 rounded-lg border border-accent-border bg-accent-bg px-3 py-2 font-body text-[13px] leading-none font-medium whitespace-nowrap"
     >
       {icon ? <TechGlyph icon={icon} size={16} /> : null}
       {label}
@@ -77,7 +79,7 @@ function MarqueeRow({
         {...(hidden || pass > 0 ? { "aria-hidden": true } : {})}
       >
         {group.items.map((item) => (
-          <SkillPill key={item} label={item} accent={group.accent} />
+          <SkillPill key={item} label={item} />
         ))}
       </div>
     ));
@@ -129,7 +131,7 @@ export function Skills({ groups }: { groups: SkillGroup[] }) {
             {asGrid ? (
               <div className="flex flex-wrap gap-2.5">
                 {group.items.map((item) => (
-                  <SkillPill key={item} label={item} accent={group.accent} />
+                  <SkillPill key={item} label={item} />
                 ))}
               </div>
             ) : (

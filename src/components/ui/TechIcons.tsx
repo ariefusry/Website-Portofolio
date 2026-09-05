@@ -58,6 +58,28 @@ export function techIcon(label: string): SimpleIcon | null {
 }
 
 
+/** Luminансi relatif WCAG dari hex simple-icons (tanpa '#'). */
+function luminance(hex: string): number {
+  const n = parseInt(hex, 16);
+  const channels = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) => {
+    const c = v / 255;
+    return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+  });
+  return 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2];
+}
+
+/**
+ * Sebagian lambang brand nyaris tak berwarna — Vercel, Cursor, Copilot dan
+ * GitHub hitam pekat; Pandas dan NumPy hampir hitam. Di tema gelap semuanya
+ * lenyap ke dalam latar. Untuk yang seperti itu warnanya diambil dari
+ * `currentColor`, jadi ikut warna teks di sekitarnya dan tetap terlihat di
+ * kedua tema — di tema terang hasilnya sama saja seperti sebelumnya.
+ */
+function isAchromatic(hex: string): boolean {
+  const l = luminance(hex);
+  return l < 0.05 || l > 0.85;
+}
+
 /** SVG brand saja — dekoratif; nama teknologinya disediakan oleh pemanggil. */
 export function TechGlyph({ icon, size = 18 }: { icon: SimpleIcon; size?: number }) {
   return (
@@ -68,7 +90,7 @@ export function TechGlyph({ icon, size = 18 }: { icon: SimpleIcon; size?: number
       viewBox="0 0 24 24"
       width={size}
       height={size}
-      style={{ fill: `#${icon.hex}` }}
+      style={{ fill: isAchromatic(icon.hex) ? "currentColor" : `#${icon.hex}` }}
       className="shrink-0"
     >
       <path d={icon.path} />

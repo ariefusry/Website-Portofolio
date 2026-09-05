@@ -48,6 +48,20 @@ function systemTheme(): Theme {
     : "light";
 }
 
+/** Harus sama dengan durasi transisi .theme-switching di globals.css. */
+const SWITCH_MS = 320;
+let switchTimer: number | undefined;
+
+function startSwitching() {
+  const root = document.documentElement;
+  root.classList.add("theme-switching");
+  // Menekan tombol dua kali beruntun tidak boleh melepas kelasnya lebih awal.
+  window.clearTimeout(switchTimer);
+  switchTimer = window.setTimeout(() => {
+    root.classList.remove("theme-switching");
+  }, SWITCH_MS);
+}
+
 export function useTheme() {
   const theme = useSyncExternalStore<Theme>(
     subscribe,
@@ -62,6 +76,10 @@ export function useTheme() {
   }, [theme]);
 
   const setTheme = useCallback((next: Theme) => {
+    // Pasang kelas transisi sebelum token bergeser, lalu lepas lagi setelah
+    // selesai — memasangnya permanen akan memperlambat setiap hover di situs.
+    // Durasinya harus cocok dengan .theme-switching di globals.css.
+    startSwitching();
     try {
       window.localStorage.setItem(THEME_STORAGE_KEY, next);
     } catch {

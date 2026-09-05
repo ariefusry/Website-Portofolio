@@ -278,6 +278,32 @@
   opacity: 0;
 }
 
+/*
+ * Pergantian tema dibuat memudar, bukan berkedip.
+ *
+ * Kelas ini hanya menempel di <html> selama transisi berlangsung (lihat
+ * theme-context.tsx) — kalau transisinya dipasang permanen, setiap hover dan
+ * fokus di seluruh situs ikut melambat.
+ *
+ * Dibungkus `no-preference` supaya tidak perlu bersaing dengan aturan
+ * reduced-motion di bawah: kalau pengguna minta gerakan dikurangi, aturan ini
+ * memang tidak pernah ikut dipasang.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  .theme-switching,
+  .theme-switching *,
+  .theme-switching *::before,
+  .theme-switching *::after {
+    transition:
+      background-color 320ms var(--ease-brand),
+      border-color 320ms var(--ease-brand),
+      color 320ms var(--ease-brand),
+      fill 320ms var(--ease-brand),
+      box-shadow 320ms var(--ease-brand),
+      outline-color 320ms var(--ease-brand) !important;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
