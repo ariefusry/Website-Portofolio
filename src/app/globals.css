@@ -9,59 +9,56 @@
  */
 @theme {
   /*
-   * Palet monokrom bernuansa hangat: Porcelain White #f1ece6 sampai Onyx
-   * Black #1f1d1d. Tidak ada rona aksen sama sekali — hierarki dibangun murni
-   * dari terang-gelap. Abunya dihangatkan (bukan abu netral) supaya menyatu
-   * dengan Porcelain.
+   * Monokrom murni: hitam, putih, dan abu netral — tanpa rona sama sekali.
+   * Hierarki dibangun hanya dari terang-gelap.
+   *
+   * Satu-satunya pengecualian adalah tombol unduh CV, yang biru. Itu memang
+   * disengaja: di halaman yang seluruhnya netral, satu-satunya warna otomatis
+   * jadi hal paling menarik perhatian — persis yang diinginkan dari tombol itu.
    */
-  --color-page: #f1ece6;
-  /* Sedikit di atas Porcelain supaya kartu tetap terbaca sebagai kartu. */
-  --color-surface: #fbf9f6;
-  --color-ink: #1f1d1d;
-  --color-body: #3a3636;
-  --color-body-2: #524a48;
+  --color-page: #f5f5f5;
+  /* Putih murni supaya kartu naik satu tingkat dari halaman. */
+  --color-surface: #ffffff;
+  --color-ink: #000000;
+  --color-body: #262626;
+  --color-body-2: #404040;
   /* Keduanya diukur >= AA 4.5:1 di atas page maupun surface. */
-  --color-muted: #655d59;
-  --color-muted-2: #726964;
-  --color-dark-bg: #1f1d1d;
-  --color-dark-text: #f1ece6;
-  --color-dark-2: #b5ada8;
+  --color-muted: #5e5e5e;
+  --color-muted-2: #6b6b6b;
+  --color-dark-bg: #000000;
+  --color-dark-text: #f5f5f5;
+  --color-dark-2: #b0b0b0;
 
   /*
    * Warna teks di atas permukaan `ink` dan `accent-strong`. Dulu keduanya
    * ditulis `text-white`; itu pecah di tema gelap, karena di sana `ink` justru
-   * hampir putih. Dengan token ini pasangannya ikut berbalik sendiri.
+   * putih. Dengan token ini pasangannya ikut berbalik sendiri.
    */
-  --color-on-ink: #f1ece6;
-  --color-on-accent-strong: #f1ece6;
+  --color-on-ink: #ffffff;
+  --color-on-accent-strong: #ffffff;
 
   /*
    * Nama token tetap `accent-*` supaya komponen tidak perlu diubah, tapi
-   * isinya kini anak-anak tangga netral, bukan warna.
+   * isinya kini anak tangga netral.
    */
-  --color-accent-bg: #e2ddd6;
-  --color-accent-ink: #3a3636;
-  --color-accent-solid: #1f1d1d;
-  --color-accent-chip: #e8e3dc;
-  --color-accent-border: #d5cfc7;
-  /* Dipakai di atas footer gelap. */
-  --color-accent-dark: #b5ada8;
-  /*
-   * Isian tombol sekunder. Satu anak tangga di atas Onyx — 2.24:1 terhadap
-   * tombol primer, cukup untuk terbaca sebagai dua tombol berbeda tanpa
-   * bantuan warna, dan 6.37:1 dengan teksnya sendiri.
-   */
-  --color-accent-strong: #5c534f;
+  --color-accent-bg: #e8e8e8;
+  --color-accent-ink: #262626;
+  --color-accent-solid: #000000;
+  --color-accent-chip: #efefef;
+  --color-accent-border: #dcdcdc;
+  /* Dipakai di atas footer hitam. */
+  --color-accent-dark: #c9c9c9;
+  /* Biru tombol CV: 6.7:1 dengan teks putih, 3.13:1 dari tombol primer hitam. */
+  --color-accent-strong: #1d4ed8;
 
-  /* Garis bernuansa Onyx, bukan hitam netral. */
-  --color-line: rgba(31, 29, 29, 0.1);
-  --color-line-soft: rgba(31, 29, 29, 0.09);
-  --color-line-strong: rgba(31, 29, 29, 0.14);
-  --color-line-dark: rgba(241, 236, 230, 0.14);
+  --color-line: rgba(0, 0, 0, 0.1);
+  --color-line-soft: rgba(0, 0, 0, 0.09);
+  --color-line-strong: rgba(0, 0, 0, 0.14);
+  --color-line-dark: rgba(255, 255, 255, 0.14);
 
   /* Garis placeholder gambar; ikut berganti supaya tidak menyala di tema gelap. */
-  --color-ph-1: #e4ddd4;
-  --color-ph-2: #ede7df;
+  --color-ph-1: #e4e4e4;
+  --color-ph-2: #ededed;
 
   --font-display: var(--font-instrument-sans), system-ui, sans-serif;
   --font-body: var(--font-manrope), system-ui, sans-serif;
@@ -159,40 +156,43 @@
   :root:not([data-theme="light"]) {
     color-scheme: dark;
 
-    /* Onyx dipakai untuk kartu; halaman sedikit lebih pekat agar kartunya naik. */
-    --color-page: #171515;
-    --color-surface: #232020;
-    --color-ink: #f1ece6;
-    --color-body: #dad3cb;
-    --color-body-2: #b5ada6;
-    --color-muted: #a29993;
-    --color-muted-2: #948b84;
+    /* Hitam murni; kartu naik ke #121212 supaya tepinya tetap terbaca. */
+    --color-page: #000000;
+    --color-surface: #121212;
+    --color-ink: #ffffff;
+    --color-body: #e0e0e0;
+    --color-body-2: #b8b8b8;
+    --color-muted: #a3a3a3;
+    --color-muted-2: #8f8f8f;
 
-    /* Footer tetap satu blok tersendiri: sedikit lebih pekat dari halaman. */
-    --color-dark-bg: #0f0e0e;
-    --color-dark-text: #f1ece6;
-    --color-dark-2: #a9a19b;
+    /* Halaman sudah hitam murni, jadi footer justru naik sedikit agar terpisah. */
+    --color-dark-bg: #0a0a0a;
+    --color-dark-text: #ffffff;
+    --color-dark-2: #a3a3a3;
 
-    --color-on-ink: #171515;
-    --color-on-accent-strong: #171515;
+    --color-on-ink: #000000;
+    --color-on-accent-strong: #000000;
 
     /* Tangga netral yang sama, dibalik. */
-    --color-accent-bg: #2b2727;
-    --color-accent-ink: #dad3cb;
-    --color-accent-solid: #f1ece6;
-    --color-accent-chip: #262222;
-    --color-accent-border: #3a3535;
-    --color-accent-dark: #a9a19b;
-    /* Isian terang, teks gelap — 7:1, dan 2.21:1 terhadap tombol primer. */
-    --color-accent-strong: #a89f98;
+    --color-accent-bg: #1a1a1a;
+    --color-accent-ink: #e0e0e0;
+    --color-accent-solid: #ffffff;
+    --color-accent-chip: #141414;
+    --color-accent-border: #2a2a2a;
+    --color-accent-dark: #c9c9c9;
+    /*
+     * Biru diterangkan: #1d4ed8 hanya 1.98:1 di atas hitam. Yang ini 6.56:1
+     * dengan teks hitam, dan 3.2:1 dari tombol primer putih.
+     */
+    --color-accent-strong: #4c8dff;
 
-    --color-line: rgba(241, 236, 230, 0.1);
-    --color-line-soft: rgba(241, 236, 230, 0.08);
-    --color-line-strong: rgba(241, 236, 230, 0.16);
-    --color-line-dark: rgba(241, 236, 230, 0.12);
+    --color-line: rgba(255, 255, 255, 0.12);
+    --color-line-soft: rgba(255, 255, 255, 0.09);
+    --color-line-strong: rgba(255, 255, 255, 0.18);
+    --color-line-dark: rgba(255, 255, 255, 0.12);
 
-    --color-ph-1: #262222;
-    --color-ph-2: #2e2929;
+    --color-ph-1: #1a1a1a;
+    --color-ph-2: #222222;
 
   }
 }
@@ -200,40 +200,43 @@
 :root[data-theme="dark"] {
   color-scheme: dark;
 
-  /* Onyx dipakai untuk kartu; halaman sedikit lebih pekat agar kartunya naik. */
-  --color-page: #171515;
-  --color-surface: #232020;
-  --color-ink: #f1ece6;
-  --color-body: #dad3cb;
-  --color-body-2: #b5ada6;
-  --color-muted: #a29993;
-  --color-muted-2: #948b84;
+  /* Hitam murni; kartu naik ke #121212 supaya tepinya tetap terbaca. */
+  --color-page: #000000;
+  --color-surface: #121212;
+  --color-ink: #ffffff;
+  --color-body: #e0e0e0;
+  --color-body-2: #b8b8b8;
+  --color-muted: #a3a3a3;
+  --color-muted-2: #8f8f8f;
 
-  /* Footer tetap satu blok tersendiri: sedikit lebih pekat dari halaman. */
-  --color-dark-bg: #0f0e0e;
-  --color-dark-text: #f1ece6;
-  --color-dark-2: #a9a19b;
+  /* Halaman sudah hitam murni, jadi footer justru naik sedikit agar terpisah. */
+  --color-dark-bg: #0a0a0a;
+  --color-dark-text: #ffffff;
+  --color-dark-2: #a3a3a3;
 
-  --color-on-ink: #171515;
-  --color-on-accent-strong: #171515;
+  --color-on-ink: #000000;
+  --color-on-accent-strong: #000000;
 
   /* Tangga netral yang sama, dibalik. */
-  --color-accent-bg: #2b2727;
-  --color-accent-ink: #dad3cb;
-  --color-accent-solid: #f1ece6;
-  --color-accent-chip: #262222;
-  --color-accent-border: #3a3535;
-  --color-accent-dark: #a9a19b;
-  /* Isian terang, teks gelap — 7:1, dan 2.21:1 terhadap tombol primer. */
-  --color-accent-strong: #a89f98;
+  --color-accent-bg: #1a1a1a;
+  --color-accent-ink: #e0e0e0;
+  --color-accent-solid: #ffffff;
+  --color-accent-chip: #141414;
+  --color-accent-border: #2a2a2a;
+  --color-accent-dark: #c9c9c9;
+  /*
+   * Biru diterangkan: #1d4ed8 hanya 1.98:1 di atas hitam. Yang ini 6.56:1
+   * dengan teks hitam, dan 3.2:1 dari tombol primer putih.
+   */
+  --color-accent-strong: #4c8dff;
 
-  --color-line: rgba(241, 236, 230, 0.1);
-  --color-line-soft: rgba(241, 236, 230, 0.08);
-  --color-line-strong: rgba(241, 236, 230, 0.16);
-  --color-line-dark: rgba(241, 236, 230, 0.12);
+  --color-line: rgba(255, 255, 255, 0.12);
+  --color-line-soft: rgba(255, 255, 255, 0.09);
+  --color-line-strong: rgba(255, 255, 255, 0.18);
+  --color-line-dark: rgba(255, 255, 255, 0.12);
 
-  --color-ph-1: #262222;
-  --color-ph-2: #2e2929;
+  --color-ph-1: #1a1a1a;
+  --color-ph-2: #222222;
 
 }
 

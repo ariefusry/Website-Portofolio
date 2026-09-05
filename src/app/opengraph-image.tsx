@@ -14,7 +14,7 @@ export default function OpengraphImage() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          background: "#f1ece6",
+          background: "#f5f5f5",
           padding: 72,
           fontFamily: "sans-serif",
         }}
@@ -25,8 +25,8 @@ export default function OpengraphImage() {
             alignSelf: "flex-start",
             padding: "10px 18px",
             borderRadius: 999,
-            background: "#e2ddd6",
-            color: "#3a3636",
+            background: "#e8e8e8",
+            color: "#262626",
             fontSize: 22,
             fontWeight: 600,
             letterSpacing: 1,
@@ -42,7 +42,7 @@ export default function OpengraphImage() {
             lineHeight: 1.05,
             fontWeight: 600,
             letterSpacing: -2,
-            color: "#1f1d1d",
+            color: "#000000",
             maxWidth: 950,
           }}
         >
@@ -55,10 +55,10 @@ export default function OpengraphImage() {
             justifyContent: "space-between",
             width: "100%",
             fontSize: 26,
-            color: "#524a48",
+            color: "#404040",
           }}
         >
-          <span style={{ fontWeight: 600, color: "#1f1d1d" }}>Arief M. Usry</span>
+          <span style={{ fontWeight: 600, color: "#000000" }}>Arief M. Usry</span>
           <span>Flutter · Laravel · Supabase · TensorFlow</span>
         </div>
       </div>

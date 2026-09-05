@@ -67,7 +67,10 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
+    // suppressHydrationWarning: skrip tema di <head> sengaja memasang
+    // `data-theme` pada <html> sebelum React hidrasi, jadi atribut server dan
+    // klien memang berbeda. Cakupannya hanya elemen ini, bukan isinya.
+    <html lang="en" suppressHydrationWarning>
       <head>
         {/*
           Tema dipasang sebelum render pertama. Kalau ini dikerjakan React,
