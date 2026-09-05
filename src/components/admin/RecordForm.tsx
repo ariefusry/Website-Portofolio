@@ -1,9 +1,10 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { saveRecord, type ActionState } from "@/lib/admin/actions";
 import type { Field, TableDef } from "@/lib/admin/schema";
+import { UploadButton, publicAssetUrl } from "./UploadButton";
 
 const INPUT =
   "w-full rounded-lg border border-[var(--color-line-strong)] bg-surface px-3 py-2 font-body text-sm outline-none focus:border-ink";
@@ -23,6 +24,81 @@ function TextControl({
     return <textarea rows={field.type === "textarea" ? 4 : 5} {...common} />;
   }
   return <input type="text" {...common} />;
+}
+
+/**
+ * Kolom path berkas dengan tombol unggah menyatu.
+ *
+ * Terkendali (controlled), tidak seperti kolom teks lain, karena tombol unggah
+ * harus bisa menulis nilainya. Untuk kolom galeri (`array`) hasil unggahan
+ * ditambahkan sebagai baris baru, bukan menimpa daftar yang sudah ada.
+ */
+function AssetControl({
+  field,
+  initial,
+}: {
+  field: Field;
+  initial: string;
+}) {
+  const [value, setValue] = useState(initial);
+  const bucket = field.bucket ?? "assets";
+  const isList = field.type === "array";
+
+  const paths = value
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+  return (
+    <div className="mt-1.5 grid gap-2.5">
+      {isList ? (
+        <textarea
+          rows={4}
+          name={field.name}
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          className={INPUT}
+        />
+      ) : (
+        <input
+          type="text"
+          name={field.name}
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          className={INPUT}
+        />
+      )}
+
+      <UploadButton
+        bucket={bucket}
+        accept={bucket === "documents" ? ".pdf" : "image/*"}
+        label={isList ? "Unggah & tambahkan" : "Unggah & isi"}
+        onDone={(name) =>
+          setValue((prev) => {
+            if (!isList) return name;
+            const existing = prev.trim();
+            return existing ? `${existing}\n${name}` : name;
+          })
+        }
+      />
+
+      {bucket === "assets" && paths.length ? (
+        <div className="flex flex-wrap gap-2">
+          {paths.map((path) => (
+            // <img> biasa, bukan next/image: ini halaman admin, dan berkas
+            // yang baru diunggah belum tentu sudah ada saat render.
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              key={path}
+              src={publicAssetUrl(bucket, path)}
+              alt={path}
+              className="h-16 w-16 rounded-md border border-[var(--color-line)] bg-page object-contain"
+            />
+          ))}
+        </div>
+      ) : null}
+    </div>
+  );
 }
 
 function renderValue(field: Field, raw: unknown): string {
@@ -93,6 +169,22 @@ function FieldRow({
           ))}
         </div>
       </fieldset>
+    );
+  }
+
+  // Kolom berkas (path tunggal atau daftar galeri) dapat tombol unggahnya sendiri.
+  if (field.type === "asset" || (field.type === "array" && field.bucket)) {
+    return (
+      <div className="block font-body text-sm font-medium">
+        {field.label}
+        {field.hint ? (
+          <span className="ml-2 font-normal text-muted">{field.hint}</span>
+        ) : null}
+        <AssetControl
+          field={field}
+          initial={renderValue(field, record[field.name])}
+        />
+      </div>
     );
   }
 
