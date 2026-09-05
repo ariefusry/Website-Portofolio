@@ -19,9 +19,9 @@ export function Contact({ profile }: { profile: Profile }) {
       label: t(UI.footerNavigate),
       links: [
         { title: t(UI.nav.about), href: "/#about" },
+        { title: t(UI.nav.experience), href: "/#experience" },
         { title: t(UI.nav.projects), href: "/projects" },
         { title: t(UI.nav.research), href: "/#research" },
-        { title: t(UI.nav.experience), href: "/#experience" },
       ],
     },
     {

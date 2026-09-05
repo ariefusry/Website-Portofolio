@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import { useLang } from "@/lib/lang-context";
 import { UI } from "@/lib/i18n";
+import { CtaArrow, CtaLink } from "@/components/ui/CtaLink";
 import { ProjectCard } from "./ProjectCard";
 import type { Project } from "@/lib/types";
 
@@ -44,18 +44,10 @@ export function Projects({ projects }: { projects: Project[] }) {
 
       {hasMore ? (
         <div className="mt-10 flex justify-center">
-          <Link
-            href="/projects"
-            className="group inline-flex items-center rounded-full bg-ink px-6 py-3.5 font-display text-sm leading-none font-semibold text-white transition-transform duration-200 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid motion-reduce:transition-none motion-reduce:hover:translate-y-0"
-          >
+          <CtaLink href="/projects">
             {t(UI.exploreProjects)}
-            <span
-              aria-hidden="true"
-              className="ml-2 inline-block transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0"
-            >
-              →
-            </span>
-          </Link>
+            <CtaArrow />
+          </CtaLink>
         </div>
       ) : null}
     </section>

@@ -2,7 +2,6 @@ import { getContent } from "@/lib/content";
 import { LangProvider } from "@/lib/lang-context";
 import { Header } from "@/components/site/Header";
 import { Hero } from "@/components/site/Hero";
-import { StatStrip } from "@/components/site/StatStrip";
 import { About } from "@/components/site/About";
 import { FeaturedBuild } from "@/components/site/FeaturedBuild";
 import { Projects } from "@/components/site/Projects";
@@ -42,15 +41,14 @@ export default async function Home() {
       <Header name={profile.name} email={profile.email} />
       <main>
         <Hero profile={profile} />
-        <StatStrip stats={content.stats} />
         <About profile={profile} tracks={content.tracks} />
         <FeaturedBuild
           project={content.projects.find((p) => p.featured) ?? null}
         />
-        <Projects projects={content.projects} />
-        <Research research={content.research} />
         <Experience items={content.experiences} />
+        <Projects projects={content.projects} />
         <Skills groups={content.skillGroups} />
+        <Research research={content.research} />
       </main>
       <Contact profile={profile} />
     </LangProvider>

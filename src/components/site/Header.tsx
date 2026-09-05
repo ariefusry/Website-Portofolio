@@ -8,9 +8,9 @@ import { UI } from "@/lib/i18n";
 
 const NAV = [
   { id: "about", label: UI.nav.about },
+  { id: "experience", label: UI.nav.experience },
   { id: "projects", label: UI.nav.projects },
   { id: "research", label: UI.nav.research },
-  { id: "experience", label: UI.nav.experience },
 ] as const;
 
 export function Header({ name, email }: { name: string; email: string }) {
