@@ -24,7 +24,7 @@ export function About({
         {t(UI.trackLabel)}
       </div>
 
-      <div className="grid max-w-[760px] gap-4 sm:grid-cols-2">
+      <div className="grid gap-4 sm:grid-cols-2">
         {tracks.map((track) => (
           <div
             key={track.id}

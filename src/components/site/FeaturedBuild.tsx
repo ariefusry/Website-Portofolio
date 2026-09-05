@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import { useLang } from "@/lib/lang-context";
 import { UI } from "@/lib/i18n";
+import { CtaArrow, CtaLink } from "@/components/ui/CtaLink";
 import { SmartImage } from "@/components/ui/SmartImage";
 import { TechIcons } from "@/components/ui/TechIcons";
 import type { Project } from "@/lib/types";
@@ -47,18 +47,10 @@ export function FeaturedBuild({ project }: { project: Project | null }) {
 
           <TechIcons items={project.tech} size={20} className="mb-7" />
 
-          <Link
-            href={`/projects/${project.slug}`}
-            className="group inline-flex items-center rounded-lg border border-[var(--color-line-strong)] px-[18px] py-3 font-display text-[13px] leading-none font-semibold transition-colors duration-200 hover:border-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid"
-          >
+          <CtaLink href={`/projects/${project.slug}`}>
             {t(UI.readCaseStudy)}
-            <span
-              aria-hidden="true"
-              className="ml-1.5 inline-block transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0"
-            >
-              →
-            </span>
-          </Link>
+            <CtaArrow />
+          </CtaLink>
         </div>
 
         {/* Sengaja bukan link: tujuannya sama dengan tombol di sebelahnya, dan

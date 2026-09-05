@@ -1,7 +1,7 @@
 import * as simpleIcons from "simple-icons";
 import { Chip } from "./Primitives";
 
-type SimpleIcon = { title: string; hex: string; path: string };
+export type SimpleIcon = { title: string; hex: string; path: string };
 
 /**
  * Label teknologi yang kita tulis → slug simple-icons.
@@ -42,14 +42,38 @@ const ICON_BY_LABEL: Record<string, string> = {
   html5: "Html5",
   css: "Css",
   "android studio": "Androidstudio",
-  "vs code": "Vsc",
+  cursor: "Cursor",
+  copilot: "Githubcopilot",
+  "github copilot": "Githubcopilot",
+  "claude code": "Claude",
+  claude: "Claude",
 };
 
-function lookup(label: string): SimpleIcon | null {
+/** Ikon brand untuk satu label teknologi, atau null kalau memang tidak punya. */
+export function techIcon(label: string): SimpleIcon | null {
   const key = ICON_BY_LABEL[label.trim().toLowerCase()];
   if (!key) return null;
   const icon = (simpleIcons as unknown as Record<string, SimpleIcon>)[`si${key}`];
   return icon && icon.path ? icon : null;
+}
+
+
+/** SVG brand saja — dekoratif; nama teknologinya disediakan oleh pemanggil. */
+export function TechGlyph({ icon, size = 18 }: { icon: SimpleIcon; size?: number }) {
+  return (
+    <svg
+      role="img"
+      aria-hidden="true"
+      focusable="false"
+      viewBox="0 0 24 24"
+      width={size}
+      height={size}
+      style={{ fill: `#${icon.hex}` }}
+      className="shrink-0"
+    >
+      <path d={icon.path} />
+    </svg>
+  );
 }
 
 /**
@@ -71,7 +95,7 @@ export function TechIcons({
   return (
     <ul className={`m-0 flex list-none flex-wrap items-center gap-2.5 p-0 ${className}`}>
       {items.map((label) => {
-        const icon = lookup(label);
+        const icon = techIcon(label);
 
         if (!icon) {
           return (
@@ -83,18 +107,7 @@ export function TechIcons({
 
         return (
           <li key={label} className="flex items-center">
-            <svg
-              role="img"
-              aria-hidden="true"
-              focusable="false"
-              viewBox="0 0 24 24"
-              width={size}
-              height={size}
-              style={{ fill: `#${icon.hex}` }}
-              className="shrink-0"
-            >
-              <path d={icon.path} />
-            </svg>
+            <TechGlyph icon={icon} size={size} />
             <span className="sr-only">{label}</span>
           </li>
         );

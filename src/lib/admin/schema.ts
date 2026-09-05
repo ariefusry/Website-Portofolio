@@ -91,24 +91,9 @@ export const TABLES: TableDef[] = [
       },
     ],
   },
-  {
-    key: "stats",
-    table: "stats",
-    label: "Stat strip",
-    kind: "collection",
-    titleField: "value",
-    fields: [
-      { name: "value", label: "Nilai", type: "text" },
-      {
-        name: "is_numeric",
-        label: "Angka (dihitung naik saat load)",
-        type: "bool",
-      },
-      { name: "decimals", label: "Jumlah desimal", type: "number" },
-      bi("label", "Label"),
-      { name: "sort", label: "Urutan", type: "number" },
-    ],
-  },
+  // Stat strip dihapus dari beranda, jadi form-nya ikut dilepas — dashboard
+  // yang menawarkan pengeditan sesuatu yang tidak tampil di mana pun cuma
+  // menyesatkan. Tabel `stats` di Postgres sengaja dibiarkan utuh.
   {
     key: "tracks",
     table: "tracks",

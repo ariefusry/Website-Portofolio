@@ -54,6 +54,21 @@
   animation: spin-around calc(var(--speed) * 2) infinite linear;
 }
 
+/*
+ * Pita skill. Alasan `@utility` sama persis dengan dua animasi di atas:
+ * `--speed` diset inline per baris, jadi deklarasinya tidak boleh dinaikkan
+ * ke `:root`.
+ */
+@utility animate-marquee {
+  animation: marquee var(--speed) linear infinite;
+}
+
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 @keyframes spin-around {
   0% {
     transform: translateZ(0) rotate(0);
