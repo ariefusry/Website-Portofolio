@@ -299,6 +299,23 @@
   }
 
   /*
+   * Morph thumbnail proyek ke gambar utama halaman detail. Blur tipis di
+   * tengah jalan menutupi artefak interpolasi piksel saat gambar memuai.
+   */
+  ::view-transition-group(.morph) {
+    animation-duration: 420ms;
+    animation-timing-function: var(--ease-brand);
+  }
+  ::view-transition-image-pair(.morph) {
+    animation-name: morph-blur;
+  }
+  @keyframes morph-blur {
+    30% {
+      filter: blur(3px);
+    }
+  }
+
+  /*
    * Pil header diberi nama sendiri. Tanpa ini ia ikut cuplikan `root`, yang
    * hanya memudarkan piksel — jadi saat label nav berganti panjang ("Experience"
    * → "Pengalaman") lebarnya melompat di tengah pudar. Dengan nama sendiri,
@@ -322,6 +339,20 @@
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+  /*
+   * Transisi antar-halaman dijalankan React, bukan helper kita, jadi ia tidak
+   * bisa dilewati dari JS seperti pergantian tema dan bahasa. Dan aturan `*`
+   * di bawah tidak menjangkaunya — pseudo-element view transition bukan
+   * elemen biasa, jadi harus disebut namanya sendiri.
+   */
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-image-pair(*) {
+    animation-duration: 0.001ms !important;
+    animation-delay: 0s !important;
   }
 
   /* Kalau motion dimatikan, pastikan tidak ada yang tersangkut transparan. */

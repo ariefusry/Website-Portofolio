@@ -5,6 +5,7 @@ import { UI } from "@/lib/i18n";
 import { CtaArrow, CtaLink } from "@/components/ui/CtaLink";
 import { SmartImage } from "@/components/ui/SmartImage";
 import { TechIcons } from "@/components/ui/TechIcons";
+import { Reveal } from "@/components/ui/Reveal";
 import type { Project } from "@/lib/types";
 
 /**
@@ -26,7 +27,7 @@ export function FeaturedBuild({ project }: { project: Project | null }) {
       id="featured-build"
       className="scroll-anchor section-x border-t border-[var(--color-line-soft)] py-14"
     >
-      <div className="section-inner">
+      <Reveal className="section-inner">
       <div className="mb-4 font-mono text-xs leading-none font-semibold text-accent-ink">
         {t(UI.featuredBuild).toUpperCase()}
       </div>
@@ -67,7 +68,7 @@ export function FeaturedBuild({ project }: { project: Project | null }) {
           />
         </div>
       </div>
-      </div>
+      </Reveal>
     </section>
   );
 }
