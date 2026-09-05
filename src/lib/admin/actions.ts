@@ -109,6 +109,40 @@ export async function saveRecord(
   return { error: null, ok: true };
 }
 
+/**
+ * Pasang satu berkas sebagai foto profil.
+ *
+ * Sengaja terpisah dari `saveRecord`: action itu menyusun payload dari SELURUH
+ * field di definisi tabel, jadi memanggilnya hanya dengan satu kolom akan
+ * mengosongkan sisa profil.
+ *
+ * `photo_path` berisi nama berkas di bucket `assets`, bukan URL penuh —
+ * `publicUrl()` di lib/supabase/content.ts yang mengubahnya jadi URL.
+ */
+export async function setProfilePhoto(path: string): Promise<ActionState> {
+  const clean = path.trim();
+  if (!clean) return { error: "Nama berkas kosong.", ok: false };
+
+  try {
+    const supabase = await requireAdmin();
+    // Tabel profile memang satu baris: `id smallint primary key check (id = 1)`.
+    const { error } = await supabase
+      .from("profile")
+      .update({ photo_path: clean })
+      .eq("id", 1);
+    if (error) return { error: error.message, ok: false };
+  } catch (e) {
+    return {
+      error: e instanceof Error ? e.message : "Gagal menyimpan foto profil.",
+      ok: false,
+    };
+  }
+
+  revalidatePath("/");
+  revalidatePath("/admin/profile");
+  return { error: null, ok: true };
+}
+
 export async function deleteRecord(
   _prev: ActionState,
   formData: FormData,

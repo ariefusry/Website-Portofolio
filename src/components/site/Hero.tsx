@@ -145,9 +145,19 @@ export function Hero({ profile }: { profile: Profile }) {
           </motion.div>
         </div>
 
-        {/* 7. Foto profil */}
+        {/*
+          7. Foto profil. Begitu fotonya ada, bingkainya dilepas dan gambar
+          dirender `contain` — untuk PNG berlatar transparan, kotak bergaris
+          justru mengembalikan persis batas yang ingin dihilangkan. Selama
+          masih kosong, bingkai bergarisnya dipertahankan supaya slotnya
+          terbaca sebagai "unggah di sini", bukan sebagai lubang.
+        */}
         <motion.div
-          className="overflow-hidden rounded-xl border border-[var(--color-line-strong)]"
+          className={
+            profile.photoUrl
+              ? ""
+              : "overflow-hidden rounded-xl border border-[var(--color-line-strong)]"
+          }
           {...(reduced
             ? { initial: false as const, animate: { opacity: 1, y: 0, scale: 1 } }
             : {
@@ -161,6 +171,7 @@ export function Hero({ profile }: { profile: Profile }) {
             alt={`${t(UI.photoAlt)} — ${profile.name}`}
             label={t(UI.photoPlaceholder)}
             priority
+            fit="contain"
             sizes="(max-width: 768px) 100vw, 360px"
             className="h-[360px] w-full"
           />
