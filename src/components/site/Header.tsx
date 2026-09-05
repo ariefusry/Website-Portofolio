@@ -125,7 +125,7 @@ export function Header({ name, email }: { name: string; email: string }) {
     <header className="sticky top-0 z-30">
       <div className="section-x flex justify-center py-[14px]">
         {/* Desktop: satu pil berisi nama, nav, dan kontrol. */}
-        <SpotlightPill className="hidden items-center gap-2 py-1.5 pr-2 pl-5 lg:flex">
+        <SpotlightPill className="nav-pill hidden items-center gap-2 py-1.5 pr-2 pl-5 lg:flex">
           <Link
             href="/"
             className="rounded-full font-display text-[15px] leading-none font-semibold tracking-[-0.01em] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid"
@@ -163,7 +163,7 @@ export function Header({ name, email }: { name: string; email: string }) {
         </SpotlightPill>
 
         {/* Mobile: pil yang sama, isinya nama dan kontrol saja. */}
-        <SpotlightPill className="flex items-center gap-2 py-1.5 pr-2 pl-4 font-body text-[13px] leading-none font-medium lg:hidden">
+        <SpotlightPill className="nav-pill flex items-center gap-2 py-1.5 pr-2 pl-4 font-body text-[13px] leading-none font-medium lg:hidden">
           <Link
             href="/"
             className="rounded-full font-display text-[15px] leading-none font-semibold tracking-[-0.01em] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid"
