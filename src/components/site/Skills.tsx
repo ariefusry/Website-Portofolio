@@ -8,8 +8,16 @@ import { TwoColSection } from "@/components/ui/Primitives";
 import { TechGlyph, techIcon } from "@/components/ui/TechIcons";
 import type { SkillGroup } from "@/lib/types";
 
-/** Kecepatan per baris; sedikit berbeda supaya ketiganya tidak bergerak seragam. */
-const SPEEDS = ["38s", "30s", "24s"];
+/**
+ * Kecepatan per baris; sedikit berbeda supaya ketiganya tidak bergerak seragam.
+ * Baris tengah sengaja berlawanan arah — pergerakan yang saling melawan lebih
+ * enak dilihat daripada tiga baris yang meluncur searah.
+ */
+const ROWS = [
+  { speed: "52s", reverse: false },
+  { speed: "44s", reverse: true },
+  { speed: "36s", reverse: false },
+];
 
 /** Satu skill: logo brand bila ada, plus namanya — di sini nama itu isi utamanya. */
 function SkillPill({ label, accent }: { label: string; accent: boolean }) {
@@ -50,7 +58,15 @@ const MIN_PER_HALF = 14;
  * lompatan. Hanya pass pertama yang terbaca screen reader; sisanya
  * `aria-hidden` supaya nama skill tidak dibacakan berkali-kali.
  */
-function MarqueeRow({ group, speed }: { group: SkillGroup; speed: string }) {
+function MarqueeRow({
+  group,
+  speed,
+  reverse,
+}: {
+  group: SkillGroup;
+  speed: string;
+  reverse: boolean;
+}) {
   const passes = Math.max(1, Math.ceil(MIN_PER_HALF / group.items.length));
 
   const half = (hidden: boolean) =>
@@ -75,7 +91,11 @@ function MarqueeRow({ group, speed }: { group: SkillGroup; speed: string }) {
         style={{ "--speed": speed } as React.CSSProperties}
         // Pita yang tidak bisa dibaca karena terus bergerak adalah pita yang
         // gagal: berhenti saat disentuh kursor atau saat ada fokus di dalamnya.
-        className="flex w-max animate-marquee gap-2.5 py-1 group-hover/row:[animation-play-state:paused] focus-within:[animation-play-state:paused]"
+        className={`flex w-max animate-marquee gap-2.5 py-1 group-hover/row:[animation-play-state:paused] focus-within:[animation-play-state:paused] ${
+          // Arah kiri→kanan cukup lewat animation-direction: keyframe-nya sama,
+          // jadi seam-nya tetap mulus tanpa perlu keyframe kedua.
+          reverse ? "[animation-direction:reverse]" : ""
+        }`}
       >
         <div className="flex gap-2.5">{half(false)}</div>
         <div className="flex gap-2.5" aria-hidden="true">
@@ -113,7 +133,11 @@ export function Skills({ groups }: { groups: SkillGroup[] }) {
                 ))}
               </div>
             ) : (
-              <MarqueeRow group={group} speed={SPEEDS[i % SPEEDS.length]} />
+              <MarqueeRow
+                group={group}
+                speed={ROWS[i % ROWS.length].speed}
+                reverse={ROWS[i % ROWS.length].reverse}
+              />
             )}
           </div>
         ))}
