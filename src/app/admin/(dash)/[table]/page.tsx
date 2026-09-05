@@ -45,7 +45,7 @@ export default async function TablePage({
         </h1>
         <Link
           href={`/admin/${def.key}/new`}
-          className="rounded-lg bg-ink px-4 py-2.5 font-display text-sm font-semibold text-white"
+          className="rounded-lg bg-ink px-4 py-2.5 font-display text-sm font-semibold text-on-ink"
         >
           Tambah entri
         </Link>
@@ -62,7 +62,7 @@ export default async function TablePage({
           <li key={String(row.id)}>
             <Link
               href={`/admin/${def.key}/${String(row.id)}`}
-              className="flex items-center justify-between gap-4 rounded-xl border border-[var(--color-line)] bg-white px-5 py-4 transition-colors hover:border-ink"
+              className="flex items-center justify-between gap-4 rounded-xl border border-[var(--color-line)] bg-surface px-5 py-4 transition-colors hover:border-ink"
             >
               <span className="font-display text-sm font-semibold">
                 {String(row[def.titleField ?? "id"] ?? row.id)}

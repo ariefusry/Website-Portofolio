@@ -13,7 +13,7 @@ export function Placeholder({
 }) {
   const fill = dark
     ? "repeating-linear-gradient(135deg,#23272b 0 6px,#2b3035 6px 12px)"
-    : "repeating-linear-gradient(135deg,#e6e9ec 0 6px,#eef1f3 6px 12px)";
+    : "repeating-linear-gradient(135deg,var(--color-ph-1) 0 6px,var(--color-ph-2) 6px 12px)";
 
   return (
     <div
@@ -22,7 +22,7 @@ export function Placeholder({
       aria-hidden="true"
     >
       {label ? (
-        <span className="font-mono text-[11px] leading-none text-[#7c868f]">
+        <span className="font-mono text-[11px] leading-none text-muted-2">
           {label}
         </span>
       ) : null}

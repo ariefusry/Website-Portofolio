@@ -56,7 +56,7 @@ export function ProjectsIndex({
               aria-current={n === current ? "page" : undefined}
               className={`min-h-[40px] min-w-[40px] rounded-lg border px-3 py-2.5 text-center font-body text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid ${
                 n === current
-                  ? "border-ink bg-ink text-white"
+                  ? "border-ink bg-ink text-on-ink"
                   : "border-[var(--color-line-strong)] hover:border-ink"
               }`}
             >

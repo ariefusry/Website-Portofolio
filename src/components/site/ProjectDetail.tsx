@@ -140,7 +140,7 @@ export function ProjectDetail({ project }: { project: Project }) {
                   href={project.liveUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="rounded-lg bg-ink px-[18px] py-3 font-display text-[13px] leading-none font-semibold text-white transition-transform duration-200 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+                  className="rounded-lg bg-ink px-[18px] py-3 font-display text-[13px] leading-none font-semibold text-on-ink transition-transform duration-200 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid motion-reduce:transition-none motion-reduce:hover:translate-y-0"
                 >
                   {t(UI.visitSite)}
                 </a>

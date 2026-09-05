@@ -90,7 +90,7 @@ function BucketPanel({ bucket }: { bucket: Bucket }) {
         (mis. <code>profile.jpg</code>). Mengunggah nama yang sama akan menimpa.
       </p>
 
-      <label className="mb-4 inline-block cursor-pointer rounded-lg border border-[var(--color-line-strong)] bg-white px-4 py-2.5 font-display text-sm font-semibold">
+      <label className="mb-4 inline-block cursor-pointer rounded-lg border border-[var(--color-line-strong)] bg-surface px-4 py-2.5 font-display text-sm font-semibold">
         {busy ? "Mengunggah…" : "Pilih berkas"}
         <input
           type="file"
@@ -111,7 +111,7 @@ function BucketPanel({ bucket }: { bucket: Bucket }) {
         {items.map((item) => (
           <li
             key={item.name}
-            className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[var(--color-line)] bg-white px-4 py-3"
+            className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[var(--color-line)] bg-surface px-4 py-3"
           >
             <div className="min-w-0">
               <div className="truncate font-mono text-sm">{item.name}</div>
