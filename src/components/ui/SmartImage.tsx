@@ -14,6 +14,7 @@ export function SmartImage({
   sizes = "100vw",
   priority = false,
   fit = "cover",
+  align = "center",
 }: {
   src: string | null;
   alt: string;
@@ -28,6 +29,12 @@ export function SmartImage({
    * transparan yang tidak boleh terpotong di tepinya.
    */
   fit?: "cover" | "contain";
+  /**
+   * Di mana gambar menempel saat wadahnya lebih tinggi darinya. `bottom`
+   * dipakai untuk foto cutout supaya subjeknya berdiri di dasar wadah, bukan
+   * melayang di tengah.
+   */
+  align?: "center" | "bottom";
 }) {
   if (!src) {
     return <Placeholder label={label} dark={dark} className={className} />;
@@ -41,7 +48,9 @@ export function SmartImage({
         fill
         sizes={sizes}
         priority={priority}
-        className={fit === "contain" ? "object-contain" : "object-cover"}
+        className={`${fit === "contain" ? "object-contain" : "object-cover"} ${
+          align === "bottom" ? "object-bottom" : ""
+        }`}
       />
     </div>
   );

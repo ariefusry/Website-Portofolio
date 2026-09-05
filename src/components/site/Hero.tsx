@@ -146,16 +146,26 @@ export function Hero({ profile }: { profile: Profile }) {
         </div>
 
         {/*
-          7. Foto profil. Begitu fotonya ada, bingkainya dilepas dan gambar
-          dirender `contain` — untuk PNG berlatar transparan, kotak bergaris
-          justru mengembalikan persis batas yang ingin dihilangkan. Selama
-          masih kosong, bingkai bergarisnya dipertahankan supaya slotnya
-          terbaca sebagai "unggah di sini", bukan sebagai lubang.
+          7. Foto profil.
+
+          Foto cutout ditambatkan ke dasar section, bukan ikut dipusatkan
+          bersama teks: subjek yang dipotong sebatas pinggang akan terlihat
+          melayang kalau menggantung di tengah ruang kosong. Di dasar section
+          itulah letak garis pemisah dengan About, jadi subjeknya berdiri di
+          garis itu.
+
+          Di layar lebar ia diposisikan absolut terhadap section. Kolom grid
+          keduanya tetap ada dan tetap memesan lebarnya — track `.8fr` tidak
+          hilang meski isinya keluar dari alur — sehingga teksnya tidak
+          merangkak ke bawah foto.
+
+          Selama fotonya belum ada, bingkai bergarisnya dipertahankan supaya
+          slotnya terbaca sebagai "unggah di sini", bukan sebagai lubang.
         */}
         <motion.div
           className={
             profile.photoUrl
-              ? ""
+              ? "-mb-16 md:absolute md:right-[clamp(20px,5vw,48px)] md:bottom-0 md:mb-0 md:w-[36%] md:max-w-[480px]"
               : "overflow-hidden rounded-xl border border-[var(--color-line-strong)]"
           }
           {...(reduced
@@ -172,8 +182,13 @@ export function Hero({ profile }: { profile: Profile }) {
             label={t(UI.photoPlaceholder)}
             priority
             fit="contain"
-            sizes="(max-width: 768px) 100vw, 360px"
-            className="h-[360px] w-full"
+            align="bottom"
+            sizes="(max-width: 768px) 100vw, 480px"
+            className={
+              profile.photoUrl
+                ? "h-[440px] w-full md:h-[min(80vh,720px)]"
+                : "h-[360px] w-full"
+            }
           />
         </motion.div>
       </div>
