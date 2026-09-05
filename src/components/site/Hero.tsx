@@ -75,37 +75,6 @@ export function Hero({ profile }: { profile: Profile }) {
       // jadi lebih tinggi dari layar sebenarnya.
       className="section-x relative flex min-h-[calc(100svh-var(--header-h))] flex-col justify-center overflow-hidden pt-14 pb-16 md:pt-[84px] md:pb-[68px]"
     >
-      {/*
-       * Latar gradien. Dua lapis: satu kain gradien besar yang bergeser pelan,
-       * satu glow yang melayang berlawanan arah. Keduanya `transform` saja —
-       * murah untuk compositor, dan dibekukan oleh aturan reduced-motion global
-       * di globals.css.
-       */}
-      <div
-        aria-hidden="true"
-        style={{ "--speed": "18s" } as React.CSSProperties}
-        className="animate-gradient-pan pointer-events-none absolute -inset-x-[30%] -inset-y-[45%] -z-10 opacity-90 [background:radial-gradient(45%_45%_at_22%_28%,color-mix(in_oklch,var(--color-accent-solid)_26%,transparent)_0%,transparent_70%),radial-gradient(40%_40%_at_78%_18%,color-mix(in_oklch,var(--color-accent-dark)_20%,transparent)_0%,transparent_72%),radial-gradient(50%_50%_at_60%_85%,color-mix(in_oklch,var(--color-accent-bg)_38%,transparent)_0%,transparent_75%)]"
-      />
-
-      {!reduced ? (
-        <motion.div
-          aria-hidden="true"
-          className="pointer-events-none absolute -top-[140px] -left-[90px] -z-10 h-[520px] w-[520px] rounded-full"
-          style={{
-            background:
-              "radial-gradient(circle, color-mix(in oklch, var(--color-accent-solid) 30%, transparent) 0%, transparent 68%)",
-          }}
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1, x: [0, 26, 0], y: [0, -18, 0] }}
-          transition={{
-            opacity: { duration: 1.6, ease: "easeOut" },
-            scale: { duration: 1.6, ease: "easeOut" },
-            x: { duration: 14, repeat: Infinity, ease: "easeInOut" },
-            y: { duration: 14, repeat: Infinity, ease: "easeInOut" },
-          }}
-        />
-      ) : null}
-
       <div className="grid items-center gap-10 md:grid-cols-[1.35fr_.8fr] md:gap-14">
         <div className="relative">
           {/* 2. Status badge */}
