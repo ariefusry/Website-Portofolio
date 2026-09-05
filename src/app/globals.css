@@ -262,26 +262,6 @@
   scroll-margin-top: calc(var(--header-h) + 12px);
 }
 
-/*
- * Kursor mengetik pada judul hero. Lebarnya dalam em supaya ikut skala
- * clamp() judulnya, bukan patokan piksel tetap.
- */
-.typewriter-caret {
-  display: inline-block;
-  width: 0.055em;
-  height: 0.78em;
-  margin-left: 0.06em;
-  vertical-align: -0.04em;
-  background: currentColor;
-  animation: caret-blink 1s steps(1) infinite;
-}
-
-@keyframes caret-blink {
-  50% {
-    opacity: 0;
-  }
-}
-
 /* Elemen yang dianimasikan mulai dari transparan; JS/CSS fallback menaikkannya. */
 .hero-anim {
   opacity: 0;

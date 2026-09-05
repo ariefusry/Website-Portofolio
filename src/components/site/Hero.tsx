@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { animate, motion, useReducedMotion } from "framer-motion";
+import { useEffect, useState } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import { useLang } from "@/lib/lang-context";
 import { UI } from "@/lib/i18n";
 import { SmartImage } from "@/components/ui/SmartImage";
@@ -40,49 +40,6 @@ function WordReveal({
           </span>
         </span>
       ))}
-    </>
-  );
-}
-
-/**
- * Mengetik ulang judul saat teksnya berganti — dipakai untuk pergantian bahasa.
- *
- * Sengaja diam saat mount pertama: di situ WordReveal yang bekerja, dan tanpa
- * penjaga ini judulnya akan mengetik ulang sendiri begitu animasi masuk selesai.
- *
- * Yang diketik `aria-hidden`, dan teks utuhnya tetap ada sebagai sr-only —
- * kalau tidak, screen reader membacakan judul yang setengah jadi.
- */
-function Typewriter({ text, enabled }: { text: string; enabled: boolean }) {
-  // null berarti "tampilkan utuh"; angka berarti sedang mengetik.
-  const [count, setCount] = useState<number | null>(null);
-  const mounted = useRef(false);
-
-  useEffect(() => {
-    if (!mounted.current) {
-      mounted.current = true;
-      return;
-    }
-    if (!enabled) return;
-
-    // animate() dari framer-motion, bukan setInterval: setState dipanggil dari
-    // callback animasi, bukan langsung di badan effect.
-    const controls = animate(0, text.length, {
-      duration: Math.min(1.1, text.length * 0.016),
-      ease: "linear",
-      onUpdate: (v) => setCount(Math.round(v)),
-      onComplete: () => setCount(null),
-    });
-    return () => controls.stop();
-  }, [text, enabled]);
-
-  const typing = count !== null;
-
-  return (
-    <>
-      <span aria-hidden="true">{typing ? text.slice(0, count) : text}</span>
-      {typing ? <span aria-hidden="true" className="typewriter-caret" /> : null}
-      <span className="sr-only">{text}</span>
     </>
   );
 }
@@ -151,18 +108,14 @@ export function Hero({ profile }: { profile: Profile }) {
             {t(profile.badge)}
           </motion.div>
 
-          {/*
-            4. H1: reveal per kata saat halaman dibuka, lalu diketik ulang tiap
-            bahasa diganti. Dua animasi berbeda karena momennya berbeda —
-            yang pertama memperkenalkan halaman, yang kedua menunjukkan
-            bahwa teksnya baru saja berubah.
-          */}
+          {/* 4. H1 reveal per kata */}
           <h1 className="mt-0 mb-6 max-w-[640px] font-display font-semibold tracking-[-0.035em] text-pretty text-[clamp(34px,7vw,60px)] leading-[1.04]">
-            {!reduced && !introDone ? (
-              <WordReveal key={lang} text={t(profile.heroTitle)} animateIn />
-            ) : (
-              <Typewriter text={t(profile.heroTitle)} enabled={!reduced} />
-            )}
+            <WordReveal
+              // Re-split saat bahasa berganti; animasinya sendiri hanya jalan sekali.
+              key={lang}
+              text={t(profile.heroTitle)}
+              animateIn={!reduced && !introDone}
+            />
           </h1>
 
           {/* 5. Subhead */}
