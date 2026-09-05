@@ -123,9 +123,9 @@
 }
 
 :root {
-  /* Tinggi header sticky (terukur 71px setelah tombol tema) — dipakai untuk
-     scroll-margin section dan tinggi minimum hero. */
-  --header-h: 71px;
+  /* Tinggi band header sticky (terukur 80px setelah nav jadi pil melayang) —
+     dipakai untuk scroll-margin section dan tinggi minimum hero. */
+  --header-h: 80px;
   color-scheme: light;
 }
 

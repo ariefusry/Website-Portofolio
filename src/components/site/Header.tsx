@@ -7,6 +7,7 @@ import { useLang } from "@/lib/lang-context";
 import { UI } from "@/lib/i18n";
 import { useTheme } from "@/lib/theme-context";
 import { Moon, Sun } from "lucide-react";
+import { SpotlightNav, SpotlightNavItem } from "@/components/ui/spotlight-navbar";
 
 const NAV = [
   { id: "about", label: UI.nav.about },
@@ -105,34 +106,44 @@ export function Header({ name, email }: { name: string; email: string }) {
   );
 
   return (
-    <header className="sticky top-0 z-30 border-b border-[var(--color-line-soft)] bg-surface/70 backdrop-blur-md">
-      <div className="section-x flex items-center justify-between py-[18px]">
+    /*
+     * Header melayang: bandnya tetap sticky dan tetap memakan tinggi di alur
+     * dokumen — `--header-h` dan scroll-margin tiap section bergantung padanya —
+     * tapi latarnya transparan, sehingga yang terlihat mengambang hanyalah
+     * pil-pilnya dan konten lewat di belakangnya.
+     */
+    <header className="sticky top-0 z-30">
+      <div className="section-x flex items-center justify-between gap-4 py-[14px]">
         <Link
           href="/"
-          className="rounded font-display text-[15px] leading-none font-semibold tracking-[-0.01em] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid"
+          className="rounded-full border border-[var(--color-line)] bg-surface/70 px-4 py-2.5 font-display text-[15px] leading-none font-semibold tracking-[-0.01em] shadow-[0_8px_24px_rgba(0,0,0,0.10)] backdrop-blur-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid"
         >
           {name}
         </Link>
 
-        <nav className="hidden items-center gap-7 font-body text-[13px] leading-none font-medium text-muted lg:flex">
+        <SpotlightNav className="hidden px-2 font-body text-[13px] leading-none font-medium text-muted lg:block">
           {items.map((n) => (
-            <Link
-              key={n.id}
-              href={hrefFor(n.id)}
-              aria-current={active === n.id ? "true" : undefined}
-              className={`rounded transition-colors hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid ${
-                active === n.id ? "text-ink" : ""
-              }`}
-            >
-              {t(n.label)}
-            </Link>
+            <SpotlightNavItem key={n.id} active={active === n.id}>
+              <Link
+                href={hrefFor(n.id)}
+                aria-current={active === n.id ? "true" : undefined}
+                className={`rounded-full px-4 py-3.5 transition-colors hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid ${
+                  active === n.id ? "text-ink" : ""
+                }`}
+              >
+                {t(n.label)}
+              </Link>
+            </SpotlightNavItem>
           ))}
+        </SpotlightNav>
+
+        <div className="hidden items-center gap-3 rounded-full border border-[var(--color-line)] bg-surface/70 px-3 py-2 font-body text-[13px] leading-none font-medium shadow-[0_8px_24px_rgba(0,0,0,0.10)] backdrop-blur-md lg:flex">
           {langToggle}
           {themeToggle}
           {hireBtn}
-        </nav>
+        </div>
 
-        <div className="flex items-center gap-3 font-body text-[13px] leading-none font-medium lg:hidden">
+        <div className="flex items-center gap-3 rounded-full border border-[var(--color-line)] bg-surface/70 px-3 py-2 font-body text-[13px] leading-none font-medium shadow-[0_8px_24px_rgba(0,0,0,0.10)] backdrop-blur-md lg:hidden">
           {langToggle}
           {themeToggle}
           <button
@@ -140,7 +151,7 @@ export function Header({ name, email }: { name: string; email: string }) {
             onClick={() => setOpen(true)}
             aria-label={t(UI.menu)}
             aria-expanded={open}
-            className="rounded-lg border border-[var(--color-line-strong)] px-3 py-2 font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid"
+            className="cursor-pointer rounded-full px-2 py-1 font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid"
           >
             {t(UI.menu)}
           </button>
