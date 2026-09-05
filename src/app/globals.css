@@ -8,51 +8,60 @@
  * tema mana yang aktif — cukup memakai nama tokennya.
  */
 @theme {
-  --color-page: #f2f4f6;
-  --color-surface: #ffffff;
-  --color-ink: #14171a;
-  --color-body: #2b333b;
-  --color-body-2: #4a545f;
   /*
-   * Nilai desain aslinya (#6b757f dan #8b949c) masing-masing 4.48:1 dan
-   * 2.8:1 di atas latar halaman — keduanya meleset dari AA 4.5:1, padahal
-   * dipakai untuk teks 12-13px seperti eyebrow section. Dipekatkan seperlunya,
-   * hierarki muted > muted-2 tetap terjaga.
+   * Palet monokrom bernuansa hangat: Porcelain White #f1ece6 sampai Onyx
+   * Black #1f1d1d. Tidak ada rona aksen sama sekali — hierarki dibangun murni
+   * dari terang-gelap. Abunya dihangatkan (bukan abu netral) supaya menyatu
+   * dengan Porcelain.
    */
-  --color-muted: #5c656f;
-  --color-muted-2: #68717b;
-  --color-dark-bg: #14171a;
-  --color-dark-text: #f2f4f6;
-  --color-dark-2: #b3bcc4;
+  --color-page: #f1ece6;
+  /* Sedikit di atas Porcelain supaya kartu tetap terbaca sebagai kartu. */
+  --color-surface: #fbf9f6;
+  --color-ink: #1f1d1d;
+  --color-body: #3a3636;
+  --color-body-2: #524a48;
+  /* Keduanya diukur >= AA 4.5:1 di atas page maupun surface. */
+  --color-muted: #655d59;
+  --color-muted-2: #726964;
+  --color-dark-bg: #1f1d1d;
+  --color-dark-text: #f1ece6;
+  --color-dark-2: #b5ada8;
 
   /*
    * Warna teks di atas permukaan `ink` dan `accent-strong`. Dulu keduanya
    * ditulis `text-white`; itu pecah di tema gelap, karena di sana `ink` justru
    * hampir putih. Dengan token ini pasangannya ikut berbalik sendiri.
    */
-  --color-on-ink: #f2f4f6;
-  --color-on-accent-strong: #ffffff;
+  --color-on-ink: #f1ece6;
+  --color-on-accent-strong: #f1ece6;
 
-  --color-accent-bg: oklch(0.93 0.05 45);
-  --color-accent-ink: oklch(0.42 0.09 45);
-  --color-accent-solid: oklch(0.62 0.14 45);
-  --color-accent-chip: oklch(0.95 0.03 45);
-  --color-accent-border: oklch(0.88 0.05 45);
-  --color-accent-dark: oklch(0.72 0.11 45);
   /*
-   * Versi pekat untuk tombol berisi teks: aksen standar hanya 3.83:1 dengan
-   * teks putih — gagal AA 4.5:1 untuk teks 14px. Yang ini 5.9:1.
+   * Nama token tetap `accent-*` supaya komponen tidak perlu diubah, tapi
+   * isinya kini anak-anak tangga netral, bukan warna.
    */
-  --color-accent-strong: oklch(0.52 0.15 45);
+  --color-accent-bg: #e2ddd6;
+  --color-accent-ink: #3a3636;
+  --color-accent-solid: #1f1d1d;
+  --color-accent-chip: #e8e3dc;
+  --color-accent-border: #d5cfc7;
+  /* Dipakai di atas footer gelap. */
+  --color-accent-dark: #b5ada8;
+  /*
+   * Isian tombol sekunder. Satu anak tangga di atas Onyx — 2.24:1 terhadap
+   * tombol primer, cukup untuk terbaca sebagai dua tombol berbeda tanpa
+   * bantuan warna, dan 6.37:1 dengan teksnya sendiri.
+   */
+  --color-accent-strong: #5c534f;
 
-  --color-line: rgba(0, 0, 0, 0.09);
-  --color-line-soft: rgba(0, 0, 0, 0.08);
-  --color-line-strong: rgba(0, 0, 0, 0.12);
-  --color-line-dark: rgba(255, 255, 255, 0.14);
+  /* Garis bernuansa Onyx, bukan hitam netral. */
+  --color-line: rgba(31, 29, 29, 0.1);
+  --color-line-soft: rgba(31, 29, 29, 0.09);
+  --color-line-strong: rgba(31, 29, 29, 0.14);
+  --color-line-dark: rgba(241, 236, 230, 0.14);
 
   /* Garis placeholder gambar; ikut berganti supaya tidak menyala di tema gelap. */
-  --color-ph-1: #e6e9ec;
-  --color-ph-2: #eef1f3;
+  --color-ph-1: #e4ddd4;
+  --color-ph-2: #ede7df;
 
   --font-display: var(--font-instrument-sans), system-ui, sans-serif;
   --font-body: var(--font-manrope), system-ui, sans-serif;
@@ -150,76 +159,82 @@
   :root:not([data-theme="light"]) {
     color-scheme: dark;
 
-    --color-page: #0f1216;
-    --color-surface: #171b21;
-    --color-ink: #eef1f4;
-    --color-body: #ced5dc;
-    --color-body-2: #a7b0b9;
-    --color-muted: #a7b0b9;
-    --color-muted-2: #8f98a1;
+    /* Onyx dipakai untuk kartu; halaman sedikit lebih pekat agar kartunya naik. */
+    --color-page: #171515;
+    --color-surface: #232020;
+    --color-ink: #f1ece6;
+    --color-body: #dad3cb;
+    --color-body-2: #b5ada6;
+    --color-muted: #a29993;
+    --color-muted-2: #948b84;
 
     /* Footer tetap satu blok tersendiri: sedikit lebih pekat dari halaman. */
-    --color-dark-bg: #090b0e;
-    --color-dark-text: #eef1f4;
-    --color-dark-2: #98a1aa;
+    --color-dark-bg: #0f0e0e;
+    --color-dark-text: #f1ece6;
+    --color-dark-2: #a9a19b;
 
-    --color-on-ink: #0f1216;
-    --color-on-accent-strong: #1b1206;
+    --color-on-ink: #171515;
+    --color-on-accent-strong: #171515;
 
-    --color-accent-bg: oklch(0.34 0.06 45);
-    --color-accent-ink: oklch(0.82 0.1 45);
-    --color-accent-solid: oklch(0.68 0.14 45);
-    --color-accent-chip: oklch(0.3 0.045 45);
-    --color-accent-border: oklch(0.42 0.07 45);
-    --color-accent-dark: oklch(0.78 0.12 45);
-    /* Dibalik: di latar gelap tombol isi harus terang, teksnya yang gelap. */
-    --color-accent-strong: oklch(0.78 0.14 55);
+    /* Tangga netral yang sama, dibalik. */
+    --color-accent-bg: #2b2727;
+    --color-accent-ink: #dad3cb;
+    --color-accent-solid: #f1ece6;
+    --color-accent-chip: #262222;
+    --color-accent-border: #3a3535;
+    --color-accent-dark: #a9a19b;
+    /* Isian terang, teks gelap — 7:1, dan 2.21:1 terhadap tombol primer. */
+    --color-accent-strong: #a89f98;
 
-    --color-line: rgba(255, 255, 255, 0.1);
-    --color-line-soft: rgba(255, 255, 255, 0.08);
-    --color-line-strong: rgba(255, 255, 255, 0.16);
-    --color-line-dark: rgba(255, 255, 255, 0.12);
+    --color-line: rgba(241, 236, 230, 0.1);
+    --color-line-soft: rgba(241, 236, 230, 0.08);
+    --color-line-strong: rgba(241, 236, 230, 0.16);
+    --color-line-dark: rgba(241, 236, 230, 0.12);
 
-    --color-ph-1: #1c2128;
-    --color-ph-2: #22282f;
+    --color-ph-1: #262222;
+    --color-ph-2: #2e2929;
+
   }
 }
 
 :root[data-theme="dark"] {
   color-scheme: dark;
 
-  --color-page: #0f1216;
-  --color-surface: #171b21;
-  --color-ink: #eef1f4;
-  --color-body: #ced5dc;
-  --color-body-2: #a7b0b9;
-  --color-muted: #a7b0b9;
-  --color-muted-2: #8f98a1;
+  /* Onyx dipakai untuk kartu; halaman sedikit lebih pekat agar kartunya naik. */
+  --color-page: #171515;
+  --color-surface: #232020;
+  --color-ink: #f1ece6;
+  --color-body: #dad3cb;
+  --color-body-2: #b5ada6;
+  --color-muted: #a29993;
+  --color-muted-2: #948b84;
 
   /* Footer tetap satu blok tersendiri: sedikit lebih pekat dari halaman. */
-  --color-dark-bg: #090b0e;
-  --color-dark-text: #eef1f4;
-  --color-dark-2: #98a1aa;
+  --color-dark-bg: #0f0e0e;
+  --color-dark-text: #f1ece6;
+  --color-dark-2: #a9a19b;
 
-  --color-on-ink: #0f1216;
-  --color-on-accent-strong: #1b1206;
+  --color-on-ink: #171515;
+  --color-on-accent-strong: #171515;
 
-  --color-accent-bg: oklch(0.34 0.06 45);
-  --color-accent-ink: oklch(0.82 0.1 45);
-  --color-accent-solid: oklch(0.68 0.14 45);
-  --color-accent-chip: oklch(0.3 0.045 45);
-  --color-accent-border: oklch(0.42 0.07 45);
-  --color-accent-dark: oklch(0.78 0.12 45);
-  /* Dibalik: di latar gelap tombol isi harus terang, teksnya yang gelap. */
-  --color-accent-strong: oklch(0.78 0.14 55);
+  /* Tangga netral yang sama, dibalik. */
+  --color-accent-bg: #2b2727;
+  --color-accent-ink: #dad3cb;
+  --color-accent-solid: #f1ece6;
+  --color-accent-chip: #262222;
+  --color-accent-border: #3a3535;
+  --color-accent-dark: #a9a19b;
+  /* Isian terang, teks gelap — 7:1, dan 2.21:1 terhadap tombol primer. */
+  --color-accent-strong: #a89f98;
 
-  --color-line: rgba(255, 255, 255, 0.1);
-  --color-line-soft: rgba(255, 255, 255, 0.08);
-  --color-line-strong: rgba(255, 255, 255, 0.16);
-  --color-line-dark: rgba(255, 255, 255, 0.12);
+  --color-line: rgba(241, 236, 230, 0.1);
+  --color-line-soft: rgba(241, 236, 230, 0.08);
+  --color-line-strong: rgba(241, 236, 230, 0.16);
+  --color-line-dark: rgba(241, 236, 230, 0.12);
 
-  --color-ph-1: #1c2128;
-  --color-ph-2: #22282f;
+  --color-ph-1: #262222;
+  --color-ph-2: #2e2929;
+
 }
 
 /*
