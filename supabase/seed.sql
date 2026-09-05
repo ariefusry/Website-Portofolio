@@ -163,3 +163,9 @@ on conflict (id) do update set
   name_en = excluded.name_en, name_id = excluded.name_id,
   items = excluded.items, accent = excluded.accent, sort = excluded.sort;
 
+
+-- Tautan repository. Hanya repo yang publik yang dipasang: repo privat akan
+-- tampil sebagai 404 bagi pengunjung, yang lebih buruk daripada tanpa tautan.
+update public.projects set github_url = 'https://github.com/ariefusry/INDETA'        where slug = 'indeta';
+update public.projects set github_url = 'https://github.com/ghazyfadhal/sugih'       where slug = 'sugih';
+update public.projects set github_url = 'https://github.com/MaNdeZZZ/FlexiTask_Mobile' where slug = 'flexitask';
