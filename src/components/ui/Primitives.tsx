@@ -42,7 +42,7 @@ export function TagPill({
 }) {
   const tone = accent
     ? "bg-accent-bg text-accent-ink"
-    : "bg-black/[0.06] text-[#5b6570]";
+    : "bg-[var(--color-line)] text-muted";
 
   return (
     <span

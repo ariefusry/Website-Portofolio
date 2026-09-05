@@ -6,7 +6,7 @@ import { saveRecord, type ActionState } from "@/lib/admin/actions";
 import type { Field, TableDef } from "@/lib/admin/schema";
 
 const INPUT =
-  "w-full rounded-lg border border-[var(--color-line-strong)] bg-white px-3 py-2 font-body text-sm outline-none focus:border-ink";
+  "w-full rounded-lg border border-[var(--color-line-strong)] bg-surface px-3 py-2 font-body text-sm outline-none focus:border-ink";
 
 function TextControl({
   field,
@@ -119,7 +119,7 @@ function SubmitButton() {
     <button
       type="submit"
       disabled={pending}
-      className="rounded-lg bg-ink px-5 py-2.5 font-display text-sm font-semibold text-white disabled:opacity-60"
+      className="rounded-lg bg-ink px-5 py-2.5 font-display text-sm font-semibold text-on-ink disabled:opacity-60"
     >
       {pending ? "Menyimpan…" : "Simpan"}
     </button>

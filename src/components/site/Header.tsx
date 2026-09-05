@@ -5,6 +5,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useLang } from "@/lib/lang-context";
 import { UI } from "@/lib/i18n";
+import { useTheme } from "@/lib/theme-context";
+import { Moon, Sun } from "lucide-react";
 
 const NAV = [
   { id: "about", label: UI.nav.about },
@@ -15,6 +17,7 @@ const NAV = [
 
 export function Header({ name, email }: { name: string; email: string }) {
   const { lang, setLang, t } = useLang();
+  const { theme, toggle: toggleTheme } = useTheme();
   const pathname = usePathname();
   const onHome = pathname === "/";
   const [observed, setObserved] = useState<string>("");
@@ -60,32 +63,49 @@ export function Header({ name, email }: { name: string; email: string }) {
   const other = lang === "EN" ? "ID" : "EN";
 
   const langToggle = (
-    <div className="flex gap-0.5 rounded-full bg-black/[0.06] p-[3px] font-mono text-[11px] leading-none font-semibold">
-      <span className="rounded-full bg-ink px-[9px] py-[5px] text-white">
+    <div className="flex gap-0.5 rounded-full bg-[var(--color-line)] p-[3px] font-mono text-[11px] leading-none font-semibold">
+      <span className="rounded-full bg-ink px-[9px] py-[5px] text-on-ink">
         {lang}
       </span>
       <button
         type="button"
         onClick={() => setLang(other)}
         aria-label={`${t(UI.switchLang)}: ${other}`}
-        className="cursor-pointer rounded-full px-[9px] py-[5px] text-[#5b6570] transition-colors hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid"
+        className="cursor-pointer rounded-full px-[9px] py-[5px] text-muted transition-colors hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid"
       >
         {other}
       </button>
     </div>
   );
 
+  // Ikon menunjukkan tema yang akan dituju, bukan yang sedang aktif — itu yang
+  // dicari orang saat menekannya. Label-nya juga menyebut tujuan.
+  const themeToggle = (
+    <button
+      type="button"
+      onClick={toggleTheme}
+      aria-label={t(theme === "dark" ? UI.themeToLight : UI.themeToDark)}
+      className="cursor-pointer rounded-full border border-[var(--color-line-strong)] p-2 text-muted transition-colors hover:border-ink hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid"
+    >
+      {theme === "dark" ? (
+        <Sun aria-hidden="true" className="h-4 w-4" />
+      ) : (
+        <Moon aria-hidden="true" className="h-4 w-4" />
+      )}
+    </button>
+  );
+
   const hireBtn = (
     <a
       href={`mailto:${email}`}
-      className="rounded-full bg-ink px-[15px] py-2 font-semibold text-white transition-transform duration-200 hover:-translate-y-[1px] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid"
+      className="rounded-full bg-ink px-[15px] py-2 font-semibold text-on-ink transition-transform duration-200 hover:-translate-y-[1px] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid"
     >
       {t(UI.hire)}
     </a>
   );
 
   return (
-    <header className="sticky top-0 z-30 border-b border-[var(--color-line-soft)] bg-white/70 backdrop-blur-md">
+    <header className="sticky top-0 z-30 border-b border-[var(--color-line-soft)] bg-surface/70 backdrop-blur-md">
       <div className="section-x flex items-center justify-between py-[18px]">
         <Link
           href="/"
@@ -94,7 +114,7 @@ export function Header({ name, email }: { name: string; email: string }) {
           {name}
         </Link>
 
-        <nav className="hidden items-center gap-7 font-body text-[13px] leading-none font-medium text-[#5b6570] lg:flex">
+        <nav className="hidden items-center gap-7 font-body text-[13px] leading-none font-medium text-muted lg:flex">
           {items.map((n) => (
             <Link
               key={n.id}
@@ -108,11 +128,13 @@ export function Header({ name, email }: { name: string; email: string }) {
             </Link>
           ))}
           {langToggle}
+          {themeToggle}
           {hireBtn}
         </nav>
 
         <div className="flex items-center gap-3 font-body text-[13px] leading-none font-medium lg:hidden">
           {langToggle}
+          {themeToggle}
           <button
             type="button"
             onClick={() => setOpen(true)}
@@ -154,7 +176,7 @@ export function Header({ name, email }: { name: string; email: string }) {
             <a
               href={`mailto:${email}`}
               onClick={() => setOpen(false)}
-              className="mt-6 rounded-lg bg-ink px-5 py-4 text-center font-display font-semibold text-white"
+              className="mt-6 rounded-lg bg-ink px-5 py-4 text-center font-display font-semibold text-on-ink"
             >
               {t(UI.hire)}
             </a>

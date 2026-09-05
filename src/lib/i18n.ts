@@ -57,6 +57,8 @@ export const UI = {
   screenshotOf: { en: "screenshot", id: "screenshot" },
   adminDashboard: { en: "admin dashboard", id: "dashboard admin" },
   switchLang: { en: "Switch language", id: "Ganti bahasa" },
+  themeToDark: { en: "Switch to dark theme", id: "Ganti ke tema gelap" },
+  themeToLight: { en: "Switch to light theme", id: "Ganti ke tema terang" },
   skillsRegion: { en: "Skills and tools", id: "Skill dan tools" },
   skillsShowAll: { en: "Show all", id: "Tampilkan semua" },
   skillsShowMarquee: { en: "Back to the reel", id: "Kembali ke pita" },

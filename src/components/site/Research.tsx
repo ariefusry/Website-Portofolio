@@ -16,7 +16,7 @@ export function Research({ research }: { research: ResearchType }) {
     >
       <div className="grid items-start gap-8 lg:grid-cols-[1.15fr_.85fr]">
         <div>
-          <div className="mb-4 inline-flex rounded-[5px] bg-accent-solid px-2.5 py-[5px] font-mono text-[10.5px] leading-none font-semibold text-white">
+          <div className="mb-4 inline-flex rounded-[5px] bg-accent-strong px-2.5 py-[5px] font-mono text-[10.5px] leading-none font-semibold text-on-accent-strong">
             {research.badge}
           </div>
           <h3 className="mt-0 mb-3 font-display text-2xl leading-[1.25] font-semibold tracking-[-0.02em]">

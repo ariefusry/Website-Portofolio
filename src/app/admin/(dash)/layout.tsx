@@ -43,7 +43,7 @@ export default async function DashboardLayout({
 
   return (
     <div className="min-h-screen bg-page md:grid md:grid-cols-[240px_1fr]">
-      <aside className="border-b border-[var(--color-line)] bg-white p-6 md:sticky md:top-0 md:h-screen md:border-r md:border-b-0 md:overflow-y-auto">
+      <aside className="border-b border-[var(--color-line)] bg-surface p-6 md:sticky md:top-0 md:h-screen md:border-r md:border-b-0 md:overflow-y-auto">
         <Link href="/admin" className="font-display text-base font-semibold">
           Admin
         </Link>

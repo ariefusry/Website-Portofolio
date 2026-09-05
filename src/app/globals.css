@@ -1,17 +1,37 @@
 @import "tailwindcss";
 
-/* Design token dari README §Design Tokens — satu-satunya tempat nilai mentah hidup. */
+/*
+ * Design token dari README §Design Tokens — satu-satunya tempat nilai mentah hidup.
+ *
+ * Nilai di sini adalah tema terang. Tema gelap menimpa variabel yang sama di
+ * blok `:root[data-theme=...]` di bawah, jadi seluruh komponen tidak perlu tahu
+ * tema mana yang aktif — cukup memakai nama tokennya.
+ */
 @theme {
   --color-page: #f2f4f6;
   --color-surface: #ffffff;
   --color-ink: #14171a;
   --color-body: #2b333b;
   --color-body-2: #4a545f;
-  --color-muted: #6b757f;
-  --color-muted-2: #8b949c;
+  /*
+   * Nilai desain aslinya (#6b757f dan #8b949c) masing-masing 4.48:1 dan
+   * 2.8:1 di atas latar halaman — keduanya meleset dari AA 4.5:1, padahal
+   * dipakai untuk teks 12-13px seperti eyebrow section. Dipekatkan seperlunya,
+   * hierarki muted > muted-2 tetap terjaga.
+   */
+  --color-muted: #5c656f;
+  --color-muted-2: #68717b;
   --color-dark-bg: #14171a;
   --color-dark-text: #f2f4f6;
   --color-dark-2: #b3bcc4;
+
+  /*
+   * Warna teks di atas permukaan `ink` dan `accent-strong`. Dulu keduanya
+   * ditulis `text-white`; itu pecah di tema gelap, karena di sana `ink` justru
+   * hampir putih. Dengan token ini pasangannya ikut berbalik sendiri.
+   */
+  --color-on-ink: #f2f4f6;
+  --color-on-accent-strong: #ffffff;
 
   --color-accent-bg: oklch(0.93 0.05 45);
   --color-accent-ink: oklch(0.42 0.09 45);
@@ -29,6 +49,10 @@
   --color-line-soft: rgba(0, 0, 0, 0.08);
   --color-line-strong: rgba(0, 0, 0, 0.12);
   --color-line-dark: rgba(255, 255, 255, 0.14);
+
+  /* Garis placeholder gambar; ikut berganti supaya tidak menyala di tema gelap. */
+  --color-ph-1: #e6e9ec;
+  --color-ph-2: #eef1f3;
 
   --font-display: var(--font-instrument-sans), system-ui, sans-serif;
   --font-body: var(--font-manrope), system-ui, sans-serif;
@@ -63,6 +87,17 @@
   animation: marquee var(--speed) linear infinite;
 }
 
+/* Gradien hero yang bergeser pelan. */
+@utility animate-gradient-pan {
+  animation: gradient-pan var(--speed) ease-in-out infinite alternate;
+}
+
+@keyframes gradient-pan {
+  to {
+    transform: translate3d(6%, -4%, 0) scale(1.15);
+  }
+}
+
 @keyframes marquee {
   to {
     transform: translateX(-50%);
@@ -93,9 +128,98 @@
 }
 
 :root {
-  /* Tinggi header sticky (terukur 66px) — dipakai untuk scroll-margin section. */
-  --header-h: 66px;
+  /* Tinggi header sticky (terukur 71px setelah tombol tema) — dipakai untuk
+     scroll-margin section dan tinggi minimum hero. */
+  --header-h: 71px;
   color-scheme: light;
+}
+
+/*
+ * Tema gelap. Ditulis dua kali dengan sengaja:
+ *
+ * - `@media (prefers-color-scheme: dark)` untuk pengunjung yang belum pernah
+ *   menekan tombol tema; `:not([data-theme="light"])` supaya pilihan terang
+ *   yang eksplisit tetap menang atas preferensi sistem.
+ * - `[data-theme="dark"]` untuk pilihan eksplisit, yang harus menang di kedua
+ *   arah — termasuk saat sistemnya terang.
+ *
+ * Keduanya hanya mendefinisikan ulang variabel; tidak ada satu pun komponen
+ * yang perlu varian `dark:`.
+ */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    --color-page: #0f1216;
+    --color-surface: #171b21;
+    --color-ink: #eef1f4;
+    --color-body: #ced5dc;
+    --color-body-2: #a7b0b9;
+    --color-muted: #a7b0b9;
+    --color-muted-2: #8f98a1;
+
+    /* Footer tetap satu blok tersendiri: sedikit lebih pekat dari halaman. */
+    --color-dark-bg: #090b0e;
+    --color-dark-text: #eef1f4;
+    --color-dark-2: #98a1aa;
+
+    --color-on-ink: #0f1216;
+    --color-on-accent-strong: #1b1206;
+
+    --color-accent-bg: oklch(0.34 0.06 45);
+    --color-accent-ink: oklch(0.82 0.1 45);
+    --color-accent-solid: oklch(0.68 0.14 45);
+    --color-accent-chip: oklch(0.3 0.045 45);
+    --color-accent-border: oklch(0.42 0.07 45);
+    --color-accent-dark: oklch(0.78 0.12 45);
+    /* Dibalik: di latar gelap tombol isi harus terang, teksnya yang gelap. */
+    --color-accent-strong: oklch(0.78 0.14 55);
+
+    --color-line: rgba(255, 255, 255, 0.1);
+    --color-line-soft: rgba(255, 255, 255, 0.08);
+    --color-line-strong: rgba(255, 255, 255, 0.16);
+    --color-line-dark: rgba(255, 255, 255, 0.12);
+
+    --color-ph-1: #1c2128;
+    --color-ph-2: #22282f;
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --color-page: #0f1216;
+  --color-surface: #171b21;
+  --color-ink: #eef1f4;
+  --color-body: #ced5dc;
+  --color-body-2: #a7b0b9;
+  --color-muted: #a7b0b9;
+  --color-muted-2: #8f98a1;
+
+  /* Footer tetap satu blok tersendiri: sedikit lebih pekat dari halaman. */
+  --color-dark-bg: #090b0e;
+  --color-dark-text: #eef1f4;
+  --color-dark-2: #98a1aa;
+
+  --color-on-ink: #0f1216;
+  --color-on-accent-strong: #1b1206;
+
+  --color-accent-bg: oklch(0.34 0.06 45);
+  --color-accent-ink: oklch(0.82 0.1 45);
+  --color-accent-solid: oklch(0.68 0.14 45);
+  --color-accent-chip: oklch(0.3 0.045 45);
+  --color-accent-border: oklch(0.42 0.07 45);
+  --color-accent-dark: oklch(0.78 0.12 45);
+  /* Dibalik: di latar gelap tombol isi harus terang, teksnya yang gelap. */
+  --color-accent-strong: oklch(0.78 0.14 55);
+
+  --color-line: rgba(255, 255, 255, 0.1);
+  --color-line-soft: rgba(255, 255, 255, 0.08);
+  --color-line-strong: rgba(255, 255, 255, 0.16);
+  --color-line-dark: rgba(255, 255, 255, 0.12);
+
+  --color-ph-1: #1c2128;
+  --color-ph-2: #22282f;
 }
 
 /*
@@ -129,29 +253,6 @@
 /* Target scroll nav supaya judul tidak tertutup header sticky. */
 .scroll-anchor {
   scroll-margin-top: calc(var(--header-h) + 12px);
-}
-
-/*
- * Stat strip: 2 kolom di mobile, 4 di desktop. Pembatas hanya di antara sel,
- * tidak pernah di tepi grid — lebih mudah dibaca sebagai aturan nth-child.
- */
-.stat-cell {
-  border-color: var(--color-line-soft);
-}
-.stat-cell:nth-child(odd) {
-  border-inline-end: 1px solid var(--color-line-soft);
-}
-.stat-cell:not(:nth-last-child(-n + 2)) {
-  border-block-end: 1px solid var(--color-line-soft);
-}
-@media (width >= 64rem) {
-  .stat-cell:nth-child(n) {
-    border-block-end: 0;
-    border-inline-end: 1px solid var(--color-line-soft);
-  }
-  .stat-cell:last-child {
-    border-inline-end: 0;
-  }
 }
 
 /* Elemen yang dianimasikan mulai dari transparan; JS/CSS fallback menaikkannya. */

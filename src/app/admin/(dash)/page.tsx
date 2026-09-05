@@ -28,7 +28,7 @@ export default function AdminHome() {
           <Link
             key={card.href}
             href={card.href}
-            className="rounded-xl border border-[var(--color-line)] bg-white p-5 transition-colors hover:border-ink"
+            className="rounded-xl border border-[var(--color-line)] bg-surface p-5 transition-colors hover:border-ink"
           >
             <div className="font-display text-base font-semibold">{card.label}</div>
             <div className="mt-1 font-body text-xs text-muted">{card.note}</div>

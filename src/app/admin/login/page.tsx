@@ -33,7 +33,7 @@ function LoginForm() {
   return (
     <form
       onSubmit={onSubmit}
-      className="w-full max-w-sm rounded-xl border border-[var(--color-line)] bg-white p-8"
+      className="w-full max-w-sm rounded-xl border border-[var(--color-line)] bg-surface p-8"
     >
       <h1 className="mt-0 mb-1 font-display text-2xl font-semibold">Admin</h1>
       <p className="mt-0 mb-6 font-body text-sm text-muted">
@@ -73,7 +73,7 @@ function LoginForm() {
       <button
         type="submit"
         disabled={busy}
-        className="w-full rounded-lg bg-ink px-4 py-3 font-display text-sm font-semibold text-white disabled:opacity-60"
+        className="w-full rounded-lg bg-ink px-4 py-3 font-display text-sm font-semibold text-on-ink disabled:opacity-60"
       >
         {busy ? "Memproses…" : "Masuk"}
       </button>

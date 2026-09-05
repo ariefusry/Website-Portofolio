@@ -70,6 +70,17 @@ export default function RootLayout({
     <html lang="en">
       <head>
         {/*
+          Tema dipasang sebelum render pertama. Kalau ini dikerjakan React,
+          halaman sempat tergambar dengan tema salah lalu berkedip berganti.
+          Tanpa pilihan tersimpan, atribut sengaja tidak dipasang sama sekali
+          supaya @media (prefers-color-scheme) yang memutuskan.
+        */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{var t=localStorage.getItem("portfolio-theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}`,
+          }}
+        />
+        {/*
           framer-motion me-render initial style (opacity:0) di HTML server.
           Tanpa JS, konten akan tak terlihat — noscript ini mengembalikannya.
         */}
