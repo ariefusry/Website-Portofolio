@@ -13,6 +13,7 @@ export function SmartImage({
   className = "",
   sizes = "100vw",
   priority = false,
+  fit = "cover",
 }: {
   src: string | null;
   alt: string;
@@ -21,6 +22,12 @@ export function SmartImage({
   className?: string;
   sizes?: string;
   priority?: boolean;
+  /**
+   * `cover` memenuhi kotak dan memotong kelebihannya — benar untuk thumbnail.
+   * `contain` menampilkan gambar utuh tanpa memotong, dipakai untuk PNG
+   * transparan yang tidak boleh terpotong di tepinya.
+   */
+  fit?: "cover" | "contain";
 }) {
   if (!src) {
     return <Placeholder label={label} dark={dark} className={className} />;
@@ -34,7 +41,7 @@ export function SmartImage({
         fill
         sizes={sizes}
         priority={priority}
-        className="object-cover"
+        className={fit === "contain" ? "object-contain" : "object-cover"}
       />
     </div>
   );

@@ -1,4 +1,5 @@
 import { AssetManager } from "@/components/admin/AssetManager";
+import { PhotoCropper } from "@/components/admin/PhotoCropper";
 
 export default function AssetsPage() {
   return (
@@ -11,6 +12,7 @@ export default function AssetsPage() {
         diunggah, salin nama berkasnya ke kolom path di halaman Profil atau
         Selected work.
       </p>
+      <PhotoCropper />
       <AssetManager />
     </>
   );
