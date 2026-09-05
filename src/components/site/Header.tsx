@@ -7,7 +7,17 @@ import { useLang } from "@/lib/lang-context";
 import { UI } from "@/lib/i18n";
 import { useTheme } from "@/lib/theme-context";
 import { Moon, Sun } from "lucide-react";
-import { SpotlightNav, SpotlightNavItem } from "@/components/ui/spotlight-navbar";
+import { SpotlightNavItem, SpotlightPill } from "@/components/ui/spotlight-navbar";
+
+/** Pemisah tipis antar kelompok di dalam pil. */
+function Divider() {
+  return (
+    <span
+      aria-hidden="true"
+      className="h-5 w-px shrink-0 bg-[var(--color-line-strong)]"
+    />
+  );
+}
 
 const NAV = [
   { id: "about", label: UI.nav.about },
@@ -113,37 +123,54 @@ export function Header({ name, email }: { name: string; email: string }) {
      * pil-pilnya dan konten lewat di belakangnya.
      */
     <header className="sticky top-0 z-30">
-      <div className="section-x flex items-center justify-between gap-4 py-[14px]">
-        <Link
-          href="/"
-          className="rounded-full border border-[var(--color-line)] bg-surface/70 px-4 py-2.5 font-display text-[15px] leading-none font-semibold tracking-[-0.01em] shadow-[0_8px_24px_rgba(0,0,0,0.10)] backdrop-blur-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid"
-        >
-          {name}
-        </Link>
+      <div className="section-x flex justify-center py-[14px]">
+        {/* Desktop: satu pil berisi nama, nav, dan kontrol. */}
+        <SpotlightPill className="hidden items-center gap-2 py-1.5 pr-2 pl-5 lg:flex">
+          <Link
+            href="/"
+            className="rounded-full font-display text-[15px] leading-none font-semibold tracking-[-0.01em] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid"
+          >
+            {name}
+          </Link>
 
-        <SpotlightNav className="hidden px-2 font-body text-[13px] leading-none font-medium text-muted lg:block">
-          {items.map((n) => (
-            <SpotlightNavItem key={n.id} active={active === n.id}>
-              <Link
-                href={hrefFor(n.id)}
-                aria-current={active === n.id ? "true" : undefined}
-                className={`rounded-full px-4 py-3.5 transition-colors hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid ${
-                  active === n.id ? "text-ink" : ""
-                }`}
-              >
-                {t(n.label)}
-              </Link>
-            </SpotlightNavItem>
-          ))}
-        </SpotlightNav>
+          <Divider />
 
-        <div className="hidden items-center gap-3 rounded-full border border-[var(--color-line)] bg-surface/70 px-3 py-2 font-body text-[13px] leading-none font-medium shadow-[0_8px_24px_rgba(0,0,0,0.10)] backdrop-blur-md lg:flex">
-          {langToggle}
-          {themeToggle}
-          {hireBtn}
-        </div>
+          <nav className="font-body text-[13px] leading-none font-medium text-muted">
+            <ul className="m-0 flex list-none items-center p-0">
+              {items.map((n) => (
+                <SpotlightNavItem key={n.id} active={active === n.id}>
+                  <Link
+                    href={hrefFor(n.id)}
+                    aria-current={active === n.id ? "true" : undefined}
+                    className={`rounded-full px-3.5 py-3 transition-colors hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid ${
+                      active === n.id ? "text-ink" : ""
+                    }`}
+                  >
+                    {t(n.label)}
+                  </Link>
+                </SpotlightNavItem>
+              ))}
+            </ul>
+          </nav>
 
-        <div className="flex items-center gap-3 rounded-full border border-[var(--color-line)] bg-surface/70 px-3 py-2 font-body text-[13px] leading-none font-medium shadow-[0_8px_24px_rgba(0,0,0,0.10)] backdrop-blur-md lg:hidden">
+          <Divider />
+
+          <div className="flex items-center gap-2 font-body text-[13px] leading-none font-medium">
+            {langToggle}
+            {themeToggle}
+            {hireBtn}
+          </div>
+        </SpotlightPill>
+
+        {/* Mobile: pil yang sama, isinya nama dan kontrol saja. */}
+        <SpotlightPill className="flex items-center gap-2 py-1.5 pr-2 pl-4 font-body text-[13px] leading-none font-medium lg:hidden">
+          <Link
+            href="/"
+            className="rounded-full font-display text-[15px] leading-none font-semibold tracking-[-0.01em] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid"
+          >
+            {name}
+          </Link>
+          <Divider />
           {langToggle}
           {themeToggle}
           <button
@@ -155,7 +182,7 @@ export function Header({ name, email }: { name: string; email: string }) {
           >
             {t(UI.menu)}
           </button>
-        </div>
+        </SpotlightPill>
       </div>
 
       {open ? (

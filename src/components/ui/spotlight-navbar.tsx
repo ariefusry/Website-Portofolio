@@ -25,14 +25,14 @@ import { cn } from "@/lib/utils";
  *   (`spotlight-nav-bg`, `glass-border`, ...), jadi tampilannya dibangun ulang
  *   dengan token di sini.
  */
-export function SpotlightNav({
+export function SpotlightPill({
   children,
   className,
 }: {
   children: React.ReactNode;
   className?: string;
 }) {
-  const navRef = useRef<HTMLElement>(null);
+  const navRef = useRef<HTMLDivElement>(null);
   const spotlightX = useRef(0);
   const ambienceX = useRef(0);
   const [hovering, setHovering] = useState(false);
@@ -105,7 +105,7 @@ export function SpotlightNav({
   };
 
   return (
-    <nav
+    <div
       ref={navRef}
       onMouseMove={handleMove}
       onMouseEnter={() => setHovering(true)}
@@ -137,8 +137,8 @@ export function SpotlightNav({
         }}
       />
 
-      <ul className="m-0 flex list-none items-center gap-0 p-0">{children}</ul>
-    </nav>
+      {children}
+    </div>
   );
 }
 
