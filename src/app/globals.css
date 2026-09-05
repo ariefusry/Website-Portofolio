@@ -302,6 +302,26 @@
     animation-duration: 320ms;
     animation-timing-function: var(--ease-brand);
   }
+
+  /*
+   * Pil header diberi nama sendiri. Tanpa ini ia ikut cuplikan `root`, yang
+   * hanya memudarkan piksel — jadi saat label nav berganti panjang ("Experience"
+   * → "Pengalaman") lebarnya melompat di tengah pudar. Dengan nama sendiri,
+   * browser memorph kotak lama ke kotak baru, sehingga lebarnya ikut beranimasi.
+   */
+  ::view-transition-group(nav-pill) {
+    animation-duration: 320ms;
+    animation-timing-function: var(--ease-brand);
+  }
+}
+
+/*
+ * Hanya satu pil yang tampil pada satu waktu (yang lain `display:none` lewat
+ * breakpoint, dan elemen display:none tidak ikut tercuplik), jadi nama ini
+ * tetap unik meski dipakai dua komponen.
+ */
+.nav-pill {
+  view-transition-name: nav-pill;
 }
 
 @media (prefers-reduced-motion: reduce) {
