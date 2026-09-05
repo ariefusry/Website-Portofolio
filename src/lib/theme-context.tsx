@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useSyncExternalStore } from "react";
+import { withViewTransition } from "./view-transition";
 
 export type Theme = "light" | "dark";
 
@@ -48,10 +49,6 @@ function systemTheme(): Theme {
     : "light";
 }
 
-type WithViewTransition = Document & {
-  startViewTransition?: (cb: () => void) => { finished: Promise<void> };
-};
-
 export function useTheme() {
   const theme = useSyncExternalStore<Theme>(
     subscribe,
@@ -75,23 +72,10 @@ export function useTheme() {
     // Atribut dipasang di sini, bukan menunggu effect: View Transition perlu
     // perubahan DOM-nya terjadi di dalam callback-nya, sementara render React
     // baru menyusul belakangan. Effect di atas nanti menulis nilai yang sama.
-    const apply = () => {
+    withViewTransition(() => {
       document.documentElement.dataset.theme = next;
       emit();
-    };
-
-    const doc = document as WithViewTransition;
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    // Tanpa dukungan View Transition, temanya berganti seketika. Itu disengaja:
-    // alternatifnya — mentransisikan warna seluruh elemen — justru yang tadi
-    // terukur patah-patah.
-    if (reduced || typeof doc.startViewTransition !== "function") {
-      apply();
-      return;
-    }
-
-    doc.startViewTransition(apply);
+    });
   }, []);
 
   return {
