@@ -15,7 +15,13 @@ export function About({
   const { t } = useLang();
 
   return (
-    <TwoColSection id="about" eyebrow={t(UI.eyebrowAbout)}>
+    <TwoColSection
+      id="about"
+      eyebrow={t(UI.eyebrowAbout)}
+      // Garis pemisah dari hero. Memakai border-t seperti section lain, bukan
+      // elemen pemisah tersendiri, supaya semua batas section tetap seragam.
+      className="border-t border-[var(--color-line-soft)]"
+    >
       <p className="mt-0 mb-8 max-w-[700px] font-body text-[17.5px] leading-[1.7] font-normal text-body text-pretty">
         {t(profile.about)}
       </p>
