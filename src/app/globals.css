@@ -279,28 +279,19 @@
 }
 
 /*
- * Pergantian tema dibuat memudar, bukan berkedip.
+ * Pergantian tema dibuat memudar, bukan berkedip — lewat View Transition.
  *
- * Kelas ini hanya menempel di <html> selama transisi berlangsung (lihat
- * theme-context.tsx) — kalau transisinya dipasang permanen, setiap hover dan
- * fokus di seluruh situs ikut melambat.
- *
- * Dibungkus `no-preference` supaya tidak perlu bersaing dengan aturan
- * reduced-motion di bawah: kalau pengguna minta gerakan dikurangi, aturan ini
- * memang tidak pernah ikut dipasang.
+ * Versi sebelumnya memasang transisi warna pada SEMUA elemen sekaligus. Itu
+ * terukur patah-patah: frame terburuk 109ms, karena background-color dan
+ * kawan-kawannya adalah properti paint, sehingga seluruh halaman digambar
+ * ulang tiap frame. View Transition hanya memudarkan dua cuplikan layar di
+ * GPU, jadi biayanya sama saja berapa pun jumlah elemen di halaman.
  */
 @media (prefers-reduced-motion: no-preference) {
-  .theme-switching,
-  .theme-switching *,
-  .theme-switching *::before,
-  .theme-switching *::after {
-    transition:
-      background-color 320ms var(--ease-brand),
-      border-color 320ms var(--ease-brand),
-      color 320ms var(--ease-brand),
-      fill 320ms var(--ease-brand),
-      box-shadow 320ms var(--ease-brand),
-      outline-color 320ms var(--ease-brand) !important;
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 320ms;
+    animation-timing-function: var(--ease-brand);
   }
 }
 
