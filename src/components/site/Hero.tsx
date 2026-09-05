@@ -156,19 +156,18 @@ export function Hero({ profile }: { profile: Profile }) {
               {t(UI.ctaWork)}
             </ShimmerLink>
 
-            {/* Sekunder: terang, kilau warna aksen supaya tetap terlihat */}
+            {/* Sekunder: aksen pekat + teks putih (5.9:1), kilau putih */}
             <ShimmerLink
               href={profile.cvUrl ?? "#"}
               {...(profile.cvUrl
                 ? { target: "_blank", rel: "noopener noreferrer" }
                 : { "aria-disabled": true })}
-              background="#f2f4f6"
-              shimmerColor="oklch(0.62 0.14 45)"
+              background="var(--color-accent-strong)"
               borderRadius="8px"
               shimmerDuration="3.4s"
               className={cn(
-                "border-black/[0.16] px-[22px] py-[13px] font-display text-sm leading-none font-semibold text-ink hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid motion-reduce:transition-none motion-reduce:hover:translate-y-0",
-                profile.cvUrl ? "" : "opacity-60",
+                "border-white/20 px-[22px] py-[13px] font-display text-sm leading-none font-semibold shadow-[0_6px_18px_color-mix(in_oklch,var(--color-accent-strong)_32%,transparent)] hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink motion-reduce:transition-none motion-reduce:hover:translate-y-0",
+                profile.cvUrl ? "" : "opacity-70",
               )}
             >
               {t(UI.ctaCv)}

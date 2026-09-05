@@ -19,6 +19,11 @@
   --color-accent-chip: oklch(0.95 0.03 45);
   --color-accent-border: oklch(0.88 0.05 45);
   --color-accent-dark: oklch(0.72 0.11 45);
+  /*
+   * Versi pekat untuk tombol berisi teks: aksen standar hanya 3.83:1 dengan
+   * teks putih — gagal AA 4.5:1 untuk teks 14px. Yang ini 5.9:1.
+   */
+  --color-accent-strong: oklch(0.52 0.15 45);
 
   --color-line: rgba(0, 0, 0, 0.09);
   --color-line-soft: rgba(0, 0, 0, 0.08);
