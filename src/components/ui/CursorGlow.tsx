@@ -34,16 +34,20 @@ export function useCursorGlow<T extends HTMLElement>() {
  * Lapisan gradiennya. Wadahnya harus `relative isolate overflow-hidden` supaya
  * sorotannya terpotong mengikuti sudut membulat wadah.
  *
- * Digambar di atas isi kartu, bukan di belakangnya: kartu punya latar sendiri
- * dan thumbnail-nya buram, jadi sorotan di lapisan bawah hanya akan terlihat di
- * sela-sela teks. `pointer-events-none` menjaga klik tetap tembus ke link.
+ * `-z-10`, jadi sorotannya berada di bawah isi wadah tapi tetap di atas latar
+ * wadah — anak ber-z negatif memang digambar begitu. Efeknya sorotan menyapu
+ * bagian teks tapi berhenti di blok gambar, karena blok itu punya latar buram
+ * sendiri dan menutupinya. Itu memang yang diinginkan: gradien tidak boleh
+ * mengenai screenshot-nya.
+ *
+ * `pointer-events-none` menjaga klik tetap tembus ke link.
  */
 export function CursorGlow({ visible }: { visible: boolean }) {
   return (
     <div
       aria-hidden="true"
       style={{ opacity: visible ? 1 : 0 }}
-      className="pointer-events-none absolute inset-0 z-10 transition-opacity duration-300 motion-reduce:transition-none [background:radial-gradient(260px_circle_at_var(--glow-x,50%)_var(--glow-y,50%),color-mix(in_oklab,var(--color-ink)_15%,transparent)_0%,transparent_72%)]"
+      className="pointer-events-none absolute inset-0 -z-10 transition-opacity duration-300 motion-reduce:transition-none [background:radial-gradient(260px_circle_at_var(--glow-x,50%)_var(--glow-y,50%),color-mix(in_oklab,var(--color-ink)_15%,transparent)_0%,transparent_72%)]"
     />
   );
 }
