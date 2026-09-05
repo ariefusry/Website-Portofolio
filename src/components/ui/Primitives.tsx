@@ -1,3 +1,5 @@
+import { Reveal } from "./Reveal";
+
 /** Label mono kecil di kolom kiri tiap section. */
 export function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
@@ -72,12 +74,12 @@ export function TwoColSection({
       id={id}
       className={`scroll-anchor section-x py-14 ${className}`}
     >
-      <div className="section-inner grid gap-8 md:grid-cols-[200px_1fr] md:gap-12">
+      <Reveal className="section-inner grid gap-8 md:grid-cols-[200px_1fr] md:gap-12">
         <Eyebrow>{eyebrow}</Eyebrow>
         {/* min-w-0: tanpa ini grid item memakai min-width:auto, dan isi yang
             lebih lebar (mis. pita skill) melebarkan halaman alih-alih terpotong. */}
         <div className="min-w-0">{children}</div>
-      </div>
+      </Reveal>
     </section>
   );
 }

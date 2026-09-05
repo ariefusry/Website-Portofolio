@@ -1,5 +1,7 @@
 "use client";
 
+import { ViewTransition } from "react";
+
 import Link from "next/link";
 import { useLang } from "@/lib/lang-context";
 import { UI } from "@/lib/i18n";
@@ -37,6 +39,20 @@ export function ProjectCard({ project }: { project: Project }) {
       <CursorGlow visible={hovering} />
 
       {project.hasThumb ? (
+        /*
+         * Nama yang sama dipakai di gambar utama halaman detail, jadi saat
+         * kartunya diklik browser memuaikan gambar ini ke slot besar di sana —
+         * satu benda yang bergerak, bukan dua gambar yang bertukar.
+         *
+         * `default="none"` penting: situs ini sudah menjalankan view transition
+         * untuk ganti tema dan ganti bahasa. Tanpa itu, setiap gambar proyek
+         * ikut beranimasi setiap kali tema ditoggle.
+         */
+        <ViewTransition
+          name={`project-${project.slug}`}
+          share="morph"
+          default="none"
+        >
         <div className="bg-page p-3 pb-0">
           <SmartImage
             src={project.imageUrl}
@@ -46,6 +62,7 @@ export function ProjectCard({ project }: { project: Project }) {
             className="aspect-[16/9] w-full rounded-lg"
           />
         </div>
+        </ViewTransition>
       ) : null}
 
       <div className="flex flex-1 flex-col p-[22px]">

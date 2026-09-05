@@ -1,5 +1,7 @@
 "use client";
 
+import { ViewTransition } from "react";
+
 import Link from "next/link";
 import { useLang } from "@/lib/lang-context";
 import { UI } from "@/lib/i18n";
@@ -19,8 +21,6 @@ export function ProjectDetail({ project }: { project: Project }) {
   const { lang, t } = useLang();
   const highlights = lang === "ID" ? project.highlights.id : project.highlights.en;
   const [heroImage, ...restImages] = project.imageUrls;
-  // Gambar untuk pratinjau hover: screenshot utama proyek, dengan thumbnail
-  // kartu sebagai cadangan kalau galerinya belum diisi.
 
   return (
     <article className="section-x section-inner py-12 md:py-16">
@@ -53,16 +53,22 @@ export function ProjectDetail({ project }: { project: Project }) {
         <TechIcons items={project.tech} size={20} />
       </header>
 
-      {/* Gambar utama */}
-      <SmartImage
-        src={heroImage ?? project.imageUrl}
-        alt={`${project.title} — ${t(UI.screenshotOf)}`}
-        label={`[ screenshot ${project.title} ]`}
-        priority
-        sizes="(max-width: 1024px) 100vw, 1000px"
-        fit="contain"
-        className="mb-12 aspect-[16/9] w-full rounded-[14px] border border-[var(--color-line)] bg-page"
-      />
+      {/* Gambar utama — pasangan morph dari thumbnail kartu proyek. */}
+      <ViewTransition
+        name={`project-${project.slug}`}
+        share="morph"
+        default="none"
+      >
+        <SmartImage
+          src={heroImage ?? project.imageUrl}
+          alt={`${project.title} — ${t(UI.screenshotOf)}`}
+          label={`[ screenshot ${project.title} ]`}
+          priority
+          sizes="(max-width: 1024px) 100vw, 1000px"
+          fit="contain"
+          className="mb-12 aspect-[16/9] w-full rounded-[14px] border border-[var(--color-line)] bg-page"
+        />
+      </ViewTransition>
 
       <div className="grid gap-12 lg:grid-cols-[1fr_320px] lg:gap-16">
         <div className="min-w-0">
