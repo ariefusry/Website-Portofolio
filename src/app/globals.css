@@ -93,17 +93,6 @@
   animation: marquee var(--speed) linear infinite;
 }
 
-/* Gradien hero yang bergeser pelan. */
-@utility animate-gradient-pan {
-  animation: gradient-pan var(--speed) ease-in-out infinite alternate;
-}
-
-@keyframes gradient-pan {
-  to {
-    transform: translate3d(6%, -4%, 0) scale(1.15);
-  }
-}
-
 @keyframes marquee {
   to {
     transform: translateX(-50%);
