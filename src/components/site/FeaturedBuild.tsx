@@ -26,6 +26,7 @@ export function FeaturedBuild({ project }: { project: Project | null }) {
       id="featured-build"
       className="scroll-anchor section-x border-t border-[var(--color-line-soft)] py-14"
     >
+      <div className="section-inner">
       <div className="mb-4 font-mono text-xs leading-none font-semibold text-accent-ink">
         {t(UI.featuredBuild).toUpperCase()}
       </div>
@@ -65,6 +66,7 @@ export function FeaturedBuild({ project }: { project: Project | null }) {
             className="aspect-[16/9] w-full rounded-xl bg-page"
           />
         </div>
+      </div>
       </div>
     </section>
   );

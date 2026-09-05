@@ -72,7 +72,7 @@ export function TwoColSection({
       id={id}
       className={`scroll-anchor section-x py-14 ${className}`}
     >
-      <div className="grid gap-8 md:grid-cols-[200px_1fr] md:gap-12">
+      <div className="section-inner grid gap-8 md:grid-cols-[200px_1fr] md:gap-12">
         <Eyebrow>{eyebrow}</Eyebrow>
         {/* min-w-0: tanpa ini grid item memakai min-width:auto, dan isi yang
             lebih lebar (mis. pita skill) melebarkan halaman alih-alih terpotong. */}

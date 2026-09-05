@@ -21,7 +21,7 @@ export function ProjectDetail({ project }: { project: Project }) {
   const [heroImage, ...restImages] = project.imageUrls;
 
   return (
-    <article className="section-x py-12 md:py-16">
+    <article className="section-x section-inner py-12 md:py-16">
       <Link
         href="/#projects"
         className="inline-block rounded font-body text-sm font-medium text-muted transition-colors hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid"
