@@ -48,19 +48,9 @@ function systemTheme(): Theme {
     : "light";
 }
 
-/** Harus sama dengan durasi transisi .theme-switching di globals.css. */
-const SWITCH_MS = 320;
-let switchTimer: number | undefined;
-
-function startSwitching() {
-  const root = document.documentElement;
-  root.classList.add("theme-switching");
-  // Menekan tombol dua kali beruntun tidak boleh melepas kelasnya lebih awal.
-  window.clearTimeout(switchTimer);
-  switchTimer = window.setTimeout(() => {
-    root.classList.remove("theme-switching");
-  }, SWITCH_MS);
-}
+type WithViewTransition = Document & {
+  startViewTransition?: (cb: () => void) => { finished: Promise<void> };
+};
 
 export function useTheme() {
   const theme = useSyncExternalStore<Theme>(
@@ -76,16 +66,32 @@ export function useTheme() {
   }, [theme]);
 
   const setTheme = useCallback((next: Theme) => {
-    // Pasang kelas transisi sebelum token bergeser, lalu lepas lagi setelah
-    // selesai — memasangnya permanen akan memperlambat setiap hover di situs.
-    // Durasinya harus cocok dengan .theme-switching di globals.css.
-    startSwitching();
     try {
       window.localStorage.setItem(THEME_STORAGE_KEY, next);
     } catch {
       // abaikan: pilihan tetap berlaku untuk sesi ini, hanya tidak bertahan.
     }
-    emit();
+
+    // Atribut dipasang di sini, bukan menunggu effect: View Transition perlu
+    // perubahan DOM-nya terjadi di dalam callback-nya, sementara render React
+    // baru menyusul belakangan. Effect di atas nanti menulis nilai yang sama.
+    const apply = () => {
+      document.documentElement.dataset.theme = next;
+      emit();
+    };
+
+    const doc = document as WithViewTransition;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    // Tanpa dukungan View Transition, temanya berganti seketika. Itu disengaja:
+    // alternatifnya — mentransisikan warna seluruh elemen — justru yang tadi
+    // terukur patah-patah.
+    if (reduced || typeof doc.startViewTransition !== "function") {
+      apply();
+      return;
+    }
+
+    doc.startViewTransition(apply);
   }, []);
 
   return {
