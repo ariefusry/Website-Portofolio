@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useLang } from "@/lib/lang-context";
 import { UI } from "@/lib/i18n";
 import { externalHref } from "@/lib/utils";
+import { CtaLink } from "@/components/ui/CtaLink";
 import { TagPill } from "@/components/ui/Primitives";
 import { TechIcons } from "@/components/ui/TechIcons";
 import { SmartImage } from "@/components/ui/SmartImage";
@@ -135,26 +136,31 @@ export function ProjectDetail({ project }: { project: Project }) {
               </dl>
             ) : null}
 
+            {/*
+              Sepasang seperti CTA di hero: gelap untuk aksi utama, biru untuk
+              yang kedua — bentuk yang sama dengan "View projects" dan
+              "Download CV", jadi tombol yang berperan sama terlihat sama di
+              seluruh situs.
+            */}
             <div className="mt-6 flex flex-wrap gap-2.5">
               {project.liveUrl ? (
-                <a
+                <CtaLink
                   href={externalHref(project.liveUrl)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="rounded-lg bg-ink px-[18px] py-3 font-display text-[13px] leading-none font-semibold text-on-ink transition-transform duration-200 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid motion-reduce:transition-none motion-reduce:hover:translate-y-0"
                 >
                   {t(UI.visitSite)}
-                </a>
+                </CtaLink>
               ) : null}
               {project.githubUrl ? (
-              <a
-                href={externalHref(project.githubUrl)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="rounded-lg border border-[var(--color-line-strong)] px-[18px] py-3 font-display text-[13px] leading-none font-semibold transition-colors hover:border-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid"
-              >
-                {t(UI.github)}
-              </a>
+                <CtaLink
+                  variant="accent"
+                  href={externalHref(project.githubUrl)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {t(UI.github)}
+                </CtaLink>
               ) : null}
             </div>
           </aside>
