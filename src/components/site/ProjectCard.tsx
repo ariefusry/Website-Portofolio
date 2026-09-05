@@ -33,7 +33,7 @@ export function ProjectCard({ project }: { project: Project }) {
             alt=""
             label={`[ screenshot ${project.title} ]`}
             sizes="(max-width: 768px) 100vw, 50vw"
-            className="h-[170px] w-full rounded-lg transition-transform duration-[350ms] ease-[var(--ease-brand)] group-hover:scale-[1.04] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+            className="aspect-[16/9] w-full rounded-lg transition-transform duration-[350ms] ease-[var(--ease-brand)] group-hover:scale-[1.04] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
           />
         </div>
       ) : null}

@@ -61,7 +61,8 @@ export function FeaturedBuild({ project }: { project: Project | null }) {
             alt={`${project.title} — ${t(UI.screenshotOf)}`}
             label={`[ screenshot ${project.title} ]`}
             sizes="(max-width: 1024px) 100vw, 46vw"
-            className="aspect-[16/10] w-full rounded-xl"
+            fit="contain"
+            className="aspect-[16/9] w-full rounded-xl bg-page"
           />
         </div>
       </div>

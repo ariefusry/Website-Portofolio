@@ -58,7 +58,8 @@ export function ProjectDetail({ project }: { project: Project }) {
         label={`[ screenshot ${project.title} ]`}
         priority
         sizes="(max-width: 1024px) 100vw, 1000px"
-        className="mb-12 h-[260px] w-full rounded-[14px] border border-[var(--color-line)] md:h-[420px]"
+        fit="contain"
+        className="mb-12 aspect-[16/9] w-full rounded-[14px] border border-[var(--color-line)] bg-page"
       />
 
       <div className="grid gap-12 lg:grid-cols-[1fr_320px] lg:gap-16">
@@ -107,7 +108,8 @@ export function ProjectDetail({ project }: { project: Project }) {
                     src={url}
                     alt={`${project.title} — ${t(UI.screenshotOf)} ${i + 2}`}
                     sizes="(max-width: 640px) 100vw, 50vw"
-                    className="h-[180px] w-full rounded-[10px] border border-[var(--color-line)]"
+                    fit="contain"
+                    className="aspect-[16/9] w-full rounded-[10px] border border-[var(--color-line)] bg-page"
                   />
                 ))}
               </div>
