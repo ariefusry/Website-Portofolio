@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useLang } from "@/lib/lang-context";
 import { UI } from "@/lib/i18n";
+import { externalHref } from "@/lib/utils";
 import { TagPill } from "@/components/ui/Primitives";
 import { TechIcons } from "@/components/ui/TechIcons";
 import { SmartImage } from "@/components/ui/SmartImage";
@@ -137,7 +138,7 @@ export function ProjectDetail({ project }: { project: Project }) {
             <div className="mt-6 flex flex-wrap gap-2.5">
               {project.liveUrl ? (
                 <a
-                  href={project.liveUrl}
+                  href={externalHref(project.liveUrl)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="rounded-lg bg-ink px-[18px] py-3 font-display text-[13px] leading-none font-semibold text-on-ink transition-transform duration-200 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid motion-reduce:transition-none motion-reduce:hover:translate-y-0"
@@ -147,7 +148,7 @@ export function ProjectDetail({ project }: { project: Project }) {
               ) : null}
               {project.githubUrl ? (
               <a
-                href={project.githubUrl}
+                href={externalHref(project.githubUrl)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="rounded-lg border border-[var(--color-line-strong)] px-[18px] py-3 font-display text-[13px] leading-none font-semibold transition-colors hover:border-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid"

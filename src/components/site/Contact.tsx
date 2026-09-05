@@ -3,6 +3,7 @@
 import { Mail, Phone } from "lucide-react";
 import { useLang } from "@/lib/lang-context";
 import { UI } from "@/lib/i18n";
+import { externalHref } from "@/lib/utils";
 import { Footer, type FooterColumn } from "@/components/ui/footer-section";
 import type { Profile } from "@/lib/types";
 
@@ -41,8 +42,11 @@ export function Contact({ profile }: { profile: Profile }) {
         // Tanpa ikon: lucide v1 dan simple-icons sama-sama sudah mencabut
         // lambang LinkedIn/GitHub karena merek dagang, dan menggambar tiruannya
         // bukan pilihan. Labelnya sendiri sudah jelas.
-        { title: "LinkedIn", href: `https://${profile.linkedin}`, external: true },
-        { title: "GitHub", href: `https://${profile.github}`, external: true },
+        // externalHref, bukan `https://${...}` mentah: kolomnya minta alamat
+        // tanpa skema, tapi kalau ada yang menempel URL lengkap hasilnya jadi
+        // `https://https://…`. Helper-nya menerima kedua bentuk.
+        { title: "LinkedIn", href: externalHref(profile.linkedin), external: true },
+        { title: "GitHub", href: externalHref(profile.github), external: true },
       ],
     },
   ];
