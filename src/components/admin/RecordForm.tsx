@@ -5,6 +5,8 @@ import { useFormStatus } from "react-dom";
 import { saveRecord, type ActionState } from "@/lib/admin/actions";
 import type { Field, TableDef } from "@/lib/admin/schema";
 import { UploadButton, publicAssetUrl } from "./UploadButton";
+import { ImageCropper } from "./ImageCropper";
+import { createClient } from "@/lib/supabase/client";
 
 const INPUT =
   "w-full rounded-lg border border-[var(--color-line-strong)] bg-surface px-3 py-2 font-body text-sm outline-none focus:border-ink";
@@ -41,6 +43,8 @@ function AssetControl({
   initial: string;
 }) {
   const [value, setValue] = useState(initial);
+  const [busy, setBusy] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const bucket = field.bucket ?? "assets";
   const isList = field.type === "array";
 
@@ -69,18 +73,59 @@ function AssetControl({
         />
       )}
 
-      <UploadButton
-        bucket={bucket}
-        accept={bucket === "documents" ? ".pdf" : "image/*"}
-        label={isList ? "Unggah & tambahkan" : "Unggah & isi"}
-        onDone={(name) =>
-          setValue((prev) => {
-            if (!isList) return name;
-            const existing = prev.trim();
-            return existing ? `${existing}\n${name}` : name;
-          })
-        }
-      />
+      {bucket === "documents" ? (
+        <UploadButton
+          bucket={bucket}
+          accept=".pdf"
+          label="Unggah & isi"
+          onDone={(name) => setValue(name)}
+        />
+      ) : (
+        /*
+         * Screenshot dipotong 16:9 sebelum diunggah — itu rasio jendela
+         * browser, dan itu pula rasio kotak yang menampilkannya. Tanpa ini,
+         * screenshot apa pun akan terpotong sendiri oleh kotaknya, dan tidak
+         * ada yang bisa mengatur bagian mana yang dibuang.
+         *
+         * JPEG, bukan PNG: screenshot tidak punya bagian transparan, dan
+         * berkasnya jauh lebih kecil.
+         */
+        <ImageCropper
+          aspect={16 / 9}
+          format="jpeg"
+          busy={busy}
+          pickLabel={isList ? "Unggah & tambahkan" : "Unggah & isi"}
+          confirmLabel="Potong & unggah"
+          onConfirm={async (blob, sourceName) => {
+            setBusy(true);
+            setUploadError(null);
+            const safe = sourceName
+              .replace(/\.[^.]+$/, "")
+              .replace(/[^a-zA-Z0-9._-]/g, "-");
+            const name = `${Date.now()}-${safe}.jpg`;
+            const supabase = createClient();
+            const { error } = await supabase.storage
+              .from(bucket)
+              .upload(name, blob, {
+                upsert: false,
+                cacheControl: "3600",
+                contentType: "image/jpeg",
+              });
+            if (error) setUploadError(error.message);
+            else
+              setValue((prev) => {
+                if (!isList) return name;
+                const existing = prev.trim();
+                return existing ? `${existing}\n${name}` : name;
+              });
+            setBusy(false);
+          }}
+        />
+      )}
+
+      {uploadError ? (
+        <p className="m-0 font-body text-xs text-red-700">{uploadError}</p>
+      ) : null}
 
       {bucket === "assets" && paths.length ? (
         <div className="flex flex-wrap gap-2">
