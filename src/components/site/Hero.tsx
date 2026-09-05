@@ -73,9 +73,19 @@ export function Hero({ profile }: { profile: Profile }) {
       // penuh dan section berikutnya belum mengintip. `svh` bukan `vh`: di
       // browser mobile `vh` menghitung bar alamat yang tersembunyi, dan hero
       // jadi lebih tinggi dari layar sebenarnya.
-      className="section-x relative flex min-h-[calc(100svh-var(--header-h))] flex-col justify-center overflow-hidden pt-14 pb-16 md:pt-[84px] md:pb-[68px]"
+      // `justify-start`, bukan `justify-center`: hero setinggi layar sementara
+      // isinya jauh lebih pendek, jadi memusatkannya membagi sisa ruang rata ke
+      // atas dan bawah — teks terdorong jauh dari navbar dan atasnya terasa
+      // kosong. Ditempel ke atas, sisa ruangnya jatuh ke bawah, tempat foto
+      // berdiri.
+      className="section-x relative flex min-h-[calc(100svh-var(--header-h))] flex-col justify-start overflow-hidden pt-8 pb-16 md:pt-10 md:pb-[68px]"
     >
-      <div className="grid items-center gap-10 md:grid-cols-[1.35fr_.8fr] md:gap-14">
+      {/*
+        Track kedua dipatok lebar tetap, bukan pecahan: judulnya sendiri sudah
+        dibatasi 640px, jadi memberi kolom teks porsi lebih besar hanya
+        menyisakan ruang kosong. Lebar itu yang dipesan untuk foto.
+      */}
+      <div className="grid items-start gap-10 md:grid-cols-[1fr_minmax(0,520px)] md:gap-14">
         <div className="relative">
           {/* 2. Status badge */}
           <motion.div
@@ -165,7 +175,7 @@ export function Hero({ profile }: { profile: Profile }) {
         <motion.div
           className={
             profile.photoUrl
-              ? "-mb-16 md:absolute md:right-[clamp(20px,5vw,48px)] md:bottom-0 md:mb-0 md:w-[36%] md:max-w-[480px]"
+              ? "-mb-16 md:absolute md:right-[clamp(20px,5vw,48px)] md:bottom-0 md:mb-0 md:w-[40%] md:max-w-[560px]"
               : "overflow-hidden rounded-xl border border-[var(--color-line-strong)]"
           }
           {...(reduced
@@ -183,10 +193,10 @@ export function Hero({ profile }: { profile: Profile }) {
             priority
             fit="contain"
             align="bottom"
-            sizes="(max-width: 768px) 100vw, 480px"
+            sizes="(max-width: 768px) 100vw, 560px"
             className={
               profile.photoUrl
-                ? "h-[440px] w-full md:h-[min(80vh,720px)]"
+                ? "h-[440px] w-full md:h-[min(84vh,780px)]"
                 : "h-[360px] w-full"
             }
           />
