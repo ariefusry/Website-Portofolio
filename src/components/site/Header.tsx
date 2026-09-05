@@ -73,20 +73,41 @@ export function Header({ name, email }: { name: string; email: string }) {
 
   const other = lang === "EN" ? "ID" : "EN";
 
+  /*
+   * Satu tombol, bukan dua: keduanya melakukan hal yang sama — berpindah ke
+   * bahasa satunya — jadi memisahkannya hanya menambah perhentian tab tanpa
+   * menambah pilihan. Isinya `aria-hidden` dan tombolnya membawa aria-label,
+   * kalau tidak screen reader membacakan "EN ID" yang tidak berarti apa-apa.
+   *
+   * Kedua label selalu dirender, jadi lebarnya tetap saat bahasa berganti dan
+   * pil navbar tidak ikut melompat.
+   */
   const langToggle = (
-    <div className="flex gap-0.5 rounded-full bg-[var(--color-line)] p-[3px] font-mono text-[11px] leading-none font-semibold">
-      <span className="rounded-full bg-ink px-[9px] py-[5px] text-on-ink">
-        {lang}
-      </span>
-      <button
-        type="button"
-        onClick={() => setLang(other)}
-        aria-label={`${t(UI.switchLang)}: ${other}`}
-        className="cursor-pointer rounded-full px-[9px] py-[5px] text-muted transition-colors hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid"
-      >
-        {other}
-      </button>
-    </div>
+    <button
+      type="button"
+      onClick={() => setLang(other)}
+      aria-label={`${t(UI.switchLang)}: ${other}`}
+      className="relative flex cursor-pointer items-center rounded-full bg-[var(--color-line)] p-[3px] font-mono text-[11px] leading-none font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid"
+    >
+      {/* Thumb yang meluncur; lebarnya persis satu sel label. */}
+      <span
+        aria-hidden="true"
+        className={`absolute top-[3px] bottom-[3px] left-[3px] w-[calc(50%-3px)] rounded-full bg-ink transition-transform duration-300 ease-[var(--ease-brand)] motion-reduce:transition-none ${
+          lang === "EN" ? "translate-x-0" : "translate-x-full"
+        }`}
+      />
+      {(["EN", "ID"] as const).map((code) => (
+        <span
+          key={code}
+          aria-hidden="true"
+          className={`relative z-10 w-1/2 px-[9px] py-[5px] text-center transition-colors duration-300 motion-reduce:transition-none ${
+            lang === code ? "text-on-ink" : "text-muted"
+          }`}
+        >
+          {code}
+        </span>
+      ))}
+    </button>
   );
 
   // Ikon menunjukkan tema yang akan dituju, bukan yang sedang aktif — itu yang
