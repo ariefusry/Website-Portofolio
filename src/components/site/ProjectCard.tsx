@@ -5,6 +5,7 @@ import { useLang } from "@/lib/lang-context";
 import { UI } from "@/lib/i18n";
 import { SmartImage } from "@/components/ui/SmartImage";
 import { TechIcons } from "@/components/ui/TechIcons";
+import { CursorGlow, useCursorGlow } from "@/components/ui/CursorGlow";
 import type { Project } from "@/lib/types";
 
 /**
@@ -18,22 +19,31 @@ export function ProjectCard({ project }: { project: Project }) {
   const { t } = useLang();
   const role = t(project.role);
   const status = t(project.status);
+  const { ref, hovering, handlers } = useCursorGlow<HTMLAnchorElement>();
 
   return (
+    /*
+     * Hover-nya hanya berupa sorotan yang mengikuti kursor — kartunya sendiri
+     * diam. `isolate` supaya lapisan sorotan yang ber-z negatif tetap berada di
+     * dalam kartu, dan `overflow-hidden` supaya gradiennya terpotong mengikuti
+     * sudut membulatnya.
+     */
     <Link
+      ref={ref}
+      {...handlers}
       href={`/projects/${project.slug}`}
-      className="group flex flex-col overflow-hidden rounded-[14px] border border-[var(--color-line)] bg-surface transition-[transform,border-color,box-shadow] duration-[220ms] ease-[var(--ease-brand)] hover:-translate-y-1 hover:border-ink/25 hover:shadow-[0_14px_32px_rgba(0,0,0,0.08)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid motion-reduce:transition-none motion-reduce:hover:translate-y-0 motion-reduce:hover:shadow-none"
+      className="group relative isolate flex flex-col overflow-hidden rounded-[14px] border border-[var(--color-line)] bg-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid"
     >
+      <CursorGlow visible={hovering} />
+
       {project.hasThumb ? (
-        // Wadah overflow-hidden supaya zoom gambar tidak menggeser layout;
-        // yang dianimasikan hanya transform, bukan width/height.
-        <div className="overflow-hidden bg-page p-3 pb-0">
+        <div className="bg-page p-3 pb-0">
           <SmartImage
             src={project.imageUrl}
             alt=""
             label={`[ screenshot ${project.title} ]`}
             sizes="(max-width: 768px) 100vw, 50vw"
-            className="aspect-[16/9] w-full rounded-lg transition-transform duration-[350ms] ease-[var(--ease-brand)] group-hover:scale-[1.04] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+            className="aspect-[16/9] w-full rounded-lg"
           />
         </div>
       ) : null}
