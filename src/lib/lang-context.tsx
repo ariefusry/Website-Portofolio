@@ -10,6 +10,7 @@ import {
 } from "react";
 import type { Bi, Lang } from "./types";
 import { pick } from "./i18n";
+import { withViewTransition } from "./view-transition";
 
 const STORAGE_KEY = "portfolio-lang";
 
@@ -51,7 +52,9 @@ function writeStored(lang: Lang) {
   } catch {
     // abaikan: pilihan tetap berlaku untuk sesi ini, hanya tidak bertahan.
   }
-  emit();
+  // Ganti bahasa menukar hampir semua teks di halaman sekaligus. Dipudarkan
+  // lewat mekanisme yang sama dengan pergantian tema, supaya tidak berkedip.
+  withViewTransition(emit);
 }
 
 type LangContextValue = {
