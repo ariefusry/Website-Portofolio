@@ -78,14 +78,25 @@ export function Hero({ profile }: { profile: Profile }) {
       // atas dan bawah — teks terdorong jauh dari navbar dan atasnya terasa
       // kosong. Ditempel ke atas, sisa ruangnya jatuh ke bawah, tempat foto
       // berdiri.
-      className="section-x relative flex min-h-[calc(100svh-var(--header-h))] flex-col justify-start overflow-hidden pt-8 pb-16 md:pt-10 md:pb-[68px]"
+      className="section-x relative flex min-h-[calc(100svh-var(--header-h))] flex-col overflow-hidden pt-8 md:pt-[7vh]"
     >
       {/*
-        Track kedua dipatok lebar tetap, bukan pecahan: judulnya sendiri sudah
-        dibatasi 640px, jadi memberi kolom teks porsi lebih besar hanya
-        menyisakan ruang kosong. Lebar itu yang dipesan untuk foto.
+        Pembungkus terpusat dengan lebar maksimum. Tanpa ini, di layar lebar
+        teks menempel ke tepi kiri dan foto ke tepi kanan — di 1900px menyisakan
+        586px kosong menganga di tengah, dan itulah yang membuat hero terasa
+        tidak simetris.
+
+        `relative` + `flex-1`: foto diposisikan absolut terhadap pembungkus ini,
+        dan karena ia meregang setinggi section, dasarnya tepat di garis pemisah
+        dengan About. Section sengaja tanpa padding bawah supaya batas itu benar.
       */}
-      <div className="grid items-start gap-10 md:grid-cols-[1fr_minmax(0,520px)] md:gap-14">
+      <div className="relative mx-auto flex w-full max-w-[1180px] flex-1 flex-col">
+        {/*
+          Track kedua dipatok lebar tetap, bukan pecahan: judulnya sendiri sudah
+          dibatasi 640px, jadi memberi kolom teks porsi lebih besar hanya
+          menyisakan ruang kosong. Lebar itu yang dipesan untuk foto.
+        */}
+        <div className="grid items-start gap-10 md:grid-cols-[1fr_minmax(0,480px)] md:gap-12">
         <div className="relative">
           {/* 2. Status badge */}
           <motion.div
@@ -164,9 +175,10 @@ export function Hero({ profile }: { profile: Profile }) {
           itulah letak garis pemisah dengan About, jadi subjeknya berdiri di
           garis itu.
 
-          Di layar lebar ia diposisikan absolut terhadap section. Kolom grid
-          keduanya tetap ada dan tetap memesan lebarnya — track `.8fr` tidak
-          hilang meski isinya keluar dari alur — sehingga teksnya tidak
+          Di layar lebar ia diposisikan absolut terhadap pembungkus terpusat,
+          bukan terhadap section — kalau ditambatkan ke section ia menempel ke
+          tepi layar dan komposisinya terbelah lagi. Track grid keduanya tetap
+          memesan lebarnya meski isinya keluar dari alur, sehingga teksnya tidak
           merangkak ke bawah foto.
 
           Selama fotonya belum ada, bingkai bergarisnya dipertahankan supaya
@@ -175,7 +187,7 @@ export function Hero({ profile }: { profile: Profile }) {
         <motion.div
           className={
             profile.photoUrl
-              ? "-mb-16 md:absolute md:right-[clamp(20px,5vw,48px)] md:bottom-0 md:mb-0 md:w-[40%] md:max-w-[560px]"
+              ? "relative md:absolute md:right-0 md:bottom-0 md:w-[42%] md:max-w-[520px]"
               : "overflow-hidden rounded-xl border border-[var(--color-line-strong)]"
           }
           {...(reduced
@@ -186,6 +198,19 @@ export function Hero({ profile }: { profile: Profile }) {
                 transition: { duration: 1, delay: 0.3, ease: EASE },
               })}
         >
+          {/*
+            Gradasi di belakang subjek. Warnanya diturunkan dari `--color-ink`,
+            jadi ia terang di tema gelap dan gelap di tema terang tanpa aturan
+            terpisah — sekaligus mengangkat baju gelap dari latar hitam murni.
+            Berhenti tepat sebelum dasar supaya tidak menabrak garis pemisah.
+          */}
+          {profile.photoUrl ? (
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-x-[-18%] top-[4%] bottom-[2%] -z-10 [background:radial-gradient(52%_46%_at_50%_40%,color-mix(in_oklab,var(--color-ink)_14%,transparent)_0%,transparent_72%)]"
+            />
+          ) : null}
+
           <SmartImage
             src={profile.photoUrl}
             alt={`${t(UI.photoAlt)} — ${profile.name}`}
@@ -193,14 +218,15 @@ export function Hero({ profile }: { profile: Profile }) {
             priority
             fit="contain"
             align="bottom"
-            sizes="(max-width: 768px) 100vw, 560px"
+            sizes="(max-width: 768px) 100vw, 520px"
             className={
               profile.photoUrl
-                ? "h-[440px] w-full md:h-[min(84vh,780px)]"
+                ? "h-[440px] w-full md:h-[min(84vh,760px)]"
                 : "h-[360px] w-full"
             }
           />
         </motion.div>
+        </div>
       </div>
     </section>
   );
