@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Instrument_Sans, Manrope, JetBrains_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 const instrumentSans = Instrument_Sans({
@@ -95,6 +96,12 @@ export default function RootLayout({
         className={`${instrumentSans.variable} ${manrope.variable} ${jetbrainsMono.variable}`}
       >
         {children}
+        {/*
+          Vercel Web Analytics. Skripnya dimuat dari va.vercel-scripts.com,
+          jadi origin itu harus ada di script-src pada next.config.ts —
+          CSP memblokirnya tanpa error yang terlihat, datanya hanya tidak pernah masuk.
+        */}
+        <Analytics />
       </body>
     </html>
   );

@@ -19,6 +19,9 @@ let isDev = false;
 const supabaseOrigin = supabaseHost ? `https://${supabaseHost}` : "";
 const supabaseSocket = supabaseHost ? `wss://${supabaseHost}` : "";
 
+/** Skrip Vercel Web Analytics; beacon-nya sendiri pergi ke /_vercel/insights (satu origin). */
+const VERCEL_ANALYTICS = "https://va.vercel-scripts.com";
+
 /** hCaptcha di halaman login memuat skrip, iframe, dan style dari domainnya sendiri. */
 const HCAPTCHA = "https://hcaptcha.com https://*.hcaptcha.com";
 
@@ -33,7 +36,7 @@ const HCAPTCHA = "https://hcaptcha.com https://*.hcaptcha.com";
  */
 const buildCsp = () => [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline' ${HCAPTCHA}${isDev ? " 'unsafe-eval'" : ""}`,
+  `script-src 'self' 'unsafe-inline' ${HCAPTCHA} ${VERCEL_ANALYTICS}${isDev ? " 'unsafe-eval'" : ""}`,
   `style-src 'self' 'unsafe-inline' ${HCAPTCHA}`,
   `img-src 'self' data: blob: ${supabaseOrigin}`.trim(),
   "font-src 'self' data:",
