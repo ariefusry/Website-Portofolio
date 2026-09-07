@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useReducedMotion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import { useLang } from "@/lib/lang-context";
 import { UI } from "@/lib/i18n";
 import { TwoColSection } from "@/components/ui/Primitives";
@@ -18,6 +18,56 @@ const ROWS = [
   { speed: "44s", reverse: true },
   { speed: "36s", reverse: false },
 ];
+
+/** Sama dengan --ease-brand; dipakai supaya geraknya sekeluarga dengan Reveal. */
+const EASE = [0.16, 1, 0.3, 1] as const;
+
+/**
+ * Membungkus isi yang tingginya berubah, lalu menganimasikan tinggi itu.
+ *
+ * Pita satu baris vs daftar penuh enam baris bedanya ratusan piksel, dan tanpa
+ * ini tombol di bawahnya melompat begitu ditekan. Tingginya diukur ulang lewat
+ * ResizeObserver, jadi ikut benar saat lebar layar berubah dan pil-nya membungkus
+ * ke jumlah baris yang lain.
+ *
+ * Sengaja BUKAN `layout` milik framer-motion: itu menganimasikan tinggi lewat
+ * scaleY, dan teks di dalam pil ikut gepeng selama transisinya berjalan.
+ */
+function AutoHeight({
+  children,
+  animate,
+}: {
+  children: React.ReactNode;
+  animate: boolean;
+}) {
+  const inner = useRef<HTMLDivElement>(null);
+  const [height, setHeight] = useState<number | null>(null);
+
+  useEffect(() => {
+    const el = inner.current;
+    if (!el) return;
+    // getBoundingClientRect, bukan offsetHeight: yang kedua dibulatkan ke
+    // integer, dan sisa pecahannya memotong tipis baris terakhir.
+    const observer = new ResizeObserver(() =>
+      setHeight(el.getBoundingClientRect().height),
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <motion.div
+      className="overflow-hidden"
+      // Render pertama belum sempat mengukur — biarkan setinggi isinya.
+      animate={{ height: height ?? "auto" }}
+      // Tanpa ini framer menganimasikan tinggi dari nol saat mount.
+      initial={false}
+      transition={animate ? { duration: 0.42, ease: EASE } : { duration: 0 }}
+    >
+      <div ref={inner}>{children}</div>
+    </motion.div>
+  );
+}
 
 /**
  * Satu skill: logo brand bila ada, plus namanya — di sini nama itu isi utamanya.
@@ -93,14 +143,24 @@ function MarqueeRow({
         style={{ "--speed": speed } as React.CSSProperties}
         // Pita yang tidak bisa dibaca karena terus bergerak adalah pita yang
         // gagal: berhenti saat disentuh kursor atau saat ada fokus di dalamnya.
-        className={`flex w-max animate-marquee gap-2.5 py-1 group-hover/row:[animation-play-state:paused] focus-within:[animation-play-state:paused] ${
+        className={`flex w-max animate-marquee py-1 group-hover/row:[animation-play-state:paused] focus-within:[animation-play-state:paused] ${
           // Arah kiri→kanan cukup lewat animation-direction: keyframe-nya sama,
           // jadi seam-nya tetap mulus tanpa perlu keyframe kedua.
           reverse ? "[animation-direction:reverse]" : ""
         }`}
       >
-        <div className="flex gap-2.5">{half(false)}</div>
-        <div className="flex gap-2.5" aria-hidden="true">
+        {/*
+         * Jarak antar separuh dibuat lewat `pe-2.5` di dalam masing-masing
+         * separuh, BUKAN `gap` di track — dan ini bukan gaya-gayaan.
+         *
+         * Dengan `gap` di track, lebarnya jadi 2W + gap sementara animasinya
+         * bergeser -50%, yaitu W + gap/2. Meleset setengah gap tiap putaran,
+         * dan itulah sentakan kecil yang terlihat di setiap sambungan. Dengan
+         * paddingnya ikut terhitung ke dalam separuh, tiap separuh persis 50%
+         * dari track dan -50% mendarat tepat di awal separuh kedua.
+         */}
+        <div className="flex gap-2.5 pe-2.5">{half(false)}</div>
+        <div className="flex gap-2.5 pe-2.5" aria-hidden="true">
           {half(true)}
         </div>
       </div>
@@ -123,27 +183,43 @@ export function Skills({ groups }: { groups: SkillGroup[] }) {
       eyebrow={t(UI.eyebrowSkills)}
       className="border-t border-[var(--color-line-soft)] bg-surface"
     >
-      {/* role="group": aria-label pada <div> polos tidak terekspos sama sekali. */}
-      <div className="grid min-w-0 gap-6" role="group" aria-label={t(UI.skillsRegion)}>
-        {groups.map((group, i) => (
-          <div key={group.id} className="min-w-0">
-            <GroupName>{t(group.name)}</GroupName>
-            {asGrid ? (
-              <div className="flex flex-wrap gap-2.5">
-                {group.items.map((item) => (
-                  <SkillPill key={item} label={item} />
-                ))}
-              </div>
-            ) : (
-              <MarqueeRow
-                group={group}
-                speed={ROWS[i % ROWS.length].speed}
-                reverse={ROWS[i % ROWS.length].reverse}
-              />
-            )}
-          </div>
-        ))}
-      </div>
+      <AutoHeight animate={!reduced}>
+        {/*
+         * `key` yang ikut berganti membuat React memasang ulang blok ini, dan
+         * `initial` opacity-nya memudarkan keadaan baru masuk sementara tinggi
+         * wadahnya masih meluncur. Tanpa itu isinya bertukar dalam satu frame
+         * di tengah tinggi yang sedang bergerak — persis yang terasa kasar.
+         */}
+        {/* role="group": aria-label pada <div> polos tidak terekspos sama sekali. */}
+        <motion.div
+          key={asGrid ? "grid" : "reel"}
+          initial={reduced ? false : { opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3, ease: EASE }}
+          className="grid min-w-0 gap-6"
+          role="group"
+          aria-label={t(UI.skillsRegion)}
+        >
+          {groups.map((group, i) => (
+            <div key={group.id} className="min-w-0">
+              <GroupName>{t(group.name)}</GroupName>
+              {asGrid ? (
+                <div className="flex flex-wrap gap-2.5">
+                  {group.items.map((item) => (
+                    <SkillPill key={item} label={item} />
+                  ))}
+                </div>
+              ) : (
+                <MarqueeRow
+                  group={group}
+                  speed={ROWS[i % ROWS.length].speed}
+                  reverse={ROWS[i % ROWS.length].reverse}
+                />
+              )}
+            </div>
+          ))}
+        </motion.div>
+      </AutoHeight>
 
       {/* Tanpa animasi, tombolnya tidak mengontrol apa pun — jadi tidak dirender. */}
       {reduced ? null : (

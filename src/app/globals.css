@@ -91,9 +91,25 @@
  */
 @utility animate-marquee {
   animation: marquee var(--speed) linear infinite;
+  /* Pita ini bergerak sepanjang halaman hidup. `will-change` memberinya layer
+     compositor sendiri, jadi tiap frame cuma menggeser layer — bukan me-layout
+     ulang puluhan pil. Tanpa ini gerakannya bergetar halus di layar 60Hz. */
+  will-change: transform;
 }
 
+/*
+ * Promosi ke layer compositor ditangani `will-change` di atas, bukan trik
+ * translate3d — Lightning CSS melipat `translate3d(x, 0, 0)` jadi
+ * `translate(x)` waktu build, jadi bentuk 3D-nya tidak pernah sampai ke
+ * browser. Sudah dicek di CSS hasil `next build`.
+ *
+ * `from` ditulis eksplisit supaya titik awalnya tidak ikut berubah kalau suatu
+ * saat ada transform lain menempel di elemen yang sama.
+ */
 @keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
   to {
     transform: translateX(-50%);
   }
