@@ -24,3 +24,5 @@ next-env.d.ts.timestamp
 supabase/.temp/
 
 claude/
+AGENTS.md
+CLAUDE.md

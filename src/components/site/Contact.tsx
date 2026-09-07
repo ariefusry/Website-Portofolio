@@ -5,6 +5,7 @@ import { useLang } from "@/lib/lang-context";
 import { UI } from "@/lib/i18n";
 import { externalHref } from "@/lib/utils";
 import { Footer, type FooterColumn } from "@/components/ui/footer-section";
+import { VisitorCount } from "@/components/site/VisitorCount";
 import type { Profile } from "@/lib/types";
 
 /**
@@ -57,6 +58,7 @@ export function Contact({ profile }: { profile: Profile }) {
       note={t(profile.contactNote)}
       columns={columns}
       copyright={`© ${new Date().getFullYear()} ${profile.name}. ${t(UI.rightsReserved)}`}
+      meta={<VisitorCount />}
     />
   );
 }

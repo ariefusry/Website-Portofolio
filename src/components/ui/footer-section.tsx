@@ -30,12 +30,15 @@ export function Footer({
   columns,
   copyright,
   brand,
+  meta,
 }: {
   heading: ReactNode;
   note?: ReactNode;
   columns: FooterColumn[];
   copyright: string;
   brand?: ReactNode;
+  /** Baris di bawah copyright — dipakai penghitung kunjungan. */
+  meta?: ReactNode;
 }) {
   return (
     <footer className="relative w-full bg-dark-bg text-dark-text">
@@ -59,6 +62,7 @@ export function Footer({
           <p className="m-0 pt-4 font-mono text-xs leading-none text-dark-2/70">
             {copyright}
           </p>
+          {meta}
         </AnimatedContainer>
 
         <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 xl:col-span-2">
