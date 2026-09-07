@@ -10,14 +10,16 @@ import type { Project } from "@/lib/types";
 
 /**
  * Sorotan satu proyek unggulan, tepat sebelum grid Projects.
- * Judulnya memakai kolom `overview` (kalimat headline yang bisa diedit di
- * admin) dan jatuh ke nama proyek selama kolom itu masih kosong.
+ * Judulnya memakai `summary` (kalimat pendek, cocok untuk headline besar) dan
+ * jatuh ke nama proyek kalau kosong. `overview` sengaja tidak dipakai di sini —
+ * itu ringkasan panjang untuk halaman detail, terlalu panjang untuk h2.
  */
 export function FeaturedBuild({ project }: { project: Project | null }) {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   if (!project) return null;
 
-  const headline = t(project.overview) || project.title;
+  const headline = t(project.summary) || project.title;
+  const supporting = (lang === "ID" ? project.highlights.id : project.highlights.en)[0];
   // Baris pertama galeri adalah gambar utama halaman detail; pakai yang sama di
   // sini supaya sorotan dan halamannya tidak menampilkan screenshot berbeda.
   const image = project.imageUrls[0] ?? project.imageUrl;
@@ -43,9 +45,11 @@ export function FeaturedBuild({ project }: { project: Project | null }) {
             {headline}
           </h2>
 
-          <p className="mt-0 mb-6 max-w-[600px] font-body text-[16px] leading-[1.7] font-normal text-body-2">
-            {t(project.summary)}
-          </p>
+          {supporting ? (
+            <p className="mt-0 mb-6 max-w-[600px] font-body text-[16px] leading-[1.7] font-normal text-body-2">
+              {supporting}
+            </p>
+          ) : null}
 
           <TechIcons items={project.tech} size={20} className="mb-7" />
 

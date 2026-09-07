@@ -12,7 +12,7 @@ export function Research({ research }: { research: ResearchType }) {
     <TwoColSection
       id="research"
       eyebrow={t(UI.eyebrowResearch)}
-      className="bg-surface"
+      className="border-t border-[var(--color-line-soft)] bg-surface"
     >
       <div className="grid items-start gap-8 lg:grid-cols-[1.15fr_.85fr]">
         <div>
