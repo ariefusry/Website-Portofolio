@@ -69,7 +69,8 @@ on conflict (id) do update set
 
 insert into public.projects
   (id, slug, title, summary_en, summary_id, badges, accent_badge, tech,
-   featured, has_thumb, overview_en, overview_id, facts, sort)
+   featured, has_thumb, overview_en, overview_id, facts,
+   highlights_en, highlights_id, sort)
 values
   ('indeta', 'indeta', 'INDETA',
    'Tourism & UMKM platform: destinations, products, UMKM directories, travel packages, plus an admin dashboard. Schema design through deployment.',
@@ -82,6 +83,7 @@ values
      {"label":"SCOPE","value_en":"Public site + admin CMS","value_id":"Situs publik + CMS admin"},
      {"label":"STACK","value_en":"Laravel · Tailwind · Vite","value_id":"Laravel · Tailwind · Vite"},
      {"label":"OUTCOME","value_en":"Delivered and deployed","value_id":"Selesai dan ter-deploy"}]'::jsonb,
+   array[]::text[], array[]::text[],
    1),
   ('sugih', 'sugih', 'SUGIH',
    'Kretek brand company profile. Laravel + Supabase backend for company, product and article data.',
@@ -89,26 +91,88 @@ values
    array['PAID CLIENT · 2 DEVS'], true, array['Laravel','Supabase'], true, true,
    'SUGIH: a kretek brand company profile, built with one other developer.',
    'SUGIH: company profile merek kretek, dikerjakan bersama satu developer lain.',
-   '[]'::jsonb, 2),
-  ('meeting-room', 'meeting-room-management', 'Meeting Room Management',
-   'Real-time reservations for the Cilaki and Banda offices. Flutter + Supabase.',
-   'Reservasi real-time untuk kantor Cilaki dan Banda. Flutter + Supabase.',
-   array['PT POS INDONESIA'], false, array[]::text[], false, true, '', '', '[]'::jsonb, 3),
+   '[]'::jsonb, array[]::text[], array[]::text[], 2),
+  ('meeting-room', 'meeting-room-management', 'Room Management System',
+   'Room booking for PT Pos Indonesia: a Laravel web app and a Flutter app, two independent clients on one Supabase backend.',
+   'Booking ruangan untuk PT Pos Indonesia: aplikasi web Laravel dan aplikasi Flutter, dua klien independen di satu backend Supabase.',
+   array['PT POS INDONESIA'], false,
+   array['Laravel','Flutter','Supabase','PostgreSQL','Tailwind','Firebase'], false, true,
+   'Staff browse rooms, check availability per time slot, and submit a booking with date, time, purpose and headcount; an admin approves or rejects it with a reason. On the day, the user checks in with a photo, and every booking feeds a usage dashboard broken down by period and division. The web and mobile apps are not two systems — they are two front-ends speaking directly to the same Supabase Postgres with an identical schema, so Laravel serves no API to Flutter. Edge Functions in Deno handle check-in reminders, photo cleanup and notification triggers into Firebase Cloud Messaging.',
+   'Karyawan melihat daftar ruangan, mengecek ketersediaan per slot waktu, dan mengajukan booking berisi tanggal, jam, keperluan, dan jumlah peserta; admin menyetujui atau menolak beserta alasannya. Pada hari pemakaian, user check-in dengan foto, dan setiap booking mengisi dashboard analitik pemakaian per periode dan per divisi. Web dan mobile bukan dua sistem terpisah — keduanya front-end yang bicara langsung ke Supabase Postgres yang sama dengan skema identik, jadi Laravel tidak menyediakan API untuk Flutter. Edge Function berbasis Deno menangani reminder check-in, cleanup foto, dan trigger notifikasi ke Firebase Cloud Messaging.',
+   '[{"label":"ROLE","value_en":"Fullstack developer","value_id":"Fullstack developer"},
+            {"label":"SCOPE","value_en":"Laravel web + Flutter app, admin and user roles","value_id":"Web Laravel + aplikasi Flutter, peran admin dan user"},
+     {"label":"ARCHITECTURE","value_en":"Two clients, one Supabase Postgres — no API between them","value_id":"Dua klien, satu Supabase Postgres — tanpa API di antaranya"},
+     {"label":"BACKEND","value_en":"Supabase Postgres, Storage, Deno Edge Functions","value_id":"Supabase Postgres, Storage, Edge Function Deno"},
+     {"label":"STATUS","value_en":"Mobile test-ready, web at roughly 70%","value_id":"Mobile siap uji, web sekitar 70%"}]'::jsonb,
+   array[
+     'One schema, two front-ends: Laravel 12 with Blade and Tailwind, Flutter across Android, iOS and desktop, both talking to Supabase directly rather than through an API layer.',
+     'Booking lifecycle end to end: availability per time slot, approval or rejection with a reason, cancellation, and a photo check-in on the day of use.',
+     'Deno Edge Functions for the work that cannot live in a client: check-in reminders, storage cleanup, and notification triggers into Firebase Cloud Messaging and OneSignal.',
+     'Usage analytics for admins — room occupancy by period and by division, drawn from the same booking records.'
+   ],
+   array[
+     'Satu skema, dua front-end: Laravel 12 dengan Blade dan Tailwind, Flutter untuk Android, iOS, dan desktop, keduanya bicara langsung ke Supabase tanpa lapisan API.',
+     'Siklus booking utuh: ketersediaan per slot waktu, persetujuan atau penolakan beserta alasan, pembatalan, dan check-in berfoto di hari pemakaian.',
+     'Edge Function Deno untuk pekerjaan yang tidak bisa tinggal di klien: reminder check-in, cleanup storage, dan trigger notifikasi ke Firebase Cloud Messaging dan OneSignal.',
+     'Analitik pemakaian untuk admin — okupansi ruangan per periode dan per divisi, dari catatan booking yang sama.'
+   ],
+   3),
   ('autentik', 'autentik', 'AUTENTIK',
-   'Certificate verification with text detection and matching on Mantranet-based infrastructure.',
-   'Verifikasi sertifikat dengan deteksi dan pencocokan teks di atas infrastruktur berbasis Mantranet.',
-   array['PROJECT MANAGER'], false, array[]::text[], false, true, '', '', '[]'::jsonb, 4),
+   'AI verification of student activity certificates: dual OCR, a font classifier, and Gemini cross-checking behind a Laravel + FastAPI monorepo.',
+   'Verifikasi sertifikat kegiatan mahasiswa berbasis AI: OCR ganda, klasifikasi font, dan cross-check Gemini di balik monorepo Laravel + FastAPI.',
+   array['PROJECT MANAGER'], false,
+   array['Laravel','FastAPI','MySQL','Docker','Nginx','PyTorch','ONNX'], false, true,
+   'A student uploads an activity certificate, Laravel stores the record, and a FastAPI service reads the file end to end: OpenCV preprocessing, EasyOCR for a fast first pass with TrOCR re-reading low-confidence keywords, an EfficientNet-B3 font classifier exported to ONNX, then fuzzy matching against the event data plus a Google Custom Search and Gemini cross-check of whether the event exists at all. The final score and both result sets come back to Laravel and land on the certificate page. Two services, one Docker Compose stack behind Nginx.',
+   'Mahasiswa mengunggah sertifikat kegiatan, Laravel menyimpan record-nya, lalu service FastAPI membaca berkasnya dari hulu ke hilir: preprocessing OpenCV, EasyOCR untuk pembacaan cepat dengan TrOCR membaca ulang keyword ber-confidence rendah, klasifikasi font EfficientNet-B3 yang di-export ke ONNX, lalu fuzzy matching terhadap data kegiatan plus cross-check Google Custom Search dan Gemini soal apakah kegiatannya benar-benar ada. Skor akhir dan kedua set hasil kembali ke Laravel dan tampil di halaman sertifikat. Dua service, satu stack Docker Compose di balik Nginx.',
+   '[{"label":"ROLE","value_en":"Project manager","value_id":"Project manager"},
+     {"label":"ARCHITECTURE","value_en":"Laravel 12 + FastAPI, Docker Compose behind Nginx","value_id":"Laravel 12 + FastAPI, Docker Compose di balik Nginx"},
+     {"label":"OCR","value_en":"EasyOCR first pass, TrOCR for precision","value_id":"EasyOCR pembacaan awal, TrOCR untuk presisi"},
+     {"label":"MODEL","value_en":"EfficientNet-B3 font classifier, 3,473 classes, ONNX Runtime","value_id":"Klasifikasi font EfficientNet-B3, 3.473 kelas, ONNX Runtime"}]'::jsonb,
+   array[
+     'Dual OCR: EasyOCR sweeps the document, TrOCR (trocr-base-printed) re-reads the keywords the first pass was unsure about.',
+     'Font forensics: EfficientNet-B3 fine-tuned over 3,473 Google Fonts classes and exported to ONNX, checking the certificate typeface against the issuer template.',
+     'Content verification: rapidfuzz matching against event and participant records, then Google Custom Search plus Gemini 2.5 Flash judging whether the activity actually took place.',
+     'One final score per certificate, composed from the fuzzy match and the AI verdict, stored alongside the raw OCR and analysis results.'
+   ],
+   array[
+     'OCR ganda: EasyOCR menyapu seluruh dokumen, TrOCR (trocr-base-printed) membaca ulang keyword yang confidence-nya rendah.',
+     'Forensik font: EfficientNet-B3 di-finetune pada 3.473 kelas Google Fonts dan di-export ke ONNX, mencocokkan tipografi sertifikat dengan template penyelenggara.',
+     'Verifikasi konten: pencocokan rapidfuzz terhadap data kegiatan dan peserta, lalu Google Custom Search plus Gemini 2.5 Flash menilai apakah kegiatannya memang berlangsung.',
+     'Satu skor akhir per sertifikat, gabungan fuzzy match dan putusan AI, disimpan bersama hasil OCR dan analisis mentahnya.'
+   ],
+   4),
   ('flexitask', 'flexitask', 'FlexiTask',
-   'To-do app with a Llama-powered chatbot assistant.',
-   'Aplikasi to-do dengan asisten chatbot berbasis Llama.',
-   array['TEAM · 2025'], false, array[]::text[], false, true, '', '', '[]'::jsonb, 5)
+   'Flutter task manager with reminders and a chatbot that answers questions straight from Firestore. Built the frontend.',
+   'Task manager Flutter dengan pengingat dan chatbot yang menjawab langsung dari Firestore. Saya mengerjakan frontend-nya.',
+   array['TEAM · 2025'], false, array['Flutter','Dart','Firebase','Ollama'], false, true,
+   'Tasks carry a due date, a priority and a colour, group themselves into Today / Tomorrow / later, and flip to overdue on a ten-second timer without a refresh. Each one can schedule its own local notification, styled by priority. The Task Assistant answers questions like "what is due today" or "what is overdue" by querying Firestore directly, and falls back to an external LLM over REST for anything conversational. I worked on the frontend: a page transition system written from scratch rather than pulled from a router package, a central theme file that keeps colour, type and button styles consistent across every screen, and a reactive UI driven by Firestore streams with no external state management library.',
+   'Setiap task punya due date, prioritas, dan warna, mengelompokkan diri jadi Hari Ini / Besok / berikutnya, dan berubah jadi overdue lewat timer sepuluh detik tanpa perlu refresh. Masing-masing bisa menjadwalkan local notification sendiri dengan gaya berbeda per prioritas. Task Assistant menjawab pertanyaan seperti "apa yang jatuh tempo hari ini" atau "mana yang overdue" dengan query langsung ke Firestore, dan jatuh ke LLM eksternal lewat REST untuk percakapan umum. Saya mengerjakan frontend-nya: sistem transisi halaman yang ditulis sendiri alih-alih memakai package router, satu file tema terpusat yang menjaga warna, tipografi, dan gaya tombol konsisten di semua layar, serta UI reaktif dari stream Firestore tanpa state management library eksternal.',
+   '[{"label":"ROLE","value_en":"Frontend developer","value_id":"Frontend developer"},
+     {"label":"STACK","value_en":"Flutter · Firestore · Firebase Auth","value_id":"Flutter · Firestore · Firebase Auth"},
+     {"label":"STATE","value_en":"Firestore streams, no state library","value_id":"Stream Firestore, tanpa state library"},
+     {"label":"ASSISTANT","value_en":"Firestore queries, external LLM fallback","value_id":"Query Firestore, fallback LLM eksternal"}]'::jsonb,
+   array[
+     'Page transitions written by hand — fade-and-slide, directional slide, scale-and-elevation and dissolve — instead of a router package.',
+     'One theme file for colour, typography and button styles, applied across every screen with a custom bottom navigation and the Lexend typeface.',
+     'Reactive lists straight off Firestore streams, with overdue state re-evaluated on a ten-second timer rather than on refresh.',
+     'A task assistant that reads Firestore for anything about your own tasks and hands the rest to an external LLM over REST.'
+   ],
+   array[
+     'Transisi halaman ditulis tangan — fade-and-slide, slide berarah, scale-and-elevation, dan dissolve — bukan dari package router.',
+     'Satu file tema untuk warna, tipografi, dan gaya tombol, dipakai di semua layar bersama bottom navigation kustom dan tipografi Lexend.',
+     'Daftar reaktif langsung dari stream Firestore, dengan status overdue dihitung ulang lewat timer sepuluh detik alih-alih menunggu refresh.',
+     'Task assistant yang membaca Firestore untuk apa pun soal task milikmu dan melempar sisanya ke LLM eksternal lewat REST.'
+   ],
+   5)
 on conflict (id) do update set
   slug = excluded.slug, title = excluded.title,
   summary_en = excluded.summary_en, summary_id = excluded.summary_id,
   badges = excluded.badges, accent_badge = excluded.accent_badge, tech = excluded.tech,
   featured = excluded.featured, has_thumb = excluded.has_thumb,
   overview_en = excluded.overview_en, overview_id = excluded.overview_id,
-  facts = excluded.facts, sort = excluded.sort;
+  facts = excluded.facts,
+  highlights_en = excluded.highlights_en, highlights_id = excluded.highlights_id,
+  sort = excluded.sort;
 
 insert into public.research (id, badge, title, body_en, body_id, metrics)
 values (
