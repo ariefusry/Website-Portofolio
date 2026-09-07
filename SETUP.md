@@ -72,6 +72,7 @@ cp .env.example .env.local
 NEXT_PUBLIC_SUPABASE_URL=https://xxxx.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOi...
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
+NEXT_PUBLIC_HCAPTCHA_SITEKEY=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 ```
 
 Restart `npm run dev` (variabel env hanya dibaca saat start).
@@ -109,8 +110,9 @@ Lalu salin nama berkasnya ke kolom path:
 
 1. Push repo ini ke GitHub.
 2. Vercel → **Add New → Project** → pilih repo. Framework terdeteksi otomatis.
-3. **Environment Variables** — isi ketiganya (`NEXT_PUBLIC_SUPABASE_URL`,
-   `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `NEXT_PUBLIC_SITE_URL` dengan domain produksi).
+3. **Environment Variables** — isi keempatnya (`NEXT_PUBLIC_SUPABASE_URL`,
+   `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `NEXT_PUBLIC_SITE_URL` dengan domain produksi,
+   `NEXT_PUBLIC_HCAPTCHA_SITEKEY`).
 4. Deploy.
 
 Halaman publik memakai ISR 60 detik: perubahan dari dashboard muncul paling lama
@@ -118,6 +120,13 @@ satu menit kemudian, tanpa deploy ulang.
 
 ## Catatan keamanan
 
+- **Attack Protection aktif di Supabase.** Selama CAPTCHA menyala, setiap request
+  auth wajib membawa token hCaptcha. Halaman login mengirimnya dari widget yang
+  memakai `NEXT_PUBLIC_HCAPTCHA_SITEKEY`; kalau env itu kosong, login pasti ditolak
+  server. *Secret* hCaptcha hanya tinggal di dashboard Supabase, tidak pernah di repo.
+- Header keamanan (CSP, HSTS, nosniff, frame-deny, Referrer-Policy, Permissions-Policy)
+  dipasang di `next.config.ts`. CSP mengizinkan domain Supabase dan hCaptcha saja —
+  menambah layanan pihak ketiga baru berarti menambah origin-nya di sana dulu.
 - Hanya `anon` key yang dipakai; **jangan** menaruh `service_role` key di project ini.
 - Semua penulisan lewat sesi user + RLS. Kolom yang boleh ditulis dibatasi
   whitelist di `src/lib/admin/schema.ts`.

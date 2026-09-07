@@ -36,7 +36,12 @@ export default async function Home() {
     <LangProvider defaultLang={settings.defaultLang}>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        // JSON.stringify tidak meloloskan "</script>". Konten datang dari
+        // dashboard admin, tapi satu karakter "<" yang lolos sudah cukup untuk
+        // menutup blok skrip ini lebih awal, jadi escape di sini, bukan di sumbernya.
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd).replace(/</g, "\u003c"),
+        }}
       />
       <Header name={profile.name} email={profile.email} />
       <main>
