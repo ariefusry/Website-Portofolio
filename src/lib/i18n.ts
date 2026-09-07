@@ -68,6 +68,7 @@ export const UI = {
   emailLabel: { en: "Email", id: "Email" },
   phoneLabel: { en: "Phone", id: "Telepon" },
   rightsReserved: { en: "All rights reserved.", id: "Hak cipta dilindungi." },
+  visits: { en: "visits", id: "kunjungan" },
 } satisfies Record<string, Bi | Record<string, Bi>>;
 
 export type Ui = typeof UI;

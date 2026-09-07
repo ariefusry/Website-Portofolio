@@ -22,3 +22,5 @@ next-env.d.ts.timestamp
 
 # Keluaran Supabase CLI, bukan bagian dari skema.
 supabase/.temp/
+
+claude/
