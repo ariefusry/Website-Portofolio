@@ -241,15 +241,18 @@ on conflict (id) do update set
   body_en = excluded.body_en, body_id = excluded.body_id, sort = excluded.sort;
 
 insert into public.skill_groups (id, name_en, name_id, items, accent, sort) values
-  ('engineering', 'Engineering', 'Engineering',
-   array['Flutter','Dart','Laravel','PHP','Supabase','PostgreSQL','MySQL','REST API','Golang','Git','Linux'],
+  ('engineering', 'Languages & frameworks', 'Bahasa & framework',
+   array['Flutter','Dart','Laravel','PHP','Python','FastAPI','Golang','TypeScript','JavaScript','React','Next.js','Tailwind CSS','Alpine.js','REST API'],
    false, 1),
   ('data', 'Data & machine learning', 'Data & machine learning',
-   array['Python','TensorFlow / Keras','Scikit-learn','Pandas','NumPy','RDKit','NiaPy'],
+   array['TensorFlow / Keras','PyTorch','Scikit-learn','Pandas','NumPy','RDKit','NiaPy','OpenCV','ONNX','EasyOCR','TrOCR'],
    true, 2),
-  ('tools', 'Tools', 'Tools',
-   array['Figma','VS Code','Android Studio','Vercel','Jupyter','Claude Code','Cursor','Copilot'],
-   false, 3)
+  ('platform', 'Platform & infrastructure', 'Platform & infrastruktur',
+   array['Supabase','PostgreSQL','MySQL','Firebase','Docker','Nginx','Deno','Vercel','Linux','Git'],
+   false, 3),
+  ('tools', 'Tools & workflow', 'Tools & workflow',
+   array['Figma','VS Code','Android Studio','Jupyter','Vite','GSAP','Framer Motion','Swiper','Ollama','Gemini','Claude Code','Cursor','Copilot'],
+   false, 4)
 on conflict (id) do update set
   name_en = excluded.name_en, name_id = excluded.name_id,
   items = excluded.items, accent = excluded.accent, sort = excluded.sort;

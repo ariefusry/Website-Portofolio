@@ -9,15 +9,20 @@ import { TechGlyph, techIcon } from "@/components/ui/TechIcons";
 import type { SkillGroup } from "@/lib/types";
 
 /**
- * Kecepatan per baris; sedikit berbeda supaya ketiganya tidak bergerak seragam.
- * Baris tengah sengaja berlawanan arah — pergerakan yang saling melawan lebih
- * enak dilihat daripada tiga baris yang meluncur searah.
+ * Kecepatan per baris; sedikit berbeda supaya barisnya tidak bergerak seragam.
+ * Panjangnya tidak harus sama dengan jumlah grup — daftarnya diputar ulang.
  */
-const ROWS = [
-  { speed: "52s", reverse: false },
-  { speed: "44s", reverse: true },
-  { speed: "36s", reverse: false },
-];
+const SPEEDS = ["52s", "44s", "36s", "48s"];
+
+/**
+ * Arah tiap baris diturunkan dari indeks grup, bukan didaftar satu per satu:
+ * baris genap kanan→kiri, baris ganjil kiri→kanan. Pergerakan yang saling
+ * melawan lebih enak dilihat daripada beberapa baris yang meluncur searah, dan
+ * dengan dihitung begini selang-selingnya tetap benar berapa pun jumlah grupnya
+ * — daftar manual sempat ikut terputar bersama kecepatan dan bisa membuat dua
+ * baris bersebelahan searah begitu jumlah grup bertambah.
+ */
+const isReversed = (index: number) => index % 2 === 1;
 
 /** Sama dengan --ease-brand; dipakai supaya geraknya sekeluarga dengan Reveal. */
 const EASE = [0.16, 1, 0.3, 1] as const;
@@ -212,8 +217,8 @@ export function Skills({ groups }: { groups: SkillGroup[] }) {
               ) : (
                 <MarqueeRow
                   group={group}
-                  speed={ROWS[i % ROWS.length].speed}
-                  reverse={ROWS[i % ROWS.length].reverse}
+                  speed={SPEEDS[i % SPEEDS.length]}
+                  reverse={isReversed(i)}
                 />
               )}
             </div>

@@ -56,6 +56,7 @@ const ICON_BY_LABEL: Record<string, string> = {
   html5: "Html5",
   css: "Css",
   "android studio": "Androidstudio",
+  "framer motion": "Framer",
   cursor: "Cursor",
   copilot: "Githubcopilot",
   "github copilot": "Githubcopilot",
