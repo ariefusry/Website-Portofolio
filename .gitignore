@@ -16,11 +16,9 @@ yarn-error.log*
 .vercel
 *.tsbuildinfo
 
-# Kredensial database Supabase — jangan pernah masuk repo.
+# Supabase
 supabase-credential/
 next-env.d.ts.timestamp
-
-# Keluaran Supabase CLI, bukan bagian dari skema.
 supabase/.temp/
 
 claude/
