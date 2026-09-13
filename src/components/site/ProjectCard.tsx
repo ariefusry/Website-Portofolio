@@ -71,7 +71,7 @@ export function ProjectCard({ project }: { project: Project }) {
             {project.title}
           </h3>
           {status ? (
-            <span className="rounded-[5px] bg-accent-bg px-2 py-1 font-mono text-[10px] leading-none font-semibold tracking-wide text-accent-ink">
+            <span className="rounded-[5px] bg-[color-mix(in_oklab,var(--color-accent-strong)_15%,transparent)] px-2 py-1 font-mono text-[10px] leading-none font-semibold tracking-wide text-[var(--color-accent-strong)]">
               {status}
             </span>
           ) : null}
