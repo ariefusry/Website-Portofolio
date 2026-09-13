@@ -1,6 +1,6 @@
 "use client";
 
-import { ViewTransition } from "react";
+import { ViewTransition, useEffect, useState } from "react";
 
 import Link from "next/link";
 import { useLang } from "@/lib/lang-context";
@@ -22,11 +22,30 @@ export function ProjectDetail({ project }: { project: Project }) {
   const highlights = lang === "ID" ? project.highlights.id : project.highlights.en;
   const [heroImage, ...restImages] = project.imageUrls;
 
+  // Baru bisa diklik setelah halaman di-scroll sampai atas, biar posisi
+  // "kembali" ke beranda konsisten dengan bagian atas section proyek.
+  const [atTop, setAtTop] = useState(true);
+  useEffect(() => {
+    const check = () => setAtTop(window.scrollY <= 0);
+    check();
+    window.addEventListener("scroll", check, { passive: true });
+    return () => window.removeEventListener("scroll", check);
+  }, []);
+
   return (
     <article className="section-x section-inner py-12 md:py-16">
       <Link
         href="/#projects"
-        className="inline-block rounded font-body text-sm font-medium text-muted transition-colors hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid"
+        aria-disabled={!atTop}
+        tabIndex={atTop ? 0 : -1}
+        onClick={(e) => {
+          if (!atTop) e.preventDefault();
+        }}
+        className={`inline-block rounded font-body text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid ${
+          atTop
+            ? "text-muted hover:text-ink"
+            : "cursor-not-allowed text-muted-2 opacity-50"
+        }`}
       >
         ← {t(UI.backToProjects)}
       </Link>

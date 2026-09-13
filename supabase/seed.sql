@@ -190,12 +190,53 @@ values
      'Daftar reaktif langsung dari stream Firestore, dengan status overdue dihitung ulang lewat timer sepuluh detik alih-alih menunggu refresh.',
      'Task assistant yang membaca Firestore untuk apa pun soal task milikmu dan melempar sisanya ke LLM eksternal lewat REST.'
    ],
+   6)
+on conflict (id) do update set
+  slug = excluded.slug, title = excluded.title,
+  summary_en = excluded.summary_en, summary_id = excluded.summary_id,
+  badges = excluded.badges, accent_badge = excluded.accent_badge, tech = excluded.tech,
+  featured = excluded.featured, has_thumb = excluded.has_thumb,
+  overview_en = excluded.overview_en, overview_id = excluded.overview_id,
+  facts = excluded.facts,
+  highlights_en = excluded.highlights_en, highlights_id = excluded.highlights_id,
+  sort = excluded.sort;
+
+insert into public.projects
+  (id, slug, title, summary_en, summary_id, badges, accent_badge, tech,
+   featured, has_thumb, status_en, status_id, overview_en, overview_id, facts,
+   highlights_en, highlights_id, sort)
+values
+  ('web-porto', 'web-porto', 'Portfolio Site',
+   'This site itself: a Next.js portfolio with a Supabase-backed admin CMS, bilingual content, and a static seed fallback so it still renders with no database at all.',
+   'Situs ini sendiri: portofolio Next.js dengan CMS admin berbasis Supabase, konten dwibahasa, dan fallback seed statis sehingga tetap render tanpa database sama sekali.',
+   array['SOLO FULLSTACK'], false, array['Next.js','React','TypeScript','Tailwind CSS','Supabase','Framer Motion'],
+   false, false, 'ACTIVELY MAINTAINED', 'TERUS DIPERBARUI',
+   -- sort = 5, di antara Meeting Room (3) dan FlexiTask (6), supaya masuk 4 kartu pertama di beranda
+   'Every section — profile, projects, experience, research, stats, skills — is a Supabase row edited from /admin, with 60-second ISR so an edit goes live within a minute. Supabase is never a single point of failure: getContent() tries the database first and falls back whole to a static seed file if the env vars are missing or the query fails, so the repo runs with npm run dev and no .env.local at all. One schema declaration drives the admin dashboard — the same field list renders the form, whitelists which columns a Server Action may write, and coerces types, so adding a field is one line rather than a form plus a validator plus an action. Auth is enforced in three layers: middleware refreshes the Supabase session, the admin layout re-checks table membership, and Postgres RLS is the actual source of truth — only the anon key is used, no service-role key anywhere in the app. EN/ID needs no duplicated routes: every text field is stored as an _en/_id pair and swapped client-side, and a small head script sets the theme before hydration so no page ever paints in the wrong one.',
+   'Setiap bagian — profil, proyek, pengalaman, riset, statistik, skill — adalah baris Supabase yang disunting dari /admin, dengan ISR 60 detik sehingga perubahan tayang dalam semenit. Supabase tidak pernah jadi titik gagal tunggal: getContent() mencoba database dulu dan jatuh sepenuhnya ke berkas seed statis kalau env var belum diisi atau query gagal, jadi repo ini bisa dijalankan dengan npm run dev tanpa .env.local sama sekali. Satu deklarasi skema menggerakkan dashboard admin — daftar field yang sama merender form, memutih-daftarkan kolom mana yang boleh ditulis Server Action, dan mengoreksi tipe, sehingga menambah field cukup satu baris, bukan form plus validator plus action. Autentikasi ditegakkan tiga lapis: middleware menyegarkan sesi Supabase, layout admin mengecek ulang keanggotaan tabel, dan RLS Postgres jadi sumber kebenaran sesungguhnya — hanya anon key yang dipakai, tanpa service-role key di mana pun dalam aplikasi. EN/ID tidak butuh rute ganda: tiap field teks disimpan sebagai pasangan _en/_id dan ditukar di sisi klien, dan skrip kecil di head mengatur tema sebelum hydration sehingga tak ada halaman yang sempat tergambar dengan tema salah.',
+   '[{"label":"ROLE","value_en":"Solo fullstack developer","value_id":"Fullstack developer tunggal"},
+     {"label":"ARCHITECTURE","value_en":"Next.js 16 App Router + Supabase (DB, Auth, Storage, RLS)","value_id":"Next.js 16 App Router + Supabase (DB, Auth, Storage, RLS)"},
+     {"label":"RESILIENCE","value_en":"DB-first content with a static seed fallback","value_id":"Konten DB-first dengan fallback seed statis"},
+     {"label":"DEPLOY","value_en":"Vercel, 60s ISR","value_id":"Vercel, ISR 60 detik"}]'::jsonb,
+   array[
+     'Content-as-data: every section is a Supabase row edited from /admin with 60-second ISR, and the whole site still renders from a static seed file if Supabase is unreachable or unconfigured.',
+     'One field schema drives the admin form renderer, the column whitelist and the type coercion for every table — a new field is one line, not a form plus a validator plus an action.',
+     'Auth enforced in three layers: middleware refreshes the session, the admin layout re-checks membership, and Postgres RLS is the actual source of truth — only the anon key is used, no service-role key in the app.',
+     'EN/ID with no duplicated routes: every text field is stored as an _en/_id pair and swapped client-side; a small head script sets the theme before hydration so there is no light/dark flash.'
+   ],
+   array[
+     'Content-as-data: setiap bagian adalah baris Supabase yang disunting dari /admin dengan ISR 60 detik, dan seluruh situs tetap render dari berkas seed statis kalau Supabase tak terjangkau atau belum dikonfigurasi.',
+     'Satu skema field menggerakkan perender form admin, whitelist kolom, dan koersi tipe untuk setiap tabel — field baru cukup satu baris, bukan form plus validator plus action.',
+     'Autentikasi tiga lapis: middleware menyegarkan sesi, layout admin mengecek ulang keanggotaan, dan RLS Postgres jadi sumber kebenaran sesungguhnya — hanya anon key yang dipakai, tanpa service-role key di aplikasi.',
+     'EN/ID tanpa rute ganda: tiap field teks disimpan sebagai pasangan _en/_id dan ditukar di sisi klien; skrip kecil di head mengatur tema sebelum hydration sehingga tak ada flash light/dark.'
+   ],
    5)
 on conflict (id) do update set
   slug = excluded.slug, title = excluded.title,
   summary_en = excluded.summary_en, summary_id = excluded.summary_id,
   badges = excluded.badges, accent_badge = excluded.accent_badge, tech = excluded.tech,
   featured = excluded.featured, has_thumb = excluded.has_thumb,
+  status_en = excluded.status_en, status_id = excluded.status_id,
   overview_en = excluded.overview_en, overview_id = excluded.overview_id,
   facts = excluded.facts,
   highlights_en = excluded.highlights_en, highlights_id = excluded.highlights_id,

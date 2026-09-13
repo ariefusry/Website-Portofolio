@@ -167,6 +167,34 @@ export async function deleteRecord(
   redirect(`/admin/${key}`);
 }
 
+/** Tulis ulang kolom `sort` sesuai urutan id dari drag-and-drop di dashboard. */
+export async function reorderRows(
+  key: string,
+  orderedIds: string[],
+): Promise<ActionState> {
+  const def = getTableDef(key);
+  if (!def || def.kind !== "collection") {
+    return { error: "Tabel tidak dikenal.", ok: false };
+  }
+
+  try {
+    const supabase = await requireAdmin();
+    const results = await Promise.all(
+      orderedIds.map((id, i) =>
+        supabase.from(def.table).update({ sort: i + 1 }).eq("id", id),
+      ),
+    );
+    const failed = results.find((r) => r.error);
+    if (failed?.error) return { error: failed.error.message, ok: false };
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : "Gagal mengurutkan.", ok: false };
+  }
+
+  revalidatePath("/");
+  revalidatePath(`/admin/${key}`);
+  return { error: null, ok: true };
+}
+
 export async function signOut() {
   const supabase = await createClient();
   await supabase.auth.signOut();

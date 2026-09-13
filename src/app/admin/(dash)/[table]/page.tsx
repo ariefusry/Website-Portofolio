@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getTableDef } from "@/lib/admin/schema";
 import { RecordForm } from "@/components/admin/RecordForm";
+import { ReorderableList } from "@/components/admin/ReorderableList";
 
 export default async function TablePage({
   params,
@@ -57,26 +58,7 @@ export default async function TablePage({
         </p>
       ) : null}
 
-      <ul className="m-0 grid max-w-3xl list-none gap-2 p-0">
-        {(rows ?? []).map((row: Record<string, unknown>) => (
-          <li key={String(row.id)}>
-            <Link
-              href={`/admin/${def.key}/${String(row.id)}`}
-              className="flex items-center justify-between gap-4 rounded-xl border border-[var(--color-line)] bg-surface px-5 py-4 transition-colors hover:border-ink"
-            >
-              <span className="font-display text-sm font-semibold">
-                {String(row[def.titleField ?? "id"] ?? row.id)}
-              </span>
-              <span className="font-mono text-xs text-muted">
-                {String(row.id)}
-              </span>
-            </Link>
-          </li>
-        ))}
-        {(rows ?? []).length === 0 && !error ? (
-          <li className="font-body text-sm text-muted">Belum ada entri.</li>
-        ) : null}
-      </ul>
+      {!error ? <ReorderableList def={def} initialRows={rows ?? []} /> : null}
     </>
   );
 }
