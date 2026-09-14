@@ -21,7 +21,7 @@ export default async function Home() {
     "@context": "https://schema.org",
     "@type": "Person",
     name: "Arief Muhammad Usry",
-    alternateName: profile.name,
+    alternateName: [profile.name, "ariefusry"],
     email: `mailto:${profile.email}`,
     telephone: profile.phone,
     jobTitle: "Fullstack Engineer",
