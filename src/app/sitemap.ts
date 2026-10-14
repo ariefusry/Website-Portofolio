@@ -1,6 +1,9 @@
 import type { MetadataRoute } from "next";
 import { getContent } from "@/lib/content";
 
+/** Tanpa ini sitemap di-cache sejak build; proyek baru tidak masuk sampai deploy ulang. */
+export const revalidate = 60;
+
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://ariefusry.vercel.app";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
