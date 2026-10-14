@@ -1,4 +1,5 @@
 import { getContent } from "@/lib/content";
+import { externalHref } from "@/lib/utils";
 import { LangProvider } from "@/lib/lang-context";
 import { Header } from "@/components/site/Header";
 import { Hero } from "@/components/site/Hero";
@@ -29,7 +30,7 @@ export default async function Home() {
     address: { "@type": "PostalAddress", addressLocality: "Bekasi", addressCountry: "ID" },
     alumniOf: { "@type": "CollegeOrUniversity", name: "Telkom University" },
     knowsAbout: ["Flutter", "Laravel", "Supabase", "PostgreSQL", "Machine Learning"],
-    sameAs: [`https://${profile.linkedin}`, `https://${profile.github}`],
+    sameAs: [profile.linkedin, profile.github].map(externalHref).filter(Boolean),
   };
 
   return (
