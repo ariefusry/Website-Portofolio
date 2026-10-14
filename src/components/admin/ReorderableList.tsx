@@ -20,6 +20,9 @@ export function ReorderableList({
   initialRows: Row[];
 }) {
   const [rows, setRows] = useState(initialRows);
+  // Urutan terakhir yang benar-benar tersimpan, untuk dikembalikan bila gagal.
+  const [saved, setSaved] = useState(initialRows);
+  const [error, setError] = useState<string | null>(null);
   const [dragId, setDragId] = useState<string | null>(null);
   const [, startTransition] = useTransition();
 
@@ -37,8 +40,15 @@ export function ReorderableList({
   }
 
   function persist(order: Row[]) {
-    startTransition(() => {
-      reorderRows(def.key, order.map((r) => String(r.id)));
+    startTransition(async () => {
+      const res = await reorderRows(def.key, order.map((r) => String(r.id)));
+      if (res.ok) {
+        setSaved(order);
+        setError(null);
+      } else {
+        setRows(saved);
+        setError(res.error);
+      }
     });
   }
 
@@ -47,40 +57,47 @@ export function ReorderableList({
   }
 
   return (
-    <ul className="m-0 grid max-w-3xl list-none gap-2 p-0">
-      {rows.map((row) => {
-        const id = String(row.id);
-        return (
-          <li
-            key={id}
-            draggable
-            onDragStart={() => setDragId(id)}
-            onDragOver={(e) => {
-              e.preventDefault();
-              moveOver(id);
-            }}
-            onDrop={(e) => e.preventDefault()}
-            onDragEnd={() => {
-              setDragId(null);
-              persist(rows);
-            }}
-            className="flex cursor-grab items-center gap-3 rounded-xl border border-[var(--color-line)] bg-surface px-5 py-4 transition-colors hover:border-ink active:cursor-grabbing"
-          >
-            <span aria-hidden="true" className="shrink-0 touch-none select-none text-muted-2">
-              ⠿
-            </span>
-            <Link
-              href={`/admin/${def.key}/${id}`}
-              className="flex flex-1 items-center justify-between gap-4"
+    <>
+      {error ? (
+        <p role="alert" className="mb-3 font-body text-sm text-red-600">
+          Urutan gagal disimpan: {error}
+        </p>
+      ) : null}
+      <ul className="m-0 grid max-w-3xl list-none gap-2 p-0">
+        {rows.map((row) => {
+          const id = String(row.id);
+          return (
+            <li
+              key={id}
+              draggable
+              onDragStart={() => setDragId(id)}
+              onDragOver={(e) => {
+                e.preventDefault();
+                moveOver(id);
+              }}
+              onDrop={(e) => e.preventDefault()}
+              onDragEnd={() => {
+                setDragId(null);
+                persist(rows);
+              }}
+              className="flex cursor-grab items-center gap-3 rounded-xl border border-[var(--color-line)] bg-surface px-5 py-4 transition-colors hover:border-ink active:cursor-grabbing"
             >
-              <span className="font-display text-sm font-semibold">
-                {String(row[def.titleField ?? "id"] ?? row.id)}
+              <span aria-hidden="true" className="shrink-0 touch-none select-none text-muted-2">
+                ⠿
               </span>
-              <span className="font-mono text-xs text-muted">{id}</span>
-            </Link>
-          </li>
-        );
-      })}
-    </ul>
+              <Link
+                href={`/admin/${def.key}/${id}`}
+                className="flex flex-1 items-center justify-between gap-4"
+              >
+                <span className="font-display text-sm font-semibold">
+                  {String(row[def.titleField ?? "id"] ?? row.id)}
+                </span>
+                <span className="font-mono text-xs text-muted">{id}</span>
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
+    </>
   );
 }
