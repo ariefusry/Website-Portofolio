@@ -52,15 +52,18 @@ export function VisitorCount() {
         return;
       }
 
-      const { data, error } = await supabase.rpc("register_visit");
-      if (cancelled || error) return;
-
-      setVisits(Number(data));
+      // Ditandai sebelum RPC: efek yang jalan dua kali (StrictMode, remount
+      // cepat) tidak boleh menaikkan penghitung dua kali.
       try {
         localStorage.setItem(STORAGE_KEY, today);
       } catch {
         // Tidak bisa disimpan berarti kunjungan berikutnya terhitung lagi.
       }
+
+      const { data, error } = await supabase.rpc("register_visit");
+      if (cancelled || error) return;
+
+      setVisits(Number(data));
     })();
 
     return () => {
