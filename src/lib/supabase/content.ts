@@ -40,6 +40,12 @@ const arr = (row: Row, key: string): string[] => {
   return Array.isArray(v) ? v.filter((x): x is string => typeof x === "string") : [];
 };
 
+/** Isi kolom jsonb berupa array objek; entri lain (null, angka, string) dibuang. */
+const objs = (v: unknown): Row[] | null =>
+  Array.isArray(v)
+    ? v.filter((x): x is Row => typeof x === "object" && x !== null && !Array.isArray(x))
+    : null;
+
 /** Versi daftar dari `bi`: kolom `<base>_en` / `<base>_id` bertipe text[]. */
 const biList = (row: Row, base: string): BiList => {
   const en = arr(row, `${base}_en`);
@@ -114,11 +120,9 @@ const mapProjects = (rows: Row[]): Project[] =>
     role: bi(row, "role"),
     status: bi(row, "status"),
     overview: bi(row, "overview"),
-    facts: Array.isArray(row.facts)
-      ? (row.facts as Row[]).map(
-          (f): ProjectFact => ({ label: str(f, "label"), value: bi(f, "value") }),
-        )
-      : [],
+    facts: (objs(row.facts) ?? []).map(
+      (f): ProjectFact => ({ label: str(f, "label"), value: bi(f, "value") }),
+    ),
     imageUrls: arr(row, "image_paths")
       .map((path) => publicUrl(BUCKET_ASSETS, path))
       .filter((url): url is string => Boolean(url)),
@@ -127,12 +131,11 @@ const mapProjects = (rows: Row[]): Project[] =>
 
 function mapResearch(row: Row | null): Research {
   if (!row) return SEED.research;
-  const metrics = Array.isArray(row.metrics)
-    ? (row.metrics as Row[]).map((m) => ({
-        label: str(m, "label"),
-        value: str(m, "value"),
-      }))
-    : SEED.research.metrics;
+  const metrics =
+    objs(row.metrics)?.map((m) => ({
+      label: str(m, "label"),
+      value: str(m, "value"),
+    })) ?? SEED.research.metrics;
 
   return {
     badge: str(row, "badge", SEED.research.badge),
