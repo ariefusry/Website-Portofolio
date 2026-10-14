@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
+import { redirect, unstable_rethrow } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { columnsOf, getTableDef, type Field, type TableDef } from "./schema";
 
@@ -101,6 +101,8 @@ export async function saveRecord(
     const { error } = await supabase.from(def.table).upsert(payload);
     if (error) return { error: error.message, ok: false };
   } catch (e) {
+    // redirect() dari requireAdmin (sesi habis) harus diteruskan, bukan jadi pesan error.
+    unstable_rethrow(e);
     return { error: e instanceof Error ? e.message : "Gagal menyimpan.", ok: false };
   }
 
@@ -132,6 +134,8 @@ export async function setProfilePhoto(path: string): Promise<ActionState> {
       .eq("id", 1);
     if (error) return { error: error.message, ok: false };
   } catch (e) {
+    // redirect() dari requireAdmin (sesi habis) harus diteruskan, bukan jadi pesan error.
+    unstable_rethrow(e);
     return {
       error: e instanceof Error ? e.message : "Gagal menyimpan foto profil.",
       ok: false,
@@ -159,6 +163,8 @@ export async function deleteRecord(
     const { error } = await supabase.from(def.table).delete().eq("id", id);
     if (error) return { error: error.message, ok: false };
   } catch (e) {
+    // redirect() dari requireAdmin (sesi habis) harus diteruskan, bukan jadi pesan error.
+    unstable_rethrow(e);
     return { error: e instanceof Error ? e.message : "Gagal menghapus.", ok: false };
   }
 
@@ -187,6 +193,8 @@ export async function reorderRows(
     const failed = results.find((r) => r.error);
     if (failed?.error) return { error: failed.error.message, ok: false };
   } catch (e) {
+    // redirect() dari requireAdmin (sesi habis) harus diteruskan, bukan jadi pesan error.
+    unstable_rethrow(e);
     return { error: e instanceof Error ? e.message : "Gagal mengurutkan.", ok: false };
   }
 
