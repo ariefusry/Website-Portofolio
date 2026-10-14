@@ -40,7 +40,7 @@ export default async function Home() {
         // dashboard admin, tapi satu karakter "<" yang lolos sudah cukup untuk
         // menutup blok skrip ini lebih awal, jadi escape di sini, bukan di sumbernya.
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(jsonLd).replace(/</g, "\u003c"),
+          __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
         }}
       />
       <Header name={profile.name} email={profile.email} />
