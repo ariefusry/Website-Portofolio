@@ -24,7 +24,7 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://ariefusry.vercel.app";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.ariefusry.me";
 const description =
   "Fullstack engineer (Flutter, Laravel, Supabase) with a second track in data and machine learning. Paid client platforms shipped, an internship at PT Pos Indonesia, and a paper accepted at IC2IE 2026.";
 

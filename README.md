@@ -4,7 +4,7 @@ A personal portfolio site: Next.js App Router, content editable through a
 Supabase-backed `/admin` dashboard, and it still renders in full when Supabase
 is unreachable.
 
-**Live:** https://ariefusry.vercel.app
+**Live:** https://www.ariefusry.me (cadangan: https://ariefusry.vercel.app)
 
 ---
 
