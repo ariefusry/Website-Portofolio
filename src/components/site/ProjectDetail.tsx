@@ -17,7 +17,7 @@ import type { Project } from "@/lib/types";
  * ada, jadi proyek yang baru diisi sebagian tetap tampil rapi — bukan kerangka
  * kosong dengan heading yang menggantung.
  */
-export function ProjectDetail({ project }: { project: Project }) {
+export function ProjectDetail({ project, backHref = "/#projects" }: { project: Project; backHref?: string }) {
   const { lang, t } = useLang();
   const highlights = lang === "ID" ? project.highlights.id : project.highlights.en;
   const [heroImage, ...restImages] = project.imageUrls;
@@ -35,7 +35,7 @@ export function ProjectDetail({ project }: { project: Project }) {
   return (
     <article className="section-x section-inner py-12 md:py-16">
       <Link
-        href="/#projects"
+        href={backHref}
         aria-disabled={!atTop}
         tabIndex={atTop ? 0 : -1}
         onClick={(e) => {

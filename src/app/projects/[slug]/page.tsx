@@ -48,18 +48,23 @@ export async function generateMetadata({
 
 export default async function ProjectPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<{ from?: string }>;
 }) {
   const { slug } = await params;
+  const { from } = await searchParams;
   const { content, project } = await findProject(slug);
   if (!project) notFound();
+
+  const backHref = from === "projects" ? "/projects" : "/#projects";
 
   return (
     <LangProvider defaultLang={content.settings.defaultLang}>
       <Header name={content.profile.name} email={content.profile.email} />
       <main>
-        <ProjectDetail project={project} />
+        <ProjectDetail project={project} backHref={backHref} />
       </main>
       <Contact profile={content.profile} />
     </LangProvider>

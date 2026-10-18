@@ -17,7 +17,7 @@ import type { Project } from "@/lib/types";
  * perhentian tab, dan tidak ada link di dalam link. Tautan ke situs live
  * sengaja hanya ada di halaman detail karena alasan yang sama.
  */
-export function ProjectCard({ project }: { project: Project }) {
+export function ProjectCard({ project, from }: { project: Project; from?: string }) {
   const { t } = useLang();
   const role = t(project.role);
   const status = t(project.status);
@@ -33,7 +33,7 @@ export function ProjectCard({ project }: { project: Project }) {
     <Link
       ref={ref}
       {...handlers}
-      href={`/projects/${project.slug}`}
+      href={`/projects/${project.slug}${from ? `?from=${from}` : ""}`}
       className="group relative isolate flex flex-col overflow-hidden rounded-[14px] border border-[var(--color-line)] bg-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid"
     >
       <CursorGlow visible={hovering} />

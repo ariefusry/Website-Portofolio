@@ -40,7 +40,7 @@ export function ProjectsIndex({
 
       <div className="grid gap-5 md:grid-cols-2">
         {slice.map((p) => (
-          <ProjectCard key={p.id} project={p} />
+          <ProjectCard key={p.id} project={p} from="projects" />
         ))}
       </div>
 
