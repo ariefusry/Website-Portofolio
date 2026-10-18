@@ -47,7 +47,7 @@ export function ProjectDetail({ project, backHref = "/#projects" }: { project: P
             : "cursor-not-allowed text-muted-2 opacity-50"
         }`}
       >
-        ← {t(UI.backToProjects)}
+        ← {backHref === "/projects" ? t(UI.backToProjects) : t(UI.backHome)}
       </Link>
 
       <header className="mt-6 mb-10 max-w-[760px]">
