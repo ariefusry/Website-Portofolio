@@ -19,6 +19,7 @@ export function FeaturedBuild({ project }: { project: Project | null }) {
   if (!project) return null;
 
   const headline = t(project.summary) || project.title;
+  const status = t(project.status);
   const supporting = (lang === "ID" ? project.highlights.id : project.highlights.en)[0];
   // Baris pertama galeri adalah gambar utama halaman detail; pakai yang sama di
   // sini supaya sorotan dan halamannya tidak menampilkan screenshot berbeda.
@@ -41,6 +42,18 @@ export function FeaturedBuild({ project }: { project: Project | null }) {
        */}
       <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,46%)] lg:gap-12">
         <div>
+          {/* Judul besarnya kalimat ringkasan, jadi nama proyeknya disebut di sini. */}
+          <div className="mb-3 flex flex-wrap items-center gap-2">
+            <span className="font-display text-[17px] leading-[1.2] font-semibold">
+              {project.title}
+            </span>
+            {status ? (
+              <span className="rounded-[5px] bg-[color-mix(in_oklab,var(--color-accent-strong)_15%,transparent)] px-2 py-1 font-mono text-[10px] leading-none font-semibold tracking-wide text-[var(--color-accent-strong)]">
+                {status}
+              </span>
+            ) : null}
+          </div>
+
           <h2 className="mt-0 mb-4 max-w-[760px] font-display text-[clamp(26px,4.6vw,36px)] leading-[1.12] font-semibold tracking-[-0.03em] text-pretty">
             {headline}
           </h2>
@@ -51,7 +64,7 @@ export function FeaturedBuild({ project }: { project: Project | null }) {
             </p>
           ) : null}
 
-          <TechIcons items={project.tech} size={20} className="mb-7" />
+          <TechIcons items={project.tech} className="mb-7" />
 
           <CtaLink href={`/projects/${project.slug}`}>
             {t(UI.readCaseStudy)}

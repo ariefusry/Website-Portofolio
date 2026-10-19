@@ -50,7 +50,7 @@ export function ProjectDetail({ project, backHref = "/#projects" }: { project: P
           {t(project.summary)}
         </p>
 
-        <TechIcons items={project.tech} size={20} />
+        <TechIcons items={project.tech} />
       </header>
 
       {/* Gambar utama — pasangan morph dari thumbnail kartu proyek. */}
@@ -77,7 +77,7 @@ export function ProjectDetail({ project, backHref = "/#projects" }: { project: P
               <h2 className="mt-0 mb-3 font-mono text-xs leading-none font-semibold text-muted-2">
                 {t(UI.overview).toUpperCase()}
               </h2>
-              <p className="m-0 max-w-[640px] font-body text-[16px] leading-[1.75] font-normal text-body-2">
+              <p className="whitespace-pre-line m-0 max-w-[640px] font-body text-[16px] leading-[1.75] font-normal text-body-2">
                 {t(project.overview)}
               </p>
             </section>

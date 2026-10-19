@@ -22,7 +22,7 @@ export function Research({ research }: { research: ResearchType }) {
           <h3 className="mt-0 mb-3 font-display text-2xl leading-[1.25] font-semibold tracking-[-0.02em]">
             {research.title}
           </h3>
-          <p className="m-0 max-w-[560px] font-body text-[15px] leading-[1.7] font-normal text-body-2">
+          <p className="whitespace-pre-line m-0 max-w-[560px] font-body text-[15px] leading-[1.7] font-normal text-body-2">
             {t(research.body)}
           </p>
         </div>

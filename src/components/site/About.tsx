@@ -22,7 +22,7 @@ export function About({
       // elemen pemisah tersendiri, supaya semua batas section tetap seragam.
       className="border-t border-[var(--color-line-soft)]"
     >
-      <p className="mt-0 mb-8 max-w-[700px] font-body text-[17.5px] leading-[1.7] font-normal text-body text-pretty">
+      <p className="whitespace-pre-line mt-0 mb-8 max-w-[700px] font-body text-[17.5px] leading-[1.7] font-normal text-body text-pretty">
         {t(profile.about)}
       </p>
 
@@ -43,7 +43,7 @@ export function About({
             <div className="mb-2.5 font-display text-[17px] leading-[1.25] font-semibold">
               {t(track.title)}
             </div>
-            <p className="mt-0 mb-4 font-body text-sm leading-[1.6] font-normal text-body-2">
+            <p className="whitespace-pre-line mt-0 mb-4 font-body text-sm leading-[1.6] font-normal text-body-2">
               {t(track.body)}
             </p>
             <div className="flex flex-wrap gap-1.5">

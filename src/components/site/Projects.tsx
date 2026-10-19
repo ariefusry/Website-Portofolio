@@ -30,7 +30,7 @@ export function Projects({ projects }: { projects: Project[] }) {
             {t(UI.projTitle)}
           </h2>
           <span className="font-body text-[13px] leading-none font-medium text-muted">
-            {t(UI.projRange)}
+            {projects.length} {t(UI.projCount)}
           </span>
         </div>
         <p className="mt-2.5 mb-0 max-w-[560px] font-body text-sm leading-[1.6] font-normal text-body-2">

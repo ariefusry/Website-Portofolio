@@ -17,8 +17,8 @@ insert into public.profile (
   'Fullstack engineer, dengan jalur kedua di data dan machine learning.',
   'Flutter, Laravel and Supabase in production. Two paid client platforms live, an internship at PT Pos Indonesia, and a thesis accepted at IC2IE 2026.',
   'Flutter, Laravel, dan Supabase di produksi. Dua platform klien berbayar sudah live, magang di PT Pos Indonesia, dan skripsi diterima di IC2IE 2026.',
-  'Informatics graduate from Telkom University, GPA 3.77. I shipped a Flutter app and its Laravel web companion on one Supabase backend at PT Pos Indonesia, delivered a tourism platform alone for a paying client, and built a company profile site with one other developer. Alongside that: a year teaching operating systems labs, and a thesis on optimizing neural network architecture with the Grey Wolf Optimizer.',
-  'Lulusan Informatika Telkom University, IPK 3.77. Saya merilis aplikasi Flutter beserta web Laravel-nya di satu backend Supabase untuk PT Pos Indonesia, mengerjakan platform pariwisata sendiri untuk klien berbayar, dan membangun situs company profile bersama satu developer lain. Di samping itu: setahun mengajar praktikum Sistem Operasi, dan skripsi optimasi arsitektur neural network dengan Grey Wolf Optimizer.',
+  'Informatics graduate from Telkom University, GPA 3.76. I shipped a Flutter app and its Laravel web companion on one Supabase backend at PT Pos Indonesia, delivered a tourism platform alone for a paying client, and built a company profile site with one other developer. Alongside that: a year teaching operating systems labs, and a thesis on optimizing neural network architecture with the Grey Wolf Optimizer.',
+  'Lulusan Informatika Telkom University, IPK 3.76. Saya merilis aplikasi Flutter beserta web Laravel-nya di satu backend Supabase untuk PT Pos Indonesia, mengerjakan platform pariwisata sendiri untuk klien berbayar, dan membangun situs company profile bersama satu developer lain. Di samping itu: setahun mengajar praktikum Sistem Operasi, dan skripsi optimasi arsitektur neural network dengan Grey Wolf Optimizer.',
   'Open to fullstack, data and ML roles.',
   'Terbuka untuk posisi fullstack, data, dan ML.',
   'Bekasi, Indonesia · available immediately',
@@ -46,7 +46,7 @@ on conflict (id) do nothing;
 
 insert into public.stats (id, value, is_numeric, decimals, label_en, label_id, sort) values
   ('clients',  '2',          true,  0, 'Paid client platforms shipped', 'Platform klien berbayar dirilis', 1),
-  ('gpa',      '3.77',       true,  2, 'GPA / 4.00 — Telkom University', 'IPK / 4.00 — Telkom University', 2),
+  ('gpa',      '3.76',       true,  2, 'GPA / 4.00 — Telkom University', 'IPK / 4.00 — Telkom University', 2),
   ('paper',    'IC2IE 2026', false, 0, 'Paper accepted, IC2IE 2026', 'Paper diterima, IC2IE 2026', 3),
   ('projects', '6',          true,  0, 'projects 2024—2026', 'proyek 2024—2026', 4)
 on conflict (id) do update set

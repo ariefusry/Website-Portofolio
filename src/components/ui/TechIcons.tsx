@@ -114,41 +114,20 @@ export function TechGlyph({ icon, size = 18 }: { icon: SimpleIcon; size?: number
 }
 
 /**
- * Deretan teknologi. Ikon-nya dekoratif (`aria-hidden`) dan nama teknologinya
- * tetap dibacakan lewat teks sr-only, jadi informasi yang sama sampai ke
- * pengguna screen reader — bukan hanya ke yang bisa melihat warnanya.
+ * Deretan teknologi sebuah proyek, sebagai chip teks — bukan logo. Yang membaca
+ * kartu proyek sering HR yang mencocokkan kata kunci lowongan; logo Supabase
+ * atau Vercel tidak terbaca oleh mereka. Logo tetap dipakai di Skills.
  */
-export function TechIcons({
-  items,
-  size = 18,
-  className = "",
-}: {
-  items: string[];
-  size?: number;
-  className?: string;
-}) {
+export function TechIcons({ items, className = "" }: { items: string[]; className?: string }) {
   if (items.length === 0) return null;
 
   return (
-    <ul className={`m-0 flex list-none flex-wrap items-center gap-2.5 p-0 ${className}`}>
-      {items.map((label) => {
-        const icon = techIcon(label);
-
-        if (!icon) {
-          return (
-            <li key={label}>
-              <Chip>{label}</Chip>
-            </li>
-          );
-        }
-
-        return (
-          <li key={label} className="flex items-center">
-            <TechGlyph icon={icon} size={size} />
-            <span className="sr-only">{label}</span>
-          </li>
-        );
-      })}
+    <ul className={`m-0 flex list-none flex-wrap items-center gap-2 p-0 ${className}`}>
+      {items.map((label) => (
+        <li key={label}>
+          <Chip>{label}</Chip>
+        </li>
+      ))}
     </ul>
   );
 }

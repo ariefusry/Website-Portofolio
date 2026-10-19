@@ -30,7 +30,7 @@ export const UI = {
     en: "Every project opens a page with the role, stack and outcome behind it.",
     id: "Tiap proyek punya halaman berisi peran, stack, dan hasilnya.",
   },
-  projRange: { en: "2024 — 2026", id: "2024 — 2026" },
+  projCount: { en: "projects", id: "proyek" },
   viewProject: { en: "View project", id: "Lihat proyek" },
   featuredBuild: { en: "Featured build", id: "Karya sorotan" },
   readCaseStudy: { en: "Read case study", id: "Baca studi kasus" },

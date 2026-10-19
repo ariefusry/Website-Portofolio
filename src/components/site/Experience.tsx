@@ -27,7 +27,7 @@ export function Experience({ items }: { items: ExperienceType[] }) {
               <div className="mb-1.5 font-display text-[18px] leading-[1.3] font-semibold">
                 {t(item.role)}
               </div>
-              <p className="m-0 max-w-[640px] font-body text-[14.5px] leading-[1.65] font-normal text-body-2">
+              <p className="whitespace-pre-line m-0 max-w-[640px] font-body text-[14.5px] leading-[1.65] font-normal text-body-2">
                 {t(item.body)}
               </p>
             </div>
