@@ -47,7 +47,6 @@ export const UI = {
   backToProjects: { en: "Back to projects", id: "Kembali ke proyek" },
   overview: { en: "Overview", id: "Ringkasan" },
   highlights: { en: "What I did", id: "Yang saya kerjakan" },
-  gallery: { en: "Gallery", id: "Galeri" },
   notFound: {
     en: "That project does not exist.",
     id: "Proyek itu tidak ada.",
@@ -55,6 +54,10 @@ export const UI = {
   visitSite: { en: "Visit site ↗", id: "Kunjungi situs ↗" },
   github: { en: "GitHub ↗", id: "GitHub ↗" },
   screenshotOf: { en: "screenshot", id: "screenshot" },
+  prevMedia: { en: "Previous", id: "Sebelumnya" },
+  nextMedia: { en: "Next", id: "Berikutnya" },
+  showMedia: { en: "Show item", id: "Tampilkan item" },
+  projectVideo: { en: "video", id: "video" },
   adminDashboard: { en: "admin dashboard", id: "dashboard admin" },
   switchLang: { en: "Switch language", id: "Ganti bahasa" },
   themeToDark: { en: "Switch to dark theme", id: "Ganti ke tema gelap" },

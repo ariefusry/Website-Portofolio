@@ -9,7 +9,7 @@ import { externalHref } from "@/lib/utils";
 import { CtaLink } from "@/components/ui/CtaLink";
 import { TagPill } from "@/components/ui/Primitives";
 import { TechIcons } from "@/components/ui/TechIcons";
-import { SmartImage } from "@/components/ui/SmartImage";
+import { MediaViewer } from "./MediaViewer";
 import type { Project } from "@/lib/types";
 
 /**
@@ -20,7 +20,12 @@ import type { Project } from "@/lib/types";
 export function ProjectDetail({ project, backHref = "/#projects" }: { project: Project; backHref?: string }) {
   const { lang, t } = useLang();
   const highlights = lang === "ID" ? project.highlights.id : project.highlights.en;
-  const [heroImage, ...restImages] = project.imageUrls;
+  // Galeri kosong = pakai screenshot tunggal, seperti gambar utama dulu.
+  const images = project.imageUrls.length
+    ? project.imageUrls
+    : project.imageUrl
+      ? [project.imageUrl]
+      : [];
 
   return (
     <article className="section-x section-inner py-12 md:py-16">
@@ -53,21 +58,13 @@ export function ProjectDetail({ project, backHref = "/#projects" }: { project: P
         <TechIcons items={project.tech} />
       </header>
 
-      {/* Gambar utama — pasangan morph dari thumbnail kartu proyek. */}
+      {/* Media utama — pasangan morph dari thumbnail kartu proyek. */}
       <ViewTransition
         name={`project-${project.slug}`}
         share="morph"
         default="none"
       >
-        <SmartImage
-          src={heroImage ?? project.imageUrl}
-          alt={`${project.title} — ${t(UI.screenshotOf)}`}
-          label={`[ screenshot ${project.title} ]`}
-          priority
-          sizes="(max-width: 1024px) 100vw, 1000px"
-          fit="contain"
-          className="mb-12 aspect-[16/9] w-full rounded-[14px] border border-[var(--color-line)] bg-page"
-        />
+        <MediaViewer title={project.title} videoUrl={project.videoUrl} images={images} />
       </ViewTransition>
 
       <div className="grid gap-12 lg:grid-cols-[1fr_320px] lg:gap-16">
@@ -101,26 +98,6 @@ export function ProjectDetail({ project, backHref = "/#projects" }: { project: P
                   </li>
                 ))}
               </ul>
-            </section>
-          ) : null}
-
-          {restImages.length ? (
-            <section>
-              <h2 className="mt-0 mb-3 font-mono text-xs leading-none font-semibold text-muted-2">
-                {t(UI.gallery).toUpperCase()}
-              </h2>
-              <div className="grid gap-3 sm:grid-cols-2">
-                {restImages.map((url, i) => (
-                  <SmartImage
-                    key={url}
-                    src={url}
-                    alt={`${project.title} — ${t(UI.screenshotOf)} ${i + 2}`}
-                    sizes="(max-width: 640px) 100vw, 50vw"
-                    fit="contain"
-                    className="aspect-[16/9] w-full rounded-[10px] border border-[var(--color-line)] bg-page"
-                  />
-                ))}
-              </div>
             </section>
           ) : null}
         </div>
