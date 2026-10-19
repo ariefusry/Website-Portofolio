@@ -105,13 +105,18 @@ export function SpotlightPill({
   };
 
   return (
+    /*
+     * Latar solid, tanpa backdrop-blur: video proyek yang sedang
+     * berputar di bawah pil ini membuat browser mengaburkan ulang tiap frame,
+     * dan hasilnya berkedip saat halaman digulir.
+     */
     <div
       ref={navRef}
       onMouseMove={handleMove}
       onMouseEnter={() => setHovering(true)}
       onMouseLeave={() => setHovering(false)}
       className={cn(
-        "relative isolate overflow-hidden rounded-full border border-[var(--color-line)] bg-surface/70 shadow-[0_8px_24px_rgba(0,0,0,0.10)] backdrop-blur-md",
+        "relative isolate overflow-hidden rounded-full border border-[var(--color-line)] bg-surface shadow-[0_8px_24px_rgba(0,0,0,0.10)]",
         className,
       )}
     >
