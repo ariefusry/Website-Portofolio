@@ -164,6 +164,9 @@ function AssetControl({
                   e.preventDefault();
                   moveOver(i);
                 }}
+                // Tanpa ini, berkas dari desktop yang dijatuhkan ke sini dibuka
+                // browser dan isi form yang belum disimpan hilang.
+                onDrop={(e) => e.preventDefault()}
                 onDragEnd={() => setDragIndex(null)}
                 className={`relative cursor-grab ${dragIndex === i ? "opacity-50" : ""}`}
               >

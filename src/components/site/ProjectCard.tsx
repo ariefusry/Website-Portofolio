@@ -60,6 +60,7 @@ export function ProjectCard({ project, from }: { project: Project; from?: string
             <ProjectVideo
               src={project.videoUrl}
               poster={project.imageUrl}
+              sizes="(max-width: 768px) 100vw, 50vw"
               className="aspect-[16/9] w-full rounded-lg"
             />
           ) : (

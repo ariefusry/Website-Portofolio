@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useReducedMotion } from "framer-motion";
 import { SmartImage } from "./SmartImage";
 
@@ -10,27 +10,30 @@ import { SmartImage } from "./SmartImage";
  * video di HP pengunjung. Dekoratif (`aria-hidden`), jadi tidak menambah
  * perhentian tab di dalam kartu yang seluruhnya satu link.
  *
- * Kalau pengunjung meminta gerak dikurangi, videonya tidak pernah diputar dan
- * yang terlihat hanya poster. Elemen <video> tetap dirender — server tidak
- * tahu preferensi itu, jadi menukarnya dengan <img> memicu hydration mismatch.
- * Kalau videonya gagal dimuat, barulah diganti gambar poster.
+ * Gambarnya tetap SmartImage biasa (lazy, dioptimasi next/image), dan videonya
+ * ditumpuk di atas tanpa poster dengan `preload="none"`: tidak ada byte video
+ * yang diunduh sebelum kartunya terlihat. Video yang belum punya frame itu
+ * transparan, jadi gambar di bawahnya yang tampil — selama memuat, kalau
+ * berkasnya gagal dimuat, dan untuk pengunjung yang meminta gerak dikurangi
+ * (videonya tidak pernah diputar).
  */
 export function ProjectVideo({
   src,
   poster,
+  sizes,
   className = "",
 }: {
   src: string;
   poster: string | null;
+  sizes?: string;
   className?: string;
 }) {
   const ref = useRef<HTMLVideoElement>(null);
   const reduced = useReducedMotion() ?? false;
-  const [failed, setFailed] = useState(false);
 
   useEffect(() => {
     const video = ref.current;
-    if (failed || !video) return;
+    if (!video) return;
     if (reduced) {
       video.pause();
       return;
@@ -38,7 +41,7 @@ export function ProjectVideo({
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        // play() ditolak kalau browser memblokir autoplay; posternya tetap tampil.
+        // play() ditolak kalau browser memblokir autoplay; gambarnya tetap tampil.
         if (entry.isIntersecting) video.play().catch(() => {});
         else video.pause();
       },
@@ -46,25 +49,22 @@ export function ProjectVideo({
     );
     observer.observe(video);
     return () => observer.disconnect();
-  }, [failed, reduced]);
-
-  if (failed) {
-    return <SmartImage src={poster} alt="" className={className} />;
-  }
+  }, [reduced]);
 
   return (
-    <video
-      ref={ref}
-      src={src}
-      poster={poster ?? undefined}
-      muted
-      loop
-      playsInline
-      preload="metadata"
-      aria-hidden="true"
-      tabIndex={-1}
-      onError={() => setFailed(true)}
-      className={`object-cover ${className}`}
-    />
+    <div className={`relative overflow-hidden ${className}`}>
+      <SmartImage src={poster} alt="" sizes={sizes} className="h-full w-full" />
+      <video
+        ref={ref}
+        src={src}
+        muted
+        loop
+        playsInline
+        preload="none"
+        aria-hidden="true"
+        tabIndex={-1}
+        className="absolute inset-0 h-full w-full object-cover"
+      />
+    </div>
   );
 }

@@ -11,7 +11,7 @@ type Item = { kind: "video" | "image"; src: string };
 const FRAME =
   "overflow-hidden rounded-[14px] border border-[var(--color-line)] bg-page";
 const NAV =
-  "absolute top-1/2 z-10 grid h-10 w-10 -translate-y-1/2 cursor-pointer place-items-center rounded-full border border-[var(--color-line-strong)] bg-surface/90 font-display text-lg text-ink transition-opacity disabled:cursor-default disabled:opacity-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid";
+  "absolute top-1/2 z-10 grid h-10 w-10 -translate-y-1/2 cursor-pointer place-items-center rounded-full border border-[var(--color-line-strong)] bg-surface/90 font-display text-lg text-ink transition-opacity aria-disabled:cursor-default aria-disabled:opacity-30 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid";
 
 /**
  * Media di atas halaman detail: video lebih dulu (kalau ada), lalu screenshot
@@ -50,9 +50,11 @@ export function MediaViewer({
     else video.pause();
   }, [active, reduced]);
 
+  // Tombol di ujung memakai aria-disabled, bukan disabled: tombol yang
+  // dinonaktifkan selagi difokus melempar fokus keyboard ke <body>.
   function go(index: number) {
     const track = trackRef.current;
-    if (!track) return;
+    if (!track || index < 0 || index >= items.length) return;
     track.scrollTo({
       left: index * track.clientWidth,
       behavior: reduced ? "auto" : "smooth",
@@ -128,7 +130,7 @@ export function MediaViewer({
         <button
           type="button"
           onClick={() => go(active - 1)}
-          disabled={active === 0}
+          aria-disabled={active === 0}
           aria-label={t(UI.prevMedia)}
           className={`left-3 ${NAV}`}
         >
@@ -137,7 +139,7 @@ export function MediaViewer({
         <button
           type="button"
           onClick={() => go(active + 1)}
-          disabled={active === items.length - 1}
+          aria-disabled={active === items.length - 1}
           aria-label={t(UI.nextMedia)}
           className={`right-3 ${NAV}`}
         >

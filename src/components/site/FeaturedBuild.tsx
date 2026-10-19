@@ -80,6 +80,7 @@ export function FeaturedBuild({ project }: { project: Project | null }) {
             <ProjectVideo
               src={project.videoUrl}
               poster={image}
+              sizes="(max-width: 1024px) 100vw, 46vw"
               className="aspect-[16/9] w-full rounded-xl bg-page"
             />
           ) : (
