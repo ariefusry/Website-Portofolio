@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useLang } from "@/lib/lang-context";
 import { UI } from "@/lib/i18n";
 import { SmartImage } from "@/components/ui/SmartImage";
+import { ProjectVideo } from "@/components/ui/ProjectVideo";
 import { TechIcons } from "@/components/ui/TechIcons";
 import { CursorGlow, useCursorGlow } from "@/components/ui/CursorGlow";
 import type { Project } from "@/lib/types";
@@ -38,7 +39,8 @@ export function ProjectCard({ project, from }: { project: Project; from?: string
     >
       <CursorGlow visible={hovering} />
 
-      {project.hasThumb ? (
+      {/* Video selalu dapat slot media, walau kartunya diset tanpa thumbnail. */}
+      {project.hasThumb || project.videoUrl ? (
         /*
          * Nama yang sama dipakai di gambar utama halaman detail, jadi saat
          * kartunya diklik browser memuaikan gambar ini ke slot besar di sana —
@@ -54,13 +56,21 @@ export function ProjectCard({ project, from }: { project: Project; from?: string
           default="none"
         >
         <div className="bg-page p-3 pb-0">
-          <SmartImage
-            src={project.imageUrl}
-            alt=""
-            label={`[ screenshot ${project.title} ]`}
-            sizes="(max-width: 768px) 100vw, 50vw"
-            className="aspect-[16/9] w-full rounded-lg"
-          />
+          {project.videoUrl ? (
+            <ProjectVideo
+              src={project.videoUrl}
+              poster={project.imageUrl}
+              className="aspect-[16/9] w-full rounded-lg"
+            />
+          ) : (
+            <SmartImage
+              src={project.imageUrl}
+              alt=""
+              label={`[ screenshot ${project.title} ]`}
+              sizes="(max-width: 768px) 100vw, 50vw"
+              className="aspect-[16/9] w-full rounded-lg"
+            />
+          )}
         </div>
         </ViewTransition>
       ) : null}

@@ -4,6 +4,7 @@ import { useLang } from "@/lib/lang-context";
 import { UI } from "@/lib/i18n";
 import { CtaArrow, CtaLink } from "@/components/ui/CtaLink";
 import { SmartImage } from "@/components/ui/SmartImage";
+import { ProjectVideo } from "@/components/ui/ProjectVideo";
 import { TechIcons } from "@/components/ui/TechIcons";
 import { Reveal } from "@/components/ui/Reveal";
 import type { Project } from "@/lib/types";
@@ -75,14 +76,22 @@ export function FeaturedBuild({ project }: { project: Project | null }) {
         {/* Sengaja bukan link: tujuannya sama dengan tombol di sebelahnya, dan
             perhentian tab kedua ke halaman yang sama hanya menambah kebisingan. */}
         <div className="rounded-[16px] border border-[var(--color-line)] bg-surface p-3">
-          <SmartImage
-            src={image}
-            alt={`${project.title} — ${t(UI.screenshotOf)}`}
-            label={`[ screenshot ${project.title} ]`}
-            sizes="(max-width: 1024px) 100vw, 46vw"
-            fit="contain"
-            className="aspect-[16/9] w-full rounded-xl bg-page"
-          />
+          {project.videoUrl ? (
+            <ProjectVideo
+              src={project.videoUrl}
+              poster={image}
+              className="aspect-[16/9] w-full rounded-xl bg-page"
+            />
+          ) : (
+            <SmartImage
+              src={image}
+              alt={`${project.title} — ${t(UI.screenshotOf)}`}
+              label={`[ screenshot ${project.title} ]`}
+              sizes="(max-width: 1024px) 100vw, 46vw"
+              fit="contain"
+              className="aspect-[16/9] w-full rounded-xl bg-page"
+            />
+          )}
         </div>
       </div>
       </Reveal>
