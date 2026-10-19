@@ -24,6 +24,8 @@ export type Field = {
   hint?: string;
   /** Bucket untuk field bertipe asset. */
   bucket?: "assets" | "documents";
+  /** Kolom asset berisi video, bukan gambar — diunggah tanpa crop. */
+  media?: "video";
 };
 
 export type TableDef = {
@@ -129,6 +131,14 @@ export const TABLES: TableDef[] = [
         type: "asset",
         bucket: "assets",
       },
+      {
+        name: "video_path",
+        label: "Video (16:9, opsional)",
+        type: "asset",
+        bucket: "assets",
+        media: "video",
+        hint: "mp4/webm, maks. 50 MB",
+      },
       { name: "github_url", label: "URL GitHub", type: "text" },
       { name: "live_url", label: "URL situs live", type: "text" },
       {
@@ -148,7 +158,8 @@ export const TABLES: TableDef[] = [
         name: "image_paths",
         label: "Galeri screenshot",
         type: "array",
-        hint: "Satu path per baris; baris pertama jadi gambar utama",
+        bucket: "assets",
+        hint: "Seret untuk mengurutkan; foto pertama jadi gambar utama",
       },
       bi("highlights", "Poin kontribusi", "array"),
       { name: "sort", label: "Urutan", type: "number" },

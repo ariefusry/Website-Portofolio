@@ -33,7 +33,8 @@ function TextControl({
  *
  * Terkendali (controlled), tidak seperti kolom teks lain, karena tombol unggah
  * harus bisa menulis nilainya. Untuk kolom galeri (`array`) hasil unggahan
- * ditambahkan sebagai baris baru, bukan menimpa daftar yang sudah ada.
+ * ditambahkan di akhir daftar; urutannya diatur dengan menyeret thumbnail, dan
+ * daftar path-nya dikirim lewat input tersembunyi (satu path per baris).
  */
 function AssetControl({
   field,
@@ -45,24 +46,30 @@ function AssetControl({
   const [value, setValue] = useState(initial);
   const [busy, setBusy] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [dragIndex, setDragIndex] = useState<number | null>(null);
   const bucket = field.bucket ?? "assets";
   const isList = field.type === "array";
+  const isVideo = field.media === "video";
 
   const paths = value
     .split("\n")
     .map((line) => line.trim())
     .filter(Boolean);
 
+  // Pola yang sama dengan ReorderableList: urutan bergeser selagi diseret.
+  function moveOver(overIndex: number) {
+    if (dragIndex === null || dragIndex === overIndex) return;
+    const next = paths.slice();
+    const [moved] = next.splice(dragIndex, 1);
+    next.splice(overIndex, 0, moved);
+    setValue(next.join("\n"));
+    setDragIndex(overIndex);
+  }
+
   return (
     <div className="mt-1.5 grid gap-2.5">
       {isList ? (
-        <textarea
-          rows={4}
-          name={field.name}
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          className={INPUT}
-        />
+        <input type="hidden" name={field.name} value={paths.join("\n")} />
       ) : (
         <input
           type="text"
@@ -78,6 +85,14 @@ function AssetControl({
           bucket={bucket}
           accept=".pdf"
           label="Unggah & isi"
+          onDone={(name) => setValue(name)}
+        />
+      ) : isVideo ? (
+        // Video diunggah apa adanya — tanpa crop; pemiliknya selalu mengunggah 16:9.
+        <UploadButton
+          bucket={bucket}
+          accept="video/mp4,video/webm"
+          label="Unggah video"
           onDone={(name) => setValue(name)}
         />
       ) : (
@@ -127,19 +142,64 @@ function AssetControl({
         <p className="m-0 font-body text-xs text-red-700">{uploadError}</p>
       ) : null}
 
-      {bucket === "assets" && paths.length ? (
+      {isVideo && value.trim() ? (
+        <video
+          src={publicAssetUrl(bucket, value.trim())}
+          muted
+          controls
+          preload="metadata"
+          className="aspect-[16/9] w-64 rounded-md border border-[var(--color-line)] bg-page"
+        />
+      ) : null}
+
+      {!isVideo && bucket === "assets" && paths.length ? (
         <div className="flex flex-wrap gap-2">
-          {paths.map((path) => (
-            // <img> biasa, bukan next/image: ini halaman admin, dan berkas
-            // yang baru diunggah belum tentu sudah ada saat render.
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              key={path}
-              src={publicAssetUrl(bucket, path)}
-              alt={path}
-              className="h-16 w-16 rounded-md border border-[var(--color-line)] bg-page object-contain"
-            />
-          ))}
+          {paths.map((path, i) =>
+            isList ? (
+              <div
+                key={path}
+                draggable
+                onDragStart={() => setDragIndex(i)}
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  moveOver(i);
+                }}
+                onDragEnd={() => setDragIndex(null)}
+                className={`relative cursor-grab ${dragIndex === i ? "opacity-50" : ""}`}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={publicAssetUrl(bucket, path)}
+                  alt={path}
+                  draggable={false}
+                  className="aspect-[16/9] w-36 rounded-md border border-[var(--color-line)] bg-page object-cover"
+                />
+                {i === 0 ? (
+                  <span className="absolute bottom-1 left-1 rounded bg-ink px-1.5 py-0.5 font-mono text-[10px] text-on-ink">
+                    Utama
+                  </span>
+                ) : null}
+                <button
+                  type="button"
+                  aria-label={`Hapus ${path} dari galeri`}
+                  onClick={() => setValue(paths.filter((_, j) => j !== i).join("\n"))}
+                  className="absolute top-1 right-1 h-6 w-6 cursor-pointer rounded-full bg-ink text-xs leading-none text-on-ink"
+                >
+                  ×
+                </button>
+              </div>
+            ) : (
+              // <img> biasa, bukan next/image: ini halaman admin, dan berkas
+              // yang baru diunggah belum tentu sudah ada saat render.
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                key={path}
+                src={publicAssetUrl(bucket, path)}
+                alt={path}
+                className="h-16 w-16 rounded-md border border-[var(--color-line)] bg-page object-contain"
+              />
+            ),
+          )}
         </div>
       ) : null}
     </div>
