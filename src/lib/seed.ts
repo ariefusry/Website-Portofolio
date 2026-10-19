@@ -143,6 +143,7 @@ export const SEED: Content = {
         },
       ],
       imageUrls: [],
+      videoUrl: null,
       highlights: {
         en: [
           "BaaS-driven architecture: Laravel 12 handles routing and Blade views only, while data fetching, auth, CRUD and uploads go straight from the browser to Supabase — a traditional PHP framework and a modern BaaS sharing one app, with no API of my own between them.",
@@ -202,6 +203,7 @@ export const SEED: Content = {
         },
       ],
       imageUrls: [],
+      videoUrl: null,
       highlights: {
         en: [
           "An admin panel built by hand: full CRUD over products, articles and careers, drag-and-drop product ordering persisted to a sort column, and per-product sub-items.",
@@ -271,6 +273,7 @@ export const SEED: Content = {
         },
       ],
       imageUrls: [],
+      videoUrl: null,
       highlights: {
         en: [
           "One schema, two front-ends: Laravel 12 with Blade and Tailwind, Flutter across Android, iOS and desktop, both talking to Supabase directly rather than through an API layer.",
@@ -333,6 +336,7 @@ export const SEED: Content = {
         },
       ],
       imageUrls: [],
+      videoUrl: null,
       highlights: {
         en: [
           "Dual OCR: EasyOCR sweeps the document, TrOCR (trocr-base-printed) re-reads the keywords the first pass was unsure about.",
@@ -395,6 +399,7 @@ export const SEED: Content = {
         },
       ],
       imageUrls: [],
+      videoUrl: null,
       highlights: {
         en: [
           "Page transitions written by hand — fade-and-slide, directional slide, scale-and-elevation and dissolve — instead of a router package.",

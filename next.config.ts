@@ -39,6 +39,7 @@ const buildCsp = () => [
   `script-src 'self' 'unsafe-inline' ${HCAPTCHA} ${VERCEL_ANALYTICS}${isDev ? " 'unsafe-eval'" : ""}`,
   `style-src 'self' 'unsafe-inline' ${HCAPTCHA}`,
   `img-src 'self' data: blob: ${supabaseOrigin}`.trim(),
+  `media-src 'self' ${supabaseOrigin}`.trim(),
   "font-src 'self' data:",
   `connect-src 'self' ${supabaseOrigin} ${supabaseSocket} ${HCAPTCHA}${isDev ? " ws: http://localhost:*" : ""}`.trim(),
   `frame-src ${HCAPTCHA}`,

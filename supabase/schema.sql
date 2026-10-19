@@ -94,6 +94,7 @@ create table if not exists public.projects (
   accent_badge boolean not null default false,
   tech text[] not null default '{}',
   image_path text,
+  video_path text,          -- video 16:9 opsional; tampil di kartu, featured, detail
   github_url text,
   live_url text,
   -- Baris peran di bawah judul kartu; kosong = pakai `badges`.
@@ -114,6 +115,8 @@ create table if not exists public.projects (
   highlights_id text[] not null default '{}',
   sort smallint not null default 0
 );
+-- Database lama dibuat sebelum kolom video ada.
+alter table public.projects add column if not exists video_path text;
 
 create table if not exists public.experiences (
   id text primary key,

@@ -54,6 +54,8 @@ export type Project = {
   facts: ProjectFact[];
   /** Galeri di halaman detail; item pertama jadi gambar utama. */
   imageUrls: string[];
+  /** Video 16:9 opsional; kalau ada, tampil menggantikan screenshot. */
+  videoUrl: string | null;
   highlights: BiList;
 };
 

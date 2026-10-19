@@ -113,6 +113,7 @@ const mapProjects = (rows: Row[]): Project[] =>
     accentBadge: bool(row, "accent_badge"),
     tech: arr(row, "tech"),
     imageUrl: publicUrl(BUCKET_ASSETS, str(row, "image_path") || null),
+    videoUrl: publicUrl(BUCKET_ASSETS, str(row, "video_path") || null),
     githubUrl: str(row, "github_url") || null,
     liveUrl: str(row, "live_url") || null,
     featured: bool(row, "featured"),
