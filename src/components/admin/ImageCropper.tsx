@@ -60,34 +60,6 @@ async function cropToBlob(
   });
 }
 
-/** Potong bagian tengah berkas dengan rasio `aspect` — untuk unggah banyak sekaligus. */
-export async function centerCrop(
-  file: File,
-  aspect: number,
-  format: "png" | "jpeg",
-): Promise<Blob> {
-  const src = URL.createObjectURL(file);
-  try {
-    const img = new Image();
-    img.src = src;
-    await img.decode();
-    const width = Math.min(img.naturalWidth, img.naturalHeight * aspect);
-    const height = width / aspect;
-    return await cropToBlob(
-      src,
-      {
-        x: (img.naturalWidth - width) / 2,
-        y: (img.naturalHeight - height) / 2,
-        width,
-        height,
-      },
-      format,
-    );
-  } finally {
-    URL.revokeObjectURL(src);
-  }
-}
-
 /**
  * Pemilih berkas + crop dengan rasio tetap. Dipakai bersama oleh foto profil
  * (4:5, PNG supaya latar transparannya selamat) dan screenshot proyek
@@ -105,6 +77,7 @@ export function ImageCropper({
   note,
   busy = false,
   initialSrc,
+  initialFile,
   initialName = "",
   onCancel,
   onConfirm,
@@ -118,11 +91,15 @@ export function ImageCropper({
   busy?: boolean;
   /** Buka langsung dengan gambar yang sudah ada (crop ulang), tanpa memilih berkas. */
   initialSrc?: string;
+  /** Sama, tapi dari berkas yang baru dipilih (antrean unggah banyak). */
+  initialFile?: File;
   initialName?: string;
   onCancel?: () => void;
   onConfirm: (blob: Blob, sourceName: string) => void | Promise<void>;
 }) {
-  const [src, setSrc] = useState<string | null>(initialSrc ?? null);
+  const [src, setSrc] = useState<string | null>(() =>
+    initialFile ? URL.createObjectURL(initialFile) : (initialSrc ?? null),
+  );
   const [sourceName, setSourceName] = useState(initialName);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);

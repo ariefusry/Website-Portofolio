@@ -5,7 +5,7 @@ import { useFormStatus } from "react-dom";
 import { saveRecord, type ActionState } from "@/lib/admin/actions";
 import type { Field, TableDef } from "@/lib/admin/schema";
 import { UploadButton, publicAssetUrl } from "./UploadButton";
-import { ImageCropper, centerCrop } from "./ImageCropper";
+import { ImageCropper } from "./ImageCropper";
 import { createClient } from "@/lib/supabase/client";
 
 const INPUT =
@@ -51,6 +51,9 @@ function AssetControl({
   const [editing, setEditing] = useState<number | null>(null);
   /** Berkas yang dibuang dari galeri; dihapus dari Storage setelah Simpan berhasil. */
   const [removed, setRemoved] = useState<string[]>([]);
+  /** Foto yang dipilih sekaligus, di-crop satu per satu sebelum diunggah. */
+  const [queue, setQueue] = useState<File[]>([]);
+  const [queueTotal, setQueueTotal] = useState(0);
   const bucket = field.bucket ?? "assets";
   const isList = field.type === "array";
   const isVideo = field.media === "video";
@@ -94,21 +97,12 @@ function AssetControl({
     return name;
   }
 
-  async function uploadMany(e: React.ChangeEvent<HTMLInputElement>) {
+  function pickMany(e: React.ChangeEvent<HTMLInputElement>) {
     const files = [...(e.target.files ?? [])];
     e.target.value = "";
-    // Satu per satu, bukan Promise.all: urutannya ikut urutan pilihan, dan
-    // Date.now() di nama berkas tidak bentrok.
-    for (const file of files) {
-      try {
-        const name = await uploadBlob(await centerCrop(file, 16 / 9, "jpeg"), file.name);
-        if (!name) break;
-        setValue((prev) => (prev.trim() ? `${prev.trim()}\n${name}` : name));
-      } catch (err) {
-        setUploadError(err instanceof Error ? err.message : `Gagal memproses ${file.name}.`);
-        break;
-      }
-    }
+    setEditing(null);
+    setQueue(files);
+    setQueueTotal(files.length);
   }
 
   function removeAt(i: number) {
@@ -154,23 +148,46 @@ function AssetControl({
       ) : isList ? (
         <>
           {/*
-           * Galeri: banyak foto sekaligus, tiap foto dipotong 16:9 dari tengah
-           * (screenshot yang memang 16:9 tidak terpotong apa pun). Potongan
-           * yang kurang pas diatur ulang lewat tombol Crop di thumbnail-nya.
+           * Galeri: pilih banyak foto sekaligus, lalu crop 16:9 satu per satu
+           * sebelum diunggah. "Batal" melewati foto itu saja.
            */}
-          <label className="inline-flex w-fit cursor-pointer items-center rounded-lg border border-[var(--color-line-strong)] bg-surface px-3 py-1.5 font-display text-[13px] font-semibold">
-            {busy ? "Mengunggah…" : "Unggah foto (bisa banyak)"}
-            <input
-              type="file"
-              multiple
-              accept="image/png,image/webp,image/jpeg"
-              onChange={uploadMany}
-              disabled={busy}
-              className="hidden"
+          {queue.length ? (
+            <ImageCropper
+              key={`${queueTotal - queue.length}-${queue[0].name}`}
+              aspect={16 / 9}
+              format="jpeg"
+              busy={busy}
+              initialFile={queue[0]}
+              initialName={queue[0].name}
+              note={
+                <p className="m-0 font-body text-xs text-muted">
+                  Foto {queueTotal - queue.length + 1} dari {queueTotal}: {queue[0].name}
+                </p>
+              }
+              confirmLabel="Potong & unggah"
+              onCancel={() => setQueue((q) => q.slice(1))}
+              onConfirm={async (blob, sourceName) => {
+                const name = await uploadBlob(blob, sourceName);
+                if (!name) return;
+                setValue((prev) => (prev.trim() ? `${prev.trim()}\n${name}` : name));
+                setQueue((q) => q.slice(1));
+              }}
             />
-          </label>
+          ) : (
+            <label className="inline-flex w-fit cursor-pointer items-center rounded-lg border border-[var(--color-line-strong)] bg-surface px-3 py-1.5 font-display text-[13px] font-semibold">
+              Unggah foto (bisa banyak)
+              <input
+                type="file"
+                multiple
+                accept="image/png,image/webp,image/jpeg"
+                onChange={pickMany}
+                disabled={busy}
+                className="hidden"
+              />
+            </label>
+          )}
 
-          {editing !== null && paths[editing] ? (
+          {!queue.length && editing !== null && paths[editing] ? (
             <ImageCropper
               key={paths[editing]}
               aspect={16 / 9}
@@ -245,20 +262,23 @@ function AssetControl({
                 // browser dan isi form yang belum disimpan hilang.
                 onDrop={(e) => e.preventDefault()}
                 onDragEnd={() => setDragIndex(null)}
-                className={`relative cursor-grab ${dragIndex === i ? "opacity-50" : ""}`}
+                className={`cursor-grab ${dragIndex === i ? "opacity-50" : ""}`}
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={publicAssetUrl(bucket, path)}
-                  alt={path}
-                  draggable={false}
-                  className="aspect-[16/9] w-36 rounded-md border border-[var(--color-line)] bg-page object-cover"
-                />
-                {i === 0 ? (
-                  <span className="absolute bottom-1 left-1 rounded bg-ink px-1.5 py-0.5 font-mono text-[10px] text-on-ink">
-                    Utama
-                  </span>
-                ) : null}
+                {/* Label "Utama" menempel di gambarnya, bukan di baris tombol. */}
+                <div className="relative">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={publicAssetUrl(bucket, path)}
+                    alt={path}
+                    draggable={false}
+                    className="aspect-[16/9] w-36 rounded-md border border-[var(--color-line)] bg-page object-cover"
+                  />
+                  {i === 0 ? (
+                    <span className="absolute bottom-1 left-1 rounded bg-ink px-1.5 py-0.5 font-mono text-[10px] text-on-ink">
+                      Utama
+                    </span>
+                  ) : null}
+                </div>
                 <div className="mt-1 flex gap-1">
                   <button
                     type="button"
