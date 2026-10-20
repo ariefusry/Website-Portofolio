@@ -12,7 +12,6 @@ import type {
   SkillGroup,
   SiteSettings,
   Stat,
-  Track,
 } from "../types";
 import { createPublicClient } from "./server";
 import { BUCKET_ASSETS, BUCKET_DOCS, supabaseConfigured } from "./env";
@@ -66,6 +65,14 @@ function publicUrl(bucket: string, path: string | null | undefined): string | nu
   return createPublicClient().storage.from(bucket).getPublicUrl(path).data.publicUrl;
 }
 
+/** `[{label, value_en, value_id}]` → fakta; null bila kolom kosong/tidak ada. */
+const mapFacts = (v: unknown): ProjectFact[] | null => {
+  const list = objs(v);
+  return list?.length
+    ? list.map((f) => ({ label: str(f, "label"), value: bi(f, "value") }))
+    : null;
+};
+
 function mapProfile(row: Row | null): Profile {
   if (!row) return SEED.profile;
   return {
@@ -74,6 +81,7 @@ function mapProfile(row: Row | null): Profile {
     heroTitle: bi(row, "hero_title", SEED.profile.heroTitle),
     heroSub: bi(row, "hero_sub", SEED.profile.heroSub),
     about: bi(row, "about", SEED.profile.about),
+    aboutFacts: mapFacts(row.about_facts) ?? SEED.profile.aboutFacts,
     contactHeading: bi(row, "contact_heading", SEED.profile.contactHeading),
     contactNote: bi(row, "contact_note", SEED.profile.contactNote),
     photoUrl: publicUrl(BUCKET_ASSETS, str(row, "photo_path") || null),
@@ -94,15 +102,6 @@ const mapStats = (rows: Row[]): Stat[] =>
     label: bi(row, "label"),
   }));
 
-const mapTracks = (rows: Row[]): Track[] =>
-  rows.map((row) => ({
-    id: str(row, "id"),
-    title: bi(row, "title"),
-    body: bi(row, "body"),
-    chips: arr(row, "chips"),
-    accent: bool(row, "accent"),
-  }));
-
 const mapProjects = (rows: Row[]): Project[] =>
   rows.map((row) => ({
     id: str(row, "id"),
@@ -121,9 +120,7 @@ const mapProjects = (rows: Row[]): Project[] =>
     role: bi(row, "role"),
     status: bi(row, "status"),
     overview: bi(row, "overview"),
-    facts: (objs(row.facts) ?? []).map(
-      (f): ProjectFact => ({ label: str(f, "label"), value: bi(f, "value") }),
-    ),
+    facts: mapFacts(row.facts) ?? [],
     imageUrls: arr(row, "image_paths")
       .map((path) => publicUrl(BUCKET_ASSETS, path))
       .filter((url): url is string => Boolean(url)),
@@ -185,7 +182,6 @@ export async function fetchContentFromSupabase(): Promise<Content | null> {
   const [
     profileRes,
     statsRes,
-    tracksRes,
     projectsRes,
     researchRes,
     experiencesRes,
@@ -194,7 +190,6 @@ export async function fetchContentFromSupabase(): Promise<Content | null> {
   ] = await Promise.all([
     db.from("profile").select("*").eq("id", 1).maybeSingle(),
     db.from("stats").select("*").order("sort"),
-    db.from("tracks").select("*").order("sort"),
     db.from("projects").select("*").order("sort"),
     db.from("research").select("*").eq("id", 1).maybeSingle(),
     db.from("experiences").select("*").order("sort"),
@@ -206,14 +201,12 @@ export async function fetchContentFromSupabase(): Promise<Content | null> {
   const resolvedProjects = projects.length ? projects : SEED.projects;
 
   const stats = mapStats(rows(statsRes));
-  const tracks = mapTracks(rows(tracksRes));
   const experiences = mapExperiences(rows(experiencesRes));
   const skillGroups = mapSkillGroups(rows(skillsRes));
 
   return {
     profile: mapProfile(one(profileRes)),
     stats: stats.length ? stats : SEED.stats,
-    tracks: tracks.length ? tracks : SEED.tracks,
     projects: resolvedProjects,
     research: mapResearch(one(researchRes)),
     experiences: experiences.length ? experiences : SEED.experiences,

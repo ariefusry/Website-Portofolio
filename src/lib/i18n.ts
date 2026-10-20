@@ -24,7 +24,6 @@ export const UI = {
   eyebrowResearch: { en: "RESEARCH / RISET", id: "RESEARCH / RISET" },
   eyebrowExperience: { en: "EXPERIENCE / PENGALAMAN", id: "EXPERIENCE / PENGALAMAN" },
   eyebrowSkills: { en: "SKILLS & TOOLS", id: "SKILLS & TOOLS" },
-  trackLabel: { en: "Two tracks", id: "Dua jalur" },
   projTitle: { en: "Projects", id: "Proyek" },
   projLead: {
     en: "Every project opens a page with the role, stack and outcome behind it.",

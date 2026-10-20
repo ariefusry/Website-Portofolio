@@ -15,14 +15,6 @@ export type Stat = {
   label: Bi;
 };
 
-export type Track = {
-  id: string;
-  title: Bi;
-  body: Bi;
-  chips: string[];
-  accent: boolean;
-};
-
 export type ProjectFact = { label: string; value: Bi };
 
 export type Project = {
@@ -86,6 +78,8 @@ export type Profile = {
   heroTitle: Bi;
   heroSub: Bi;
   about: Bi;
+  /** Baris fakta di bawah paragraf about, bentuknya sama dengan fakta proyek. */
+  aboutFacts: ProjectFact[];
   contactHeading: Bi;
   contactNote: Bi;
   photoUrl: string | null;
@@ -103,7 +97,6 @@ export type SiteSettings = {
 export type Content = {
   profile: Profile;
   stats: Stat[];
-  tracks: Track[];
   projects: Project[];
   research: Research;
   experiences: Experience[];

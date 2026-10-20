@@ -47,7 +47,7 @@ export default async function Home() {
       <Header name={profile.name} email={profile.email} />
       <main>
         <Hero profile={profile} />
-        <About profile={profile} tracks={content.tracks} />
+        <About profile={profile} />
         <FeaturedBuild
           project={content.projects.find((p) => p.featured) ?? null}
         />

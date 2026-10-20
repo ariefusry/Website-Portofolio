@@ -21,9 +21,33 @@ export const SEED: Content = {
       id: "Flutter, Laravel, dan Supabase di produksi. Dua platform klien berbayar sudah live, magang di PT Pos Indonesia, dan skripsi diterima di IC2IE 2026.",
     },
     about: {
-      en: "Informatics graduate from Telkom University, GPA 3.76. I shipped a Flutter app and its Laravel web companion on one Supabase backend at PT Pos Indonesia, delivered a tourism platform alone for a paying client, and built a company profile site with one other developer. Alongside that: a year teaching operating systems labs, and a thesis on optimizing neural network architecture with the Grey Wolf Optimizer.",
-      id: "Lulusan Informatika Telkom University, IPK 3.76. Saya merilis aplikasi Flutter beserta web Laravel-nya di satu backend Supabase untuk PT Pos Indonesia, mengerjakan platform pariwisata sendiri untuk klien berbayar, dan membangun situs company profile bersama satu developer lain. Di samping itu: setahun mengajar praktikum Sistem Operasi, dan skripsi optimasi arsitektur neural network dengan Grey Wolf Optimizer.",
+      en: "Informatics graduate from Telkom University. I build web and mobile apps end to end, from the database schema to the admin dashboard, and I have shipped them for a paying client and for PT Pos Indonesia.",
+      id: "Lulusan Informatika Telkom University. Saya membangun aplikasi web dan mobile dari awal sampai akhir, mulai dari skema database sampai dashboard admin, dan sudah merilisnya untuk klien berbayar dan untuk PT Pos Indonesia.",
     },
+    aboutFacts: [
+      {
+        label: "EDUCATION",
+        value: {
+          en: "S1 Informatics, Telkom University · GPA 3.76",
+          id: "S1 Informatika, Telkom University · IPK 3.76",
+        },
+      },
+      {
+        label: "LOCATION",
+        value: { en: "Bekasi, Indonesia", id: "Bekasi, Indonesia" },
+      },
+      {
+        label: "AVAILABILITY",
+        value: { en: "Available immediately", id: "Bisa mulai segera" },
+      },
+      {
+        label: "LOOKING FOR",
+        value: {
+          en: "Fullstack, data and ML roles",
+          id: "Posisi fullstack, data, dan ML",
+        },
+      },
+    ],
     contactHeading: {
       en: "Open to fullstack, data and ML roles.",
       id: "Terbuka untuk posisi fullstack, data, dan ML.",
@@ -77,29 +101,6 @@ export const SEED: Content = {
       isNumeric: true,
       decimals: 0,
       label: { en: "projects 2024—2026", id: "proyek 2024—2026" },
-    },
-  ],
-
-  tracks: [
-    {
-      id: "fullstack",
-      title: { en: "Fullstack engineering", id: "Fullstack engineering" },
-      body: {
-        en: "Flutter and Laravel apps on Supabase. Schema design, admin dashboards, deployment.",
-        id: "Aplikasi Flutter dan Laravel di atas Supabase. Desain skema, dashboard admin, deployment.",
-      },
-      chips: ["Flutter", "Laravel", "Supabase", "PostgreSQL"],
-      accent: false,
-    },
-    {
-      id: "ml",
-      title: { en: "Data & machine learning", id: "Data & machine learning" },
-      body: {
-        en: "Applied ML on the Tox21 dataset with TensorFlow, Scikit-learn and RDKit. Metaheuristic architecture search.",
-        id: "ML terapan pada dataset Tox21 dengan TensorFlow, Scikit-learn, dan RDKit. Pencarian arsitektur metaheuristik.",
-      },
-      chips: ["TensorFlow", "Scikit-learn", "Pandas", "RDKit"],
-      accent: true,
     },
   ],
 

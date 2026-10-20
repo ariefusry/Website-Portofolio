@@ -2,16 +2,10 @@
 
 import { useLang } from "@/lib/lang-context";
 import { UI } from "@/lib/i18n";
-import { Chip, TwoColSection } from "@/components/ui/Primitives";
-import type { Profile, Track } from "@/lib/types";
+import { TwoColSection } from "@/components/ui/Primitives";
+import type { Profile } from "@/lib/types";
 
-export function About({
-  profile,
-  tracks,
-}: {
-  profile: Profile;
-  tracks: Track[];
-}) {
+export function About({ profile }: { profile: Profile }) {
   const { t } = useLang();
 
   return (
@@ -26,36 +20,24 @@ export function About({
         {t(profile.about)}
       </p>
 
-      <div className="mb-3.5 font-mono text-xs leading-none font-semibold text-muted-2">
-        {t(UI.trackLabel)}
-      </div>
-
-      <div className="grid gap-4 sm:grid-cols-2">
-        {tracks.map((track) => (
-          <div
-            key={track.id}
-            className={`rounded-xl bg-surface p-6 ${
-              track.accent
-                ? "border border-accent-border"
-                : "border border-[var(--color-line)]"
-            }`}
-          >
-            <div className="mb-2.5 font-display text-[17px] leading-[1.25] font-semibold">
-              {t(track.title)}
+      {/* Bentuknya sama dengan "Fakta ringkas" di halaman detail proyek. */}
+      {profile.aboutFacts.length ? (
+        <dl className="m-0 grid max-w-[700px] border-t border-[var(--color-line-strong)]">
+          {profile.aboutFacts.map((fact) => (
+            <div
+              key={fact.label}
+              className="grid gap-1.5 border-b border-[var(--color-line)] py-3.5 sm:grid-cols-[160px_1fr] sm:gap-6"
+            >
+              <dt className="font-mono text-[11px] leading-[1.5] font-semibold text-muted-2 sm:pt-[3px]">
+                {fact.label}
+              </dt>
+              <dd className="m-0 font-body text-[15px] leading-[1.5] font-medium">
+                {t(fact.value)}
+              </dd>
             </div>
-            <p className="whitespace-pre-line mt-0 mb-4 font-body text-sm leading-[1.6] font-normal text-body-2">
-              {t(track.body)}
-            </p>
-            <div className="flex flex-wrap gap-1.5">
-              {track.chips.map((chip) => (
-                <Chip key={chip} accent={track.accent}>
-                  {chip}
-                </Chip>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </dl>
+      ) : null}
     </TwoColSection>
   );
 }

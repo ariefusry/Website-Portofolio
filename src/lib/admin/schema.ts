@@ -57,6 +57,12 @@ export const TABLES: TableDef[] = [
       bi("hero_title", "Judul hero", "textarea"),
       bi("hero_sub", "Subjudul hero", "textarea"),
       bi("about", "Paragraf about", "textarea"),
+      {
+        name: "about_facts",
+        label: "Fakta about",
+        type: "json",
+        hint: '[{"label":"EDUCATION","value_en":"…","value_id":"…"}]',
+      },
       bi("contact_heading", "Judul kontak"),
       bi("contact_note", "Catatan kontak"),
       {
@@ -95,21 +101,8 @@ export const TABLES: TableDef[] = [
   },
   // Stat strip dihapus dari beranda, jadi form-nya ikut dilepas — dashboard
   // yang menawarkan pengeditan sesuatu yang tidak tampil di mana pun cuma
-  // menyesatkan. Tabel `stats` di Postgres sengaja dibiarkan utuh.
-  {
-    key: "tracks",
-    table: "tracks",
-    label: "Two tracks",
-    kind: "collection",
-    titleField: "title_en",
-    fields: [
-      bi("title", "Judul"),
-      bi("body", "Deskripsi", "textarea"),
-      { name: "chips", label: "Chip teknologi", type: "array" },
-      { name: "accent", label: "Warna aksen", type: "bool" },
-      { name: "sort", label: "Urutan", type: "number" },
-    ],
-  },
+  // menyesatkan. Tabel `stats` di Postgres sengaja dibiarkan utuh. Begitu juga
+  // "Two tracks": diganti baris fakta di about, tabel `tracks` tetap ada.
   {
     key: "projects",
     table: "projects",

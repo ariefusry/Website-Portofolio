@@ -32,6 +32,7 @@ create table if not exists public.profile (
   hero_sub_id text not null default '',
   about_en text not null default '',
   about_id text not null default '',
+  about_facts jsonb not null default '[]'::jsonb, -- [{label, value_en, value_id}]
   contact_heading_en text not null default '',
   contact_heading_id text not null default '',
   contact_note_en text not null default '',
@@ -117,6 +118,7 @@ create table if not exists public.projects (
 );
 -- Database lama dibuat sebelum kolom video ada.
 alter table public.projects add column if not exists video_path text;
+alter table public.profile add column if not exists about_facts jsonb not null default '[]'::jsonb;
 
 create table if not exists public.experiences (
   id text primary key,
