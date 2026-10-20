@@ -20,6 +20,9 @@ async function cropToBlob(
   format: "png" | "jpeg",
 ): Promise<Blob> {
   const img = new Image();
+  // Foto galeri yang di-crop ulang datang dari Storage (origin lain); tanpa
+  // ini kanvasnya "tercemar" dan toBlob ditolak browser.
+  img.crossOrigin = "anonymous";
   img.src = src;
   await img.decode();
 
@@ -57,6 +60,34 @@ async function cropToBlob(
   });
 }
 
+/** Potong bagian tengah berkas dengan rasio `aspect` — untuk unggah banyak sekaligus. */
+export async function centerCrop(
+  file: File,
+  aspect: number,
+  format: "png" | "jpeg",
+): Promise<Blob> {
+  const src = URL.createObjectURL(file);
+  try {
+    const img = new Image();
+    img.src = src;
+    await img.decode();
+    const width = Math.min(img.naturalWidth, img.naturalHeight * aspect);
+    const height = width / aspect;
+    return await cropToBlob(
+      src,
+      {
+        x: (img.naturalWidth - width) / 2,
+        y: (img.naturalHeight - height) / 2,
+        width,
+        height,
+      },
+      format,
+    );
+  } finally {
+    URL.revokeObjectURL(src);
+  }
+}
+
 /**
  * Pemilih berkas + crop dengan rasio tetap. Dipakai bersama oleh foto profil
  * (4:5, PNG supaya latar transparannya selamat) dan screenshot proyek
@@ -73,6 +104,9 @@ export function ImageCropper({
   confirmLabel = "Potong & unggah",
   note,
   busy = false,
+  initialSrc,
+  initialName = "",
+  onCancel,
   onConfirm,
 }: {
   aspect: number;
@@ -82,10 +116,14 @@ export function ImageCropper({
   confirmLabel?: string;
   note?: React.ReactNode;
   busy?: boolean;
+  /** Buka langsung dengan gambar yang sudah ada (crop ulang), tanpa memilih berkas. */
+  initialSrc?: string;
+  initialName?: string;
+  onCancel?: () => void;
   onConfirm: (blob: Blob, sourceName: string) => void | Promise<void>;
 }) {
-  const [src, setSrc] = useState<string | null>(null);
-  const [sourceName, setSourceName] = useState("");
+  const [src, setSrc] = useState<string | null>(initialSrc ?? null);
+  const [sourceName, setSourceName] = useState(initialName);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [area, setArea] = useState<Area | null>(null);
@@ -94,7 +132,7 @@ export function ImageCropper({
   // Object URL harus dilepas, kalau tidak berkasnya menggantung di memori.
   useEffect(() => {
     return () => {
-      if (src) URL.revokeObjectURL(src);
+      if (src?.startsWith("blob:")) URL.revokeObjectURL(src);
     };
   }, [src]);
 
@@ -181,7 +219,10 @@ export function ImageCropper({
             </button>
             <button
               type="button"
-              onClick={() => setSrc(null)}
+              onClick={() => {
+                setSrc(null);
+                onCancel?.();
+              }}
               disabled={busy}
               className="cursor-pointer rounded-lg border border-[var(--color-line-strong)] px-4 py-2 font-display text-[13px] font-semibold"
             >

@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect, unstable_rethrow } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { BUCKET_ASSETS } from "@/lib/supabase/env";
 import { columnsOf, getTableDef, type Field, type TableDef } from "./schema";
 
 async function requireAdmin() {
@@ -100,6 +101,23 @@ export async function saveRecord(
 
     const { error } = await supabase.from(def.table).upsert(payload);
     if (error) return { error: error.message, ok: false };
+
+    // Foto yang dibuang dari galeri (atau diganti hasil crop ulang) baru
+    // dihapus dari Storage setelah barisnya tersimpan — kalau dihapus lebih
+    // dulu lalu form tidak jadi disimpan, situs menampilkan gambar rusak.
+    // Path yang masih dipakai baris ini tidak ikut dihapus.
+    const kept = new Set(
+      Object.values(payload).flatMap((v) => (Array.isArray(v) ? v : [v])),
+    );
+    const stale = formData
+      .getAll("__remove_assets")
+      .flatMap((v) => String(v).split("\n"))
+      .map((path) => path.trim())
+      .filter((path) => path && !kept.has(path));
+    if (stale.length) {
+      // Gagal hapus tidak menggagalkan simpan: berkas yatim hanya makan tempat.
+      await supabase.storage.from(BUCKET_ASSETS).remove(stale);
+    }
   } catch (e) {
     // redirect() dari requireAdmin (sesi habis) harus diteruskan, bukan jadi pesan error.
     unstable_rethrow(e);

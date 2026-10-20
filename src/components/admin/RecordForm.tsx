@@ -5,7 +5,7 @@ import { useFormStatus } from "react-dom";
 import { saveRecord, type ActionState } from "@/lib/admin/actions";
 import type { Field, TableDef } from "@/lib/admin/schema";
 import { UploadButton, publicAssetUrl } from "./UploadButton";
-import { ImageCropper } from "./ImageCropper";
+import { ImageCropper, centerCrop } from "./ImageCropper";
 import { createClient } from "@/lib/supabase/client";
 
 const INPUT =
@@ -47,6 +47,10 @@ function AssetControl({
   const [busy, setBusy] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [dragIndex, setDragIndex] = useState<number | null>(null);
+  /** Foto galeri yang sedang di-crop ulang. */
+  const [editing, setEditing] = useState<number | null>(null);
+  /** Berkas yang dibuang dari galeri; dihapus dari Storage setelah Simpan berhasil. */
+  const [removed, setRemoved] = useState<string[]>([]);
   const bucket = field.bucket ?? "assets";
   const isList = field.type === "array";
   const isVideo = field.media === "video";
@@ -67,10 +71,61 @@ function AssetControl({
     setDragIndex(overIndex);
   }
 
+  /** Unggah satu gambar hasil potongan; mengembalikan nama berkasnya, atau null bila gagal. */
+  async function uploadBlob(blob: Blob, sourceName: string): Promise<string | null> {
+    setBusy(true);
+    setUploadError(null);
+    const safe = sourceName
+      .replace(/\.[^.]+$/, "")
+      .replace(/[^a-zA-Z0-9._-]/g, "-");
+    const name = `${Date.now()}-${safe}.${isCutout ? "png" : "jpg"}`;
+    const { error } = await createClient()
+      .storage.from(bucket)
+      .upload(name, blob, {
+        upsert: false,
+        cacheControl: "3600",
+        contentType: isCutout ? "image/png" : "image/jpeg",
+      });
+    setBusy(false);
+    if (error) {
+      setUploadError(error.message);
+      return null;
+    }
+    return name;
+  }
+
+  async function uploadMany(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = [...(e.target.files ?? [])];
+    e.target.value = "";
+    // Satu per satu, bukan Promise.all: urutannya ikut urutan pilihan, dan
+    // Date.now() di nama berkas tidak bentrok.
+    for (const file of files) {
+      try {
+        const name = await uploadBlob(await centerCrop(file, 16 / 9, "jpeg"), file.name);
+        if (!name) break;
+        setValue((prev) => (prev.trim() ? `${prev.trim()}\n${name}` : name));
+      } catch (err) {
+        setUploadError(err instanceof Error ? err.message : `Gagal memproses ${file.name}.`);
+        break;
+      }
+    }
+  }
+
+  function removeAt(i: number) {
+    if (!window.confirm("Hapus foto ini? Berkasnya ikut dihapus dari Storage saat kamu menekan Simpan.")) return;
+    const path = paths[i];
+    setValue(paths.filter((_, j) => j !== i).join("\n"));
+    setRemoved((r) => [...r, path]);
+    setEditing(null);
+  }
+
   return (
     <div className="mt-1.5 grid gap-2.5">
       {isList ? (
-        <input type="hidden" name={field.name} value={paths.join("\n")} />
+        <>
+          <input type="hidden" name={field.name} value={paths.join("\n")} />
+          <input type="hidden" name="__remove_assets" value={removed.join("\n")} />
+        </>
       ) : (
         <input
           type="text"
@@ -96,6 +151,46 @@ function AssetControl({
           label="Unggah video"
           onDone={(name) => setValue(name)}
         />
+      ) : isList ? (
+        <>
+          {/*
+           * Galeri: banyak foto sekaligus, tiap foto dipotong 16:9 dari tengah
+           * (screenshot yang memang 16:9 tidak terpotong apa pun). Potongan
+           * yang kurang pas diatur ulang lewat tombol Crop di thumbnail-nya.
+           */}
+          <label className="inline-flex w-fit cursor-pointer items-center rounded-lg border border-[var(--color-line-strong)] bg-surface px-3 py-1.5 font-display text-[13px] font-semibold">
+            {busy ? "Mengunggah…" : "Unggah foto (bisa banyak)"}
+            <input
+              type="file"
+              multiple
+              accept="image/png,image/webp,image/jpeg"
+              onChange={uploadMany}
+              disabled={busy}
+              className="hidden"
+            />
+          </label>
+
+          {editing !== null && paths[editing] ? (
+            <ImageCropper
+              key={paths[editing]}
+              aspect={16 / 9}
+              format="jpeg"
+              busy={busy}
+              initialSrc={publicAssetUrl(bucket, paths[editing])}
+              initialName={paths[editing].replace(/^\d+-/, "")}
+              confirmLabel="Simpan crop"
+              onCancel={() => setEditing(null)}
+              onConfirm={async (blob, sourceName) => {
+                const old = paths[editing];
+                const name = await uploadBlob(blob, sourceName);
+                if (!name) return;
+                setValue(paths.map((p) => (p === old ? name : p)).join("\n"));
+                setRemoved((r) => [...r, old]);
+                setEditing(null);
+              }}
+            />
+          ) : null}
+        </>
       ) : (
         /*
          * Screenshot dipotong 16:9 sebelum diunggah — itu rasio jendela
@@ -111,31 +206,11 @@ function AssetControl({
           aspect={isCutout ? 4 / 5 : 16 / 9}
           format={isCutout ? "png" : "jpeg"}
           busy={busy}
-          pickLabel={isList ? "Unggah & tambahkan" : "Unggah & isi"}
+          pickLabel="Unggah & isi"
           confirmLabel="Potong & unggah"
           onConfirm={async (blob, sourceName) => {
-            setBusy(true);
-            setUploadError(null);
-            const safe = sourceName
-              .replace(/\.[^.]+$/, "")
-              .replace(/[^a-zA-Z0-9._-]/g, "-");
-            const name = `${Date.now()}-${safe}.${isCutout ? "png" : "jpg"}`;
-            const supabase = createClient();
-            const { error } = await supabase.storage
-              .from(bucket)
-              .upload(name, blob, {
-                upsert: false,
-                cacheControl: "3600",
-                contentType: isCutout ? "image/png" : "image/jpeg",
-              });
-            if (error) setUploadError(error.message);
-            else
-              setValue((prev) => {
-                if (!isList) return name;
-                const existing = prev.trim();
-                return existing ? `${existing}\n${name}` : name;
-              });
-            setBusy(false);
+            const name = await uploadBlob(blob, sourceName);
+            if (name) setValue(name);
           }}
         />
       )}
@@ -184,14 +259,25 @@ function AssetControl({
                     Utama
                   </span>
                 ) : null}
-                <button
-                  type="button"
-                  aria-label={`Hapus ${path} dari galeri`}
-                  onClick={() => setValue(paths.filter((_, j) => j !== i).join("\n"))}
-                  className="absolute top-1 right-1 h-6 w-6 cursor-pointer rounded-full bg-ink text-xs leading-none text-on-ink"
-                >
-                  ×
-                </button>
+                <div className="mt-1 flex gap-1">
+                  <button
+                    type="button"
+                    onClick={() => setEditing(i)}
+                    disabled={busy}
+                    className="cursor-pointer rounded-md border border-[var(--color-line-strong)] px-2 py-1 font-display text-[11px] font-semibold"
+                  >
+                    Crop
+                  </button>
+                  <button
+                    type="button"
+                    aria-label={`Hapus ${path}`}
+                    onClick={() => removeAt(i)}
+                    disabled={busy}
+                    className="cursor-pointer rounded-md border border-red-300 px-2 py-1 font-display text-[11px] font-semibold text-red-700"
+                  >
+                    Hapus
+                  </button>
+                </div>
               </div>
             ) : (
               // <img> biasa, bukan next/image: ini halaman admin, dan berkas
