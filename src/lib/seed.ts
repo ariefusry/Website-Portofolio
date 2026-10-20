@@ -268,8 +268,8 @@ export const SEED: Content = {
         {
           label: "STATUS",
           value: {
-            en: "Mobile test-ready, web at roughly 70%",
-            id: "Mobile siap uji, web sekitar 70%",
+            en: "Android app test-ready; web left unfinished when the internship ended",
+            id: "Aplikasi Android siap uji; web belum selesai saat magang berakhir",
           },
         },
       ],
@@ -445,8 +445,8 @@ export const SEED: Content = {
         id: "Fullstack Developer, Magang — PT Pos Indonesia (Persero)",
       },
       body: {
-        en: "Flutter mobile app and Laravel web companion with feature parity on one Supabase backend, synced in real time. Mobile shipped test-ready; web at ~70%.",
-        id: "Aplikasi mobile Flutter dan web Laravel dengan fitur setara di satu backend Supabase, tersinkron real-time. Mobile siap uji; web sekitar 70%.",
+        en: "Flutter mobile app and Laravel web companion on one Supabase backend, synced in real time. The Android app was the priority and shipped ready for testing; the web version was a side track and was left unfinished when the internship ended.",
+        id: "Aplikasi mobile Flutter dan web Laravel di satu backend Supabase, tersinkron real-time. Aplikasi Android jadi prioritas dan selesai siap uji; versi web adalah pekerjaan sampingan dan belum selesai saat masa magang berakhir.",
       },
     },
     {

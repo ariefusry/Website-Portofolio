@@ -82,7 +82,7 @@ export function ProjectCard({ project, from }: { project: Project; from?: string
             {project.title}
           </h3>
           {status ? (
-            <span className="rounded-[5px] bg-[color-mix(in_oklab,var(--color-accent-strong)_15%,transparent)] px-2 py-1 font-mono text-[10px] leading-none font-semibold tracking-wide text-[var(--color-accent-strong)]">
+            <span className="rounded-[5px] bg-[color-mix(in_oklab,var(--color-accent-strong)_15%,transparent)] px-2 py-1 font-mono text-[10px] leading-none font-semibold tracking-wide uppercase text-[var(--color-accent-strong)]">
               {status}
             </span>
           ) : null}

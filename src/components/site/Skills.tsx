@@ -176,7 +176,9 @@ function MarqueeRow({
 export function Skills({ groups }: { groups: SkillGroup[] }) {
   const { t } = useLang();
   const reduced = useReducedMotion() ?? false;
-  const [showAll, setShowAll] = useState(false);
+  // Daftar diam jadi bawaan: HR membaca semuanya sekali lihat, tanpa menunggu
+  // pita lewat. Pita bergerak tetap ada sebagai pilihan.
+  const [showAll, setShowAll] = useState(true);
 
   // Kalau pengguna minta gerakan dikurangi, langsung tampilkan daftar penuh —
   // bukan animasi yang dijalankan lalu dimatikan.
@@ -197,32 +199,45 @@ export function Skills({ groups }: { groups: SkillGroup[] }) {
          */}
         {/* role="group": aria-label pada <div> polos tidak terekspos sama sekali. */}
         <motion.div
-          key={asGrid ? "grid" : "reel"}
+          key={asGrid ? "list" : "reel"}
           initial={reduced ? false : { opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.3, ease: EASE }}
-          className="grid min-w-0 gap-6"
+          className="min-w-0"
           role="group"
           aria-label={t(UI.skillsRegion)}
         >
-          {groups.map((group, i) => (
-            <div key={group.id} className="min-w-0">
-              <GroupName>{t(group.name)}</GroupName>
-              {asGrid ? (
-                <div className="flex flex-wrap gap-2.5">
-                  {group.items.map((item) => (
-                    <SkillPill key={item} label={item} />
-                  ))}
+          {asGrid ? (
+            // Bentuknya sama dengan baris fakta di About: label kiri, teks kanan.
+            <dl className="m-0 grid border-t border-[var(--color-line-strong)]">
+              {groups.map((group) => (
+                <div
+                  key={group.id}
+                  className="grid gap-1.5 border-b border-[var(--color-line)] py-3.5 sm:grid-cols-[200px_1fr] sm:gap-6"
+                >
+                  <dt className="font-mono text-[11px] leading-[1.5] font-semibold uppercase text-muted-2 sm:pt-[3px]">
+                    {t(group.name)}
+                  </dt>
+                  <dd className="m-0 font-body text-[15px] leading-[1.6] font-medium">
+                    {group.items.join(", ")}
+                  </dd>
                 </div>
-              ) : (
-                <MarqueeRow
-                  group={group}
-                  speed={SPEEDS[i % SPEEDS.length]}
-                  reverse={isReversed(i)}
-                />
-              )}
+              ))}
+            </dl>
+          ) : (
+            <div className="grid gap-6">
+              {groups.map((group, i) => (
+                <div key={group.id} className="min-w-0">
+                  <GroupName>{t(group.name)}</GroupName>
+                  <MarqueeRow
+                    group={group}
+                    speed={SPEEDS[i % SPEEDS.length]}
+                    reverse={isReversed(i)}
+                  />
+                </div>
+              ))}
             </div>
-          ))}
+          )}
         </motion.div>
       </AutoHeight>
 
