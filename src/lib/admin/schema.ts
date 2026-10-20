@@ -24,8 +24,11 @@ export type Field = {
   hint?: string;
   /** Bucket untuk field bertipe asset. */
   bucket?: "assets" | "documents";
-  /** Kolom asset berisi video, bukan gambar — diunggah tanpa crop. */
-  media?: "video";
+  /**
+   * `video`: diunggah apa adanya, tanpa crop.
+   * `cutout`: foto hero — crop 4:5 dan PNG supaya latar transparannya ikut.
+   */
+  media?: "video" | "cutout";
 };
 
 export type TableDef = {
@@ -70,7 +73,8 @@ export const TABLES: TableDef[] = [
         label: "Foto profil",
         type: "asset",
         bucket: "assets",
-        hint: "Path di bucket assets, mis. profile.jpg",
+        media: "cutout",
+        hint: "PNG dengan latar sudah dihapus, rasio 4:5",
       },
       {
         name: "cv_path",

@@ -50,6 +50,7 @@ function AssetControl({
   const bucket = field.bucket ?? "assets";
   const isList = field.type === "array";
   const isVideo = field.media === "video";
+  const isCutout = field.media === "cutout";
 
   const paths = value
     .split("\n")
@@ -103,11 +104,12 @@ function AssetControl({
          * ada yang bisa mengatur bagian mana yang dibuang.
          *
          * JPEG, bukan PNG: screenshot tidak punya bagian transparan, dan
-         * berkasnya jauh lebih kecil.
+         * berkasnya jauh lebih kecil. Kecuali foto hero (`cutout`): 4:5 dan
+         * PNG, sama dengan cropper di halaman Aset.
          */
         <ImageCropper
-          aspect={16 / 9}
-          format="jpeg"
+          aspect={isCutout ? 4 / 5 : 16 / 9}
+          format={isCutout ? "png" : "jpeg"}
           busy={busy}
           pickLabel={isList ? "Unggah & tambahkan" : "Unggah & isi"}
           confirmLabel="Potong & unggah"
@@ -117,14 +119,14 @@ function AssetControl({
             const safe = sourceName
               .replace(/\.[^.]+$/, "")
               .replace(/[^a-zA-Z0-9._-]/g, "-");
-            const name = `${Date.now()}-${safe}.jpg`;
+            const name = `${Date.now()}-${safe}.${isCutout ? "png" : "jpg"}`;
             const supabase = createClient();
             const { error } = await supabase.storage
               .from(bucket)
               .upload(name, blob, {
                 upsert: false,
                 cacheControl: "3600",
-                contentType: "image/jpeg",
+                contentType: isCutout ? "image/png" : "image/jpeg",
               });
             if (error) setUploadError(error.message);
             else
