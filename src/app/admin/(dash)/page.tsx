@@ -12,7 +12,7 @@ export default function AdminHome() {
         menyegarkan isinya paling lama 60 detik setelah disimpan.
       </p>
 
-      <div className="grid max-w-3xl gap-3 sm:grid-cols-2">
+      <div className="grid max-w-5xl gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {[
           ...TABLES.map((t) => ({
             href: `/admin/${t.key}`,

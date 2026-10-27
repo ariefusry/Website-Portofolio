@@ -12,8 +12,11 @@ export default function AssetsPage() {
         diunggah, salin nama berkasnya ke kolom path di halaman Profil atau
         Selected work.
       </p>
-      <PhotoCropper />
-      <AssetManager />
+      {/* Dua bagian berdampingan di layar lebar: crop foto di kiri, daftar berkas di kanan. */}
+      <div className="grid max-w-6xl items-start gap-x-12 gap-y-10 xl:grid-cols-2">
+        <PhotoCropper />
+        <AssetManager />
+      </div>
     </>
   );
 }

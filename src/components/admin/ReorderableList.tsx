@@ -63,7 +63,7 @@ export function ReorderableList({
           Urutan gagal disimpan: {error}
         </p>
       ) : null}
-      <ul className="m-0 grid max-w-3xl list-none gap-2 p-0">
+      <ul className="m-0 grid max-w-5xl list-none gap-2 p-0">
         {rows.map((row) => {
           const id = String(row.id);
           return (

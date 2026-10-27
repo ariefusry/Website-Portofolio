@@ -81,7 +81,7 @@ function BucketPanel({ bucket }: { bucket: Bucket }) {
   }
 
   return (
-    <section className="mb-10 max-w-3xl">
+    <section className="min-w-0">
       <h2 className="mt-0 mb-1 font-display text-lg font-semibold">
         {BUCKET_LABEL[bucket]}
       </h2>

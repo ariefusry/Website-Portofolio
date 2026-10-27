@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { signOut } from "@/lib/admin/actions";
 import { TABLES } from "@/lib/admin/schema";
+import { NavLinks } from "@/components/admin/NavLinks";
 
 export const metadata = { title: "Admin", robots: { index: false, follow: false } };
 
@@ -42,25 +43,17 @@ export default async function DashboardLayout({
   }
 
   return (
-    <div className="min-h-screen bg-page md:grid md:grid-cols-[240px_1fr]">
+    <div className="min-h-screen bg-page md:grid md:grid-cols-[240px_minmax(0,1fr)]">
       <aside className="border-b border-[var(--color-line)] bg-surface p-6 md:sticky md:top-0 md:h-screen md:border-r md:border-b-0 md:overflow-y-auto">
         <Link href="/admin" className="font-display text-base font-semibold">
           Admin
         </Link>
-        <nav className="mt-5 grid gap-0.5 font-body text-sm">
-          {TABLES.map((t) => (
-            <Link
-              key={t.key}
-              href={`/admin/${t.key}`}
-              className="rounded-md px-2.5 py-2 hover:bg-page"
-            >
-              {t.label}
-            </Link>
-          ))}
-          <Link href="/admin/assets" className="rounded-md px-2.5 py-2 hover:bg-page">
-            Aset & CV
-          </Link>
-        </nav>
+        <NavLinks
+          items={[
+            ...TABLES.map((t) => ({ href: `/admin/${t.key}`, label: t.label })),
+            { href: "/admin/assets", label: "Aset & CV" },
+          ]}
+        />
         <div className="mt-6 border-t border-[var(--color-line)] pt-4 font-body text-xs text-muted">
           <div className="mb-3 break-all">{user.email}</div>
           <Link href="/" className="block hover:text-ink">
@@ -72,7 +65,7 @@ export default async function DashboardLayout({
         </div>
       </aside>
 
-      <main className="p-6 md:p-10">{children}</main>
+      <main className="min-w-0 p-6 md:p-10">{children}</main>
     </div>
   );
 }

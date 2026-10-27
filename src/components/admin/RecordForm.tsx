@@ -1,15 +1,16 @@
 "use client";
 
-import { useActionState, useState } from "react";
-import { useFormStatus } from "react-dom";
+import { Fragment, useActionState, useEffect, useRef, useState } from "react";
 import { saveRecord, type ActionState } from "@/lib/admin/actions";
 import type { Field, TableDef } from "@/lib/admin/schema";
 import { UploadButton, publicAssetUrl } from "./UploadButton";
 import { ImageCropper } from "./ImageCropper";
+import { TagsControl } from "./TagsControl";
+import { RowsControl } from "./RowsControl";
 import { createClient } from "@/lib/supabase/client";
 
 const INPUT =
-  "w-full rounded-lg border border-[var(--color-line-strong)] bg-surface px-3 py-2 font-body text-sm outline-none focus:border-ink";
+  "w-full rounded-lg border border-[var(--color-line-strong)] bg-surface px-3 py-2 font-body text-sm outline-none focus:border-ink focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent-solid";
 
 function TextControl({
   field,
@@ -22,7 +23,11 @@ function TextControl({
 }) {
   const common = { name, defaultValue: value, className: INPUT };
 
-  if (field.type === "textarea" || field.type === "json" || field.type === "array") {
+  if (
+    field.type === "textarea" ||
+    field.type === "json" ||
+    field.type === "array"
+  ) {
     return <textarea rows={field.type === "textarea" ? 4 : 5} {...common} />;
   }
   return <input type="text" {...common} />;
@@ -39,11 +44,17 @@ function TextControl({
 function AssetControl({
   field,
   initial,
+  onDirty,
 }: {
   field: Field;
   initial: string;
+  onDirty: () => void;
 }) {
-  const [value, setValue] = useState(initial);
+  const [value, setRaw] = useState(initial);
+  const setValue = (v: string | ((prev: string) => string)) => {
+    setRaw(v);
+    onDirty();
+  };
   const [busy, setBusy] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [dragIndex, setDragIndex] = useState<number | null>(null);
@@ -75,7 +86,10 @@ function AssetControl({
   }
 
   /** Unggah satu gambar hasil potongan; mengembalikan nama berkasnya, atau null bila gagal. */
-  async function uploadBlob(blob: Blob, sourceName: string): Promise<string | null> {
+  async function uploadBlob(
+    blob: Blob,
+    sourceName: string,
+  ): Promise<string | null> {
     setBusy(true);
     setUploadError(null);
     const safe = sourceName
@@ -106,7 +120,12 @@ function AssetControl({
   }
 
   function removeAt(i: number) {
-    if (!window.confirm("Hapus foto ini? Berkasnya ikut dihapus dari Storage saat kamu menekan Simpan.")) return;
+    if (
+      !window.confirm(
+        "Hapus foto ini? Berkasnya ikut dihapus dari Storage saat kamu menekan Simpan.",
+      )
+    )
+      return;
     const path = paths[i];
     setValue(paths.filter((_, j) => j !== i).join("\n"));
     setRemoved((r) => [...r, path]);
@@ -118,7 +137,11 @@ function AssetControl({
       {isList ? (
         <>
           <input type="hidden" name={field.name} value={paths.join("\n")} />
-          <input type="hidden" name="__remove_assets" value={removed.join("\n")} />
+          <input
+            type="hidden"
+            name="__remove_assets"
+            value={removed.join("\n")}
+          />
         </>
       ) : (
         <input
@@ -161,7 +184,8 @@ function AssetControl({
               initialName={queue[0].name}
               note={
                 <p className="m-0 font-body text-xs text-muted">
-                  Foto {queueTotal - queue.length + 1} dari {queueTotal}: {queue[0].name}
+                  Foto {queueTotal - queue.length + 1} dari {queueTotal}:{" "}
+                  {queue[0].name}
                 </p>
               }
               confirmLabel="Potong & unggah"
@@ -169,7 +193,9 @@ function AssetControl({
               onConfirm={async (blob, sourceName) => {
                 const name = await uploadBlob(blob, sourceName);
                 if (!name) return;
-                setValue((prev) => (prev.trim() ? `${prev.trim()}\n${name}` : name));
+                setValue((prev) =>
+                  prev.trim() ? `${prev.trim()}\n${name}` : name,
+                );
                 setQueue((q) => q.slice(1));
               }}
             />
@@ -331,10 +357,23 @@ function renderValue(field: Field, raw: unknown): string {
 function FieldRow({
   field,
   record,
+  onDirty,
 }: {
   field: Field;
   record: Record<string, unknown>;
+  onDirty: () => void;
 }) {
+  // Nilainya dijaga form, bukan diketik: mis. `sort` diatur lewat seret di daftar.
+  if (field.hidden) {
+    return (
+      <input
+        type="hidden"
+        name={field.name}
+        defaultValue={String(record[field.name] ?? 0)}
+      />
+    );
+  }
+
   if (field.type === "bool") {
     return (
       <label className="flex items-center gap-2.5 py-1 font-body text-sm font-medium">
@@ -369,19 +408,22 @@ function FieldRow({
       <fieldset className="m-0 border-0 p-0">
         <legend className="mb-1.5 p-0 font-body text-sm font-medium">
           {field.label}
+          {field.hint ? (
+            <span className="ml-2 font-normal text-muted">{field.hint}</span>
+          ) : null}
         </legend>
         <div className="grid gap-3 md:grid-cols-2">
           {(["en", "id"] as const).map((lng) => (
-            <div key={lng}>
-              <div className="mb-1 font-mono text-[11px] text-muted">
-                {lng.toUpperCase()}
-              </div>
+            <label key={lng} className="block">
+              <span className="mb-1 block font-mono text-[11px] text-muted">
+                {lng === "en" ? "English" : "Indonesia"}
+              </span>
               <TextControl
                 field={field}
                 name={`${field.name}_${lng}`}
                 value={renderValue(field, record[`${field.name}_${lng}`])}
               />
-            </div>
+            </label>
           ))}
         </div>
       </fieldset>
@@ -399,6 +441,41 @@ function FieldRow({
         <AssetControl
           field={field}
           initial={renderValue(field, record[field.name])}
+          onDirty={onDirty}
+        />
+      </div>
+    );
+  }
+
+  if (field.type === "array" && field.chips) {
+    const raw = record[field.name];
+    return (
+      <div className="block font-body text-sm font-medium">
+        {field.label}
+        <span className="ml-2 font-normal text-muted">
+          {field.hint ?? "Enter atau koma untuk menambah"}
+        </span>
+        <TagsControl
+          name={field.name}
+          initial={Array.isArray(raw) ? raw.map(String) : []}
+          onDirty={onDirty}
+        />
+      </div>
+    );
+  }
+
+  if (field.type === "json" && field.rows) {
+    return (
+      <div className="block font-body text-sm font-medium">
+        {field.label}
+        {field.hint ? (
+          <span className="ml-2 font-normal text-muted">{field.hint}</span>
+        ) : null}
+        <RowsControl
+          name={field.name}
+          cols={field.rows}
+          initial={record[field.name]}
+          onDirty={onDirty}
         />
       </div>
     );
@@ -421,17 +498,14 @@ function FieldRow({
   );
 }
 
-function SubmitButton() {
-  const { pending } = useFormStatus();
-  return (
-    <button
-      type="submit"
-      disabled={pending}
-      className="rounded-lg bg-ink px-5 py-2.5 font-display text-sm font-semibold text-on-ink disabled:opacity-60"
-    >
-      {pending ? "Menyimpan…" : "Simpan"}
-    </button>
-  );
+/** "Commission Tracker!" menjadi "commission-tracker". */
+function slugify(text: string) {
+  return text
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 }
 
 export function RecordForm({
@@ -444,49 +518,136 @@ export function RecordForm({
   /** Hanya untuk koleksi: id baris (kosong = baris baru). */
   rowId?: string;
 }) {
-  const [state, formAction] = useActionState<ActionState, FormData>(saveRecord, {
-    error: null,
-    ok: false,
-  });
+  const [state, formAction, pending] = useActionState<ActionState, FormData>(
+    saveRecord,
+    { error: null, ok: false },
+  );
+
+  // "Belum disimpan" = ada perubahan sejak hasil aksi terakhir. Dibandingkan
+  // dengan objek `state`, jadi hasil simpan baru otomatis menghapus tandanya
+  // tanpa effect. Simpan yang gagal tetap dihitung belum tersimpan.
+  const [dirtyFor, setDirtyFor] = useState<ActionState | null>(null);
+  const markDirty = () => setDirtyFor(state);
+  const unsaved = dirtyFor === state || state.error !== null;
+
+  useEffect(() => {
+    if (!unsaved) return;
+    const warn = (e: BeforeUnloadEvent) => e.preventDefault();
+    window.addEventListener("beforeunload", warn);
+    return () => window.removeEventListener("beforeunload", warn);
+  }, [unsaved]);
+
+  // Entri baru: ID dan slug mengikuti judul sampai pemiliknya mengetik sendiri.
+  const touched = useRef(new Set<string>());
+  function onInput(e: React.FormEvent<HTMLFormElement>) {
+    const target = e.target as HTMLInputElement;
+    if (!target.name) return;
+    markDirty();
+    if (rowId || def.kind !== "collection") return;
+    if (target.name === "__id" || target.name === "slug") {
+      touched.current.add(target.name);
+    }
+    if (target.name === def.titleField) {
+      for (const name of ["__id", "slug"]) {
+        const el = e.currentTarget.elements.namedItem(name);
+        if (el instanceof HTMLInputElement && !touched.current.has(name)) {
+          el.value = slugify(target.value);
+        }
+      }
+    }
+  }
 
   return (
-    <form action={formAction} className="grid max-w-3xl gap-5">
+    <form
+      action={formAction}
+      onInput={onInput}
+      onChange={markDirty}
+      // Ctrl/Cmd+S menyimpan tanpa harus menggulir ke tombolnya.
+      onKeyDown={(e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s") {
+          e.preventDefault();
+          e.currentTarget.requestSubmit();
+        }
+      }}
+    >
       <input type="hidden" name="__table" value={def.key} />
 
-      {def.kind === "collection" ? (
-        <label className="block font-body text-sm font-medium">
-          ID baris
-          <span className="ml-2 font-normal text-muted">
-            huruf kecil tanpa spasi; tidak diubah setelah dibuat
-          </span>
-          <input
-            type="text"
-            name="__id"
-            required
-            defaultValue={rowId ?? ""}
-            readOnly={Boolean(rowId)}
-            className={`mt-1.5 ${INPUT} ${rowId ? "bg-page text-muted" : ""}`}
-          />
-        </label>
-      ) : null}
+      {/*
+        Isian pendek yang berdampingan (`half`) berbagi satu baris; sisanya
+        memenuhi lebar. Lebar maksimum 5xl: lebih lebar dari itu, kolom teks
+        sulit dibaca dan isian pendek memanjang tanpa guna.
+      */}
+      <div className="grid max-w-5xl gap-5 md:grid-cols-2">
+        {def.kind === "collection" ? (
+          <label className="block font-body text-sm font-medium md:col-span-2">
+            ID baris
+            <span className="ml-2 font-normal text-muted">
+              {rowId
+                ? "tidak bisa diubah setelah dibuat"
+                : "diisi otomatis dari judul; huruf kecil tanpa spasi"}
+            </span>
+            <input
+              type="text"
+              name="__id"
+              required
+              defaultValue={rowId ?? ""}
+              readOnly={Boolean(rowId)}
+              className={`mt-1.5 ${INPUT} ${rowId ? "bg-page text-muted" : ""}`}
+            />
+          </label>
+        ) : null}
 
-      {def.fields.map((field) => (
-        <FieldRow key={field.name} field={field} record={record} />
-      ))}
+        {def.fields.map((field, i) => {
+          const before = def.fields
+            .slice(0, i)
+            .findLast((f) => f.section)?.section;
+          const heading =
+            field.section && field.section !== before ? field.section : null;
+          return (
+            <Fragment key={field.name}>
+              {heading ? (
+                <h2 className="mt-4 mb-0 border-t border-[var(--color-line)] pt-5 font-display text-lg font-semibold tracking-[-0.01em] md:col-span-2">
+                  {heading}
+                </h2>
+              ) : null}
+              {field.hidden ? (
+                <FieldRow field={field} record={record} onDirty={markDirty} />
+              ) : (
+                <div className={`min-w-0 ${field.half ? "" : "md:col-span-2"}`}>
+                  <FieldRow field={field} record={record} onDirty={markDirty} />
+                </div>
+              )}
+            </Fragment>
+          );
+        })}
+      </div>
 
-      {state.error ? (
-        <p className="m-0 rounded-lg bg-red-50 px-3 py-2 font-body text-sm text-red-700">
-          {state.error}
+      {/*
+        Bar simpan menempel di dasar layar: form panjang (Projects) tidak
+        memaksa menggulir ke bawah hanya untuk menyimpan, dan statusnya selalu
+        terlihat di tempat yang sama.
+      */}
+      <div className="sticky bottom-0 z-10 -mx-6 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-[var(--color-line)] bg-page px-6 py-3 md:-mx-10 md:px-10">
+        <button
+          type="submit"
+          disabled={pending}
+          className="rounded-lg bg-ink px-5 py-2.5 font-display text-sm font-semibold text-on-ink disabled:opacity-60"
+        >
+          {pending ? "Menyimpan…" : "Simpan"}
+        </button>
+        <p
+          role={state.error ? "alert" : "status"}
+          className={`m-0 font-body text-sm ${
+            state.error ? "text-red-700" : "text-muted"
+          }`}
+        >
+          {state.error ??
+            (unsaved
+              ? "Ada perubahan yang belum disimpan. Ctrl+S untuk menyimpan."
+              : state.ok
+                ? "Tersimpan. Situs publik menyegarkan dalam 60 detik."
+                : "")}
         </p>
-      ) : null}
-      {state.ok ? (
-        <p className="m-0 rounded-lg bg-green-50 px-3 py-2 font-body text-sm text-green-700">
-          Tersimpan. Halaman publik menyegarkan dalam ≤60 detik.
-        </p>
-      ) : null}
-
-      <div>
-        <SubmitButton />
       </div>
     </form>
   );
