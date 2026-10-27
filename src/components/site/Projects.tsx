@@ -2,7 +2,7 @@
 
 import { useLang } from "@/lib/lang-context";
 import { UI } from "@/lib/i18n";
-import { CtaArrow, CtaLink } from "@/components/ui/CtaLink";
+import { CtaLink } from "@/components/ui/CtaLink";
 import { ProjectCard } from "./ProjectCard";
 import { Reveal } from "@/components/ui/Reveal";
 import type { Project } from "@/lib/types";
@@ -46,10 +46,7 @@ export function Projects({ projects }: { projects: Project[] }) {
 
       {hasMore ? (
         <div className="mt-10 flex justify-center">
-          <CtaLink href="/projects">
-            {t(UI.exploreProjects)}
-            <CtaArrow />
-          </CtaLink>
+          <CtaLink href="/projects">{t(UI.exploreProjects)}</CtaLink>
         </div>
       ) : null}
       </Reveal>

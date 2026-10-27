@@ -8,7 +8,6 @@ import { UI } from "@/lib/i18n";
 import { SmartImage } from "@/components/ui/SmartImage";
 import { ProjectVideo } from "@/components/ui/ProjectVideo";
 import { TechIcons } from "@/components/ui/TechIcons";
-import { CursorGlow, useCursorGlow } from "@/components/ui/CursorGlow";
 import type { Project } from "@/lib/types";
 
 /**
@@ -22,23 +21,12 @@ export function ProjectCard({ project, from }: { project: Project; from?: string
   const { t } = useLang();
   const role = t(project.role);
   const status = t(project.status);
-  const { ref, hovering, handlers } = useCursorGlow<HTMLAnchorElement>();
 
   return (
-    /*
-     * Hover-nya hanya berupa sorotan yang mengikuti kursor — kartunya sendiri
-     * diam. `isolate` supaya lapisan sorotan yang ber-z negatif tetap berada di
-     * dalam kartu, dan `overflow-hidden` supaya gradiennya terpotong mengikuti
-     * sudut membulatnya.
-     */
     <Link
-      ref={ref}
-      {...handlers}
       href={`/projects/${project.slug}${from ? `?from=${from}` : ""}`}
-      className="group relative isolate flex flex-col overflow-hidden rounded-[14px] border border-[var(--color-line)] bg-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid"
+      className="group relative isolate flex flex-col overflow-hidden rounded-[14px] border border-[var(--color-line)] bg-surface transition-colors duration-200 hover:border-[var(--color-line-strong)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid"
     >
-      <CursorGlow visible={hovering} />
-
       {/* Video selalu dapat slot media, walau kartunya diset tanpa thumbnail. */}
       {project.hasThumb || project.videoUrl ? (
         /*
@@ -105,12 +93,6 @@ export function ProjectCard({ project, from }: { project: Project; from?: string
 
         <span className="mt-auto font-display text-[13px] leading-none font-semibold">
           {t(UI.viewProject)}
-          <span
-            aria-hidden="true"
-            className="ml-1 inline-block transition-transform duration-200 group-hover:translate-x-0.5 motion-reduce:transition-none motion-reduce:group-hover:translate-x-0"
-          >
-            →
-          </span>
         </span>
       </div>
     </Link>

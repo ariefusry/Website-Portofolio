@@ -42,12 +42,6 @@ export function Footer({
 }) {
   return (
     <footer className="relative w-full bg-dark-bg text-dark-text">
-      {/* Garis cahaya tipis di tepi atas */}
-      <div
-        aria-hidden="true"
-        className="absolute top-0 left-1/2 h-px w-1/3 -translate-x-1/2 rounded-full bg-accent-dark/60 blur-[2px]"
-      />
-
       <div className="section-x mx-auto grid w-full max-w-[1200px] gap-12 py-16 xl:grid-cols-3 xl:gap-10">
         <AnimatedContainer className="space-y-4">
           {brand}

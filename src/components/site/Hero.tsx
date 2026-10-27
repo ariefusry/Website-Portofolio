@@ -98,37 +98,6 @@ export function Hero({ profile }: { profile: Profile }) {
         */}
         <div className="grid items-start gap-10 md:grid-cols-[1fr_minmax(0,480px)] md:gap-12">
         <div className="relative">
-          {/* 2. Status badge */}
-          <motion.div
-            className="mb-[30px] inline-flex items-center gap-2 rounded-full bg-accent-bg px-[13px] py-[7px] font-mono text-[11.5px] leading-[1.1] font-semibold whitespace-nowrap text-accent-ink"
-            {...(reduced
-              ? { initial: false as const, animate: { opacity: 1, y: 0 } }
-              : {
-                  initial: { opacity: 0, y: 14 },
-                  animate: { opacity: 1, y: 0 },
-                  transition: { duration: 0.6, delay: 0.05, ease: EASE },
-                })}
-          >
-            {/* 3. Dot berdenyut */}
-            <motion.span
-              className="h-1.5 w-1.5 flex-none rounded-full bg-accent-solid"
-              animate={
-                reduced ? undefined : { scale: [1, 1.65, 1], opacity: [1, 0.45, 1] }
-              }
-              transition={
-                reduced
-                  ? undefined
-                  : {
-                      duration: 1.8,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                      delay: 0.8,
-                    }
-              }
-            />
-            {t(profile.badge)}
-          </motion.div>
-
           {/* 4. H1 reveal per kata */}
           <h1 className="mt-0 mb-6 max-w-[640px] font-display font-semibold tracking-[-0.035em] text-pretty text-[clamp(34px,7vw,60px)] leading-[1.04]">
             <WordReveal
@@ -198,19 +167,6 @@ export function Hero({ profile }: { profile: Profile }) {
                 transition: { duration: 1, delay: 0.3, ease: EASE },
               })}
         >
-          {/*
-            Gradasi di belakang subjek. Warnanya diturunkan dari `--color-ink`,
-            jadi ia terang di tema gelap dan gelap di tema terang tanpa aturan
-            terpisah — sekaligus mengangkat baju gelap dari latar hitam murni.
-            Berhenti tepat sebelum dasar supaya tidak menabrak garis pemisah.
-          */}
-          {profile.photoUrl ? (
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-x-[-18%] top-[4%] bottom-[2%] -z-10 [background:radial-gradient(52%_46%_at_50%_40%,color-mix(in_oklab,var(--color-ink)_14%,transparent)_0%,transparent_72%)]"
-            />
-          ) : null}
-
           <SmartImage
             src={profile.photoUrl}
             alt={`${t(UI.photoAlt)} — ${profile.name}`}

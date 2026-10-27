@@ -2,7 +2,7 @@
 
 import { useLang } from "@/lib/lang-context";
 import { UI } from "@/lib/i18n";
-import { CtaArrow, CtaLink } from "@/components/ui/CtaLink";
+import { CtaLink } from "@/components/ui/CtaLink";
 import { SmartImage } from "@/components/ui/SmartImage";
 import { ProjectVideo } from "@/components/ui/ProjectVideo";
 import { TechIcons } from "@/components/ui/TechIcons";
@@ -69,7 +69,6 @@ export function FeaturedBuild({ project }: { project: Project | null }) {
 
           <CtaLink href={`/projects/${project.slug}`}>
             {t(UI.readCaseStudy)}
-            <CtaArrow />
           </CtaLink>
         </div>
 
