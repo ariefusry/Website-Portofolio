@@ -19,7 +19,7 @@ export type FooterColumn = {
 };
 
 /**
- * Footer gelap dengan kolom tautan yang muncul (blur + naik) saat masuk layar.
+ * Footer dengan kolom tautan yang muncul (blur + naik) saat masuk layar.
  *
  * Sengaja tanpa daftar tautan bawaan: isinya diserahkan lewat props supaya
  * tidak ada link ke halaman yang tidak dimiliki situs ini.
@@ -41,7 +41,7 @@ export function Footer({
   meta?: ReactNode;
 }) {
   return (
-    <footer className="relative w-full bg-dark-bg text-dark-text">
+    <footer className="relative w-full border-t border-[var(--color-line-soft)] bg-surface text-ink">
       <div className="section-x mx-auto grid w-full max-w-[1200px] gap-12 py-16 xl:grid-cols-3 xl:gap-10">
         <AnimatedContainer className="space-y-4">
           {brand}
@@ -49,11 +49,11 @@ export function Footer({
             {heading}
           </h2>
           {note ? (
-            <p className="m-0 font-body text-[15.5px] leading-[1.6] font-normal text-dark-2">
+            <p className="m-0 font-body text-[15.5px] leading-[1.6] font-normal text-muted">
               {note}
             </p>
           ) : null}
-          <p className="m-0 pt-4 font-mono text-xs leading-none text-dark-2/70">
+          <p className="m-0 pt-4 font-mono text-xs leading-none text-muted-2">
             {copyright}
           </p>
           {meta}
@@ -62,7 +62,7 @@ export function Footer({
         <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 xl:col-span-2">
           {columns.map((section, index) => (
             <AnimatedContainer key={section.label} delay={0.1 + index * 0.1}>
-              <h3 className="m-0 font-mono text-xs leading-none font-semibold text-dark-2">
+              <h3 className="m-0 font-mono text-xs leading-none font-semibold text-muted">
                 {section.label}
               </h3>
               <ul className="mt-4 mb-0 grid list-none gap-2.5 p-0 font-body text-sm">
@@ -73,7 +73,7 @@ export function Footer({
                       {...(link.external
                         ? { target: "_blank", rel: "noopener noreferrer" }
                         : {})}
-                      className="inline-flex items-center gap-2 rounded text-dark-2 transition-colors duration-300 hover:text-dark-text focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-dark motion-reduce:transition-none"
+                      className="inline-flex items-center gap-2 rounded text-muted transition-colors duration-300 hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid motion-reduce:transition-none"
                     >
                       {link.icon ? (
                         <link.icon className="size-4 shrink-0" />

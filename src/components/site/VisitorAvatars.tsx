@@ -66,7 +66,7 @@ export function VisitorAvatars() {
         <div
           key={i}
           // Cincin sewarna footer memisahkan lingkaran yang saling menumpuk.
-          className={`rounded-full ring-2 ring-dark-bg ${i > 0 ? "-ml-2.5" : ""}`}
+          className={`rounded-full ring-2 ring-surface ${i > 0 ? "-ml-2.5" : ""}`}
           style={{ zIndex: HAIR.length - i }}
         >
           <Face index={i} />

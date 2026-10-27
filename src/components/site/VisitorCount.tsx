@@ -78,9 +78,9 @@ export function VisitorCount() {
   return (
     <div className="flex flex-wrap items-center gap-3 pt-5">
       <VisitorAvatars />
-      <p className="m-0 rounded-full border border-dark-2/30 px-3.5 py-1.5 font-mono text-xs leading-none text-dark-2">
+      <p className="m-0 rounded-full border border-[var(--color-line-strong)] px-3.5 py-1.5 font-mono text-xs leading-none text-muted">
         {t(UI.visitedBy)}{" "}
-        <span className="font-semibold text-dark-text">
+        <span className="font-semibold text-ink">
           {visits.toLocaleString(lang === "ID" ? "id-ID" : "en-US")}
         </span>{" "}
         {t(UI.people)}

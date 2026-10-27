@@ -25,9 +25,6 @@
   /* Keduanya diukur >= AA 4.5:1 di atas page maupun surface. */
   --color-muted: #5e5e5e;
   --color-muted-2: #6b6b6b;
-  --color-dark-bg: #000000;
-  --color-dark-text: #f5f5f5;
-  --color-dark-2: #b0b0b0;
 
   /*
    * Warna teks di atas permukaan `ink` dan `accent-strong`. Dulu keduanya
@@ -46,15 +43,12 @@
   --color-accent-solid: #000000;
   --color-accent-chip: #efefef;
   --color-accent-border: #dcdcdc;
-  /* Dipakai di atas footer hitam. */
-  --color-accent-dark: #c9c9c9;
   /* Biru tombol CV: 6.7:1 dengan teks putih, 3.13:1 dari tombol primer hitam. */
   --color-accent-strong: #1d4ed8;
 
   --color-line: rgba(0, 0, 0, 0.1);
   --color-line-soft: rgba(0, 0, 0, 0.09);
   --color-line-strong: rgba(0, 0, 0, 0.14);
-  --color-line-dark: rgba(255, 255, 255, 0.14);
 
   /* Garis placeholder gambar; ikut berganti supaya tidak menyala di tema gelap. */
   --color-ph-1: #e4e4e4;
@@ -99,11 +93,6 @@
     --color-muted: #a3a3a3;
     --color-muted-2: #8f8f8f;
 
-    /* Halaman sudah hitam murni, jadi footer justru naik sedikit agar terpisah. */
-    --color-dark-bg: #0a0a0a;
-    --color-dark-text: #ffffff;
-    --color-dark-2: #a3a3a3;
-
     --color-on-ink: #000000;
     --color-on-accent-strong: #000000;
 
@@ -113,7 +102,6 @@
     --color-accent-solid: #ffffff;
     --color-accent-chip: #141414;
     --color-accent-border: #2a2a2a;
-    --color-accent-dark: #c9c9c9;
     /*
      * Biru diterangkan: #1d4ed8 hanya 1.98:1 di atas hitam. Yang ini 6.56:1
      * dengan teks hitam, dan 3.2:1 dari tombol primer putih.
@@ -123,7 +111,6 @@
     --color-line: rgba(255, 255, 255, 0.12);
     --color-line-soft: rgba(255, 255, 255, 0.09);
     --color-line-strong: rgba(255, 255, 255, 0.18);
-    --color-line-dark: rgba(255, 255, 255, 0.12);
 
     --color-ph-1: #1a1a1a;
     --color-ph-2: #222222;
@@ -143,11 +130,6 @@
   --color-muted: #a3a3a3;
   --color-muted-2: #8f8f8f;
 
-  /* Halaman sudah hitam murni, jadi footer justru naik sedikit agar terpisah. */
-  --color-dark-bg: #0a0a0a;
-  --color-dark-text: #ffffff;
-  --color-dark-2: #a3a3a3;
-
   --color-on-ink: #000000;
   --color-on-accent-strong: #000000;
 
@@ -157,7 +139,6 @@
   --color-accent-solid: #ffffff;
   --color-accent-chip: #141414;
   --color-accent-border: #2a2a2a;
-  --color-accent-dark: #c9c9c9;
   /*
    * Biru diterangkan: #1d4ed8 hanya 1.98:1 di atas hitam. Yang ini 6.56:1
    * dengan teks hitam, dan 3.2:1 dari tombol primer putih.
@@ -167,7 +148,6 @@
   --color-line: rgba(255, 255, 255, 0.12);
   --color-line-soft: rgba(255, 255, 255, 0.09);
   --color-line-strong: rgba(255, 255, 255, 0.18);
-  --color-line-dark: rgba(255, 255, 255, 0.12);
 
   --color-ph-1: #1a1a1a;
   --color-ph-2: #222222;
