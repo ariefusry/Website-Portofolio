@@ -36,13 +36,18 @@ const num = (row: Row, key: string, fallback = 0): number => {
 
 const arr = (row: Row, key: string): string[] => {
   const v = row[key];
-  return Array.isArray(v) ? v.filter((x): x is string => typeof x === "string") : [];
+  return Array.isArray(v)
+    ? v.filter((x): x is string => typeof x === "string")
+    : [];
 };
 
 /** Isi kolom jsonb berupa array objek; entri lain (null, angka, string) dibuang. */
 const objs = (v: unknown): Row[] | null =>
   Array.isArray(v)
-    ? v.filter((x): x is Row => typeof x === "object" && x !== null && !Array.isArray(x))
+    ? v.filter(
+        (x): x is Row =>
+          typeof x === "object" && x !== null && !Array.isArray(x),
+      )
     : null;
 
 /** Versi daftar dari `bi`: kolom `<base>_en` / `<base>_id` bertipe text[]. */
@@ -59,10 +64,14 @@ const bi = (row: Row, base: string, fallback: Bi = { en: "", id: "" }): Bi => {
   return { en, id: id || en || fallback.id };
 };
 
-function publicUrl(bucket: string, path: string | null | undefined): string | null {
+function publicUrl(
+  bucket: string,
+  path: string | null | undefined,
+): string | null {
   if (!path) return null;
   if (path.startsWith("http://") || path.startsWith("https://")) return path;
-  return createPublicClient().storage.from(bucket).getPublicUrl(path).data.publicUrl;
+  return createPublicClient().storage.from(bucket).getPublicUrl(path).data
+    .publicUrl;
 }
 
 /** `[{label, value_en, value_id}]` → fakta; null bila kolom kosong/tidak ada. */
@@ -103,29 +112,37 @@ const mapStats = (rows: Row[]): Stat[] =>
   }));
 
 const mapProjects = (rows: Row[]): Project[] =>
-  rows.map((row) => ({
-    id: str(row, "id"),
-    slug: str(row, "slug"),
-    title: str(row, "title"),
-    summary: bi(row, "summary"),
-    badges: arr(row, "badges"),
-    accentBadge: bool(row, "accent_badge"),
-    tech: arr(row, "tech"),
-    imageUrl: publicUrl(BUCKET_ASSETS, str(row, "image_path") || null),
-    videoUrl: publicUrl(BUCKET_ASSETS, str(row, "video_path") || null),
-    githubUrl: str(row, "github_url") || null,
-    liveUrl: str(row, "live_url") || null,
-    featured: bool(row, "featured"),
-    hasThumb: bool(row, "has_thumb", true),
-    role: bi(row, "role"),
-    status: bi(row, "status"),
-    overview: bi(row, "overview"),
-    facts: mapFacts(row.facts) ?? [],
-    imageUrls: arr(row, "image_paths")
+  rows.map((row) => {
+    const imageUrls = arr(row, "image_paths")
       .map((path) => publicUrl(BUCKET_ASSETS, path))
-      .filter((url): url is string => Boolean(url)),
-    highlights: biList(row, "highlights"),
-  }));
+      .filter((url): url is string => Boolean(url));
+    // Foto pertama galeri ("Utama") jadi gambar kartu; `image_path` hanya
+    // cadangan untuk baris lama yang galerinya masih kosong.
+    const imageUrl =
+      imageUrls[0] ?? publicUrl(BUCKET_ASSETS, str(row, "image_path") || null);
+
+    return {
+      id: str(row, "id"),
+      slug: str(row, "slug"),
+      title: str(row, "title"),
+      summary: bi(row, "summary"),
+      badges: arr(row, "badges"),
+      accentBadge: bool(row, "accent_badge"),
+      tech: arr(row, "tech"),
+      imageUrl,
+      videoUrl: publicUrl(BUCKET_ASSETS, str(row, "video_path") || null),
+      githubUrl: str(row, "github_url") || null,
+      liveUrl: str(row, "live_url") || null,
+      featured: bool(row, "featured"),
+      hasThumb: Boolean(imageUrl),
+      role: bi(row, "role"),
+      status: bi(row, "status"),
+      overview: bi(row, "overview"),
+      facts: mapFacts(row.facts) ?? [],
+      imageUrls,
+      highlights: biList(row, "highlights"),
+    };
+  });
 
 function mapResearch(row: Row | null): Research {
   if (!row) return SEED.research;
