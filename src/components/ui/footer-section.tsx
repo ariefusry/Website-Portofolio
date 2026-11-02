@@ -65,7 +65,7 @@ export function Footer({
               <h3 className="m-0 font-mono text-xs leading-none font-semibold text-muted">
                 {section.label}
               </h3>
-              <ul className="mt-4 mb-0 grid list-none gap-2.5 p-0 font-body text-sm">
+              <ul className="mt-2 mb-0 grid list-none gap-0 p-0 font-body text-sm">
                 {section.links.map((link) => (
                   <li key={link.title}>
                     <a
@@ -73,7 +73,7 @@ export function Footer({
                       {...(link.external
                         ? { target: "_blank", rel: "noopener noreferrer" }
                         : {})}
-                      className="inline-flex items-center gap-2 rounded text-muted transition-colors duration-300 hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid motion-reduce:transition-none"
+                      className="inline-flex min-h-11 items-center gap-2 rounded text-muted transition-colors duration-300 hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid motion-reduce:transition-none"
                     >
                       {link.icon ? (
                         <link.icon className="size-4 shrink-0" />

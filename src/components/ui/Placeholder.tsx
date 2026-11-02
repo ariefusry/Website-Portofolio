@@ -22,7 +22,7 @@ export function Placeholder({
       aria-hidden="true"
     >
       {label ? (
-        <span className="font-mono text-[11px] leading-none text-muted-2">
+        <span className="font-mono text-xs leading-none text-muted-2">
           {label}
         </span>
       ) : null}

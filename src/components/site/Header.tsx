@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useLang } from "@/lib/lang-context";
@@ -36,6 +36,8 @@ export function Header({ name, email }: { name: string; email: string }) {
   // di-reset lewat setState di dalam effect.
   const active = onHome ? observed : "";
   const [open, setOpen] = useState(false);
+  const menuBtnRef = useRef<HTMLButtonElement>(null);
+  const closeBtnRef = useRef<HTMLButtonElement>(null);
 
   const items = useMemo(() => NAV, []);
 
@@ -71,6 +73,60 @@ export function Header({ name, email }: { name: string; email: string }) {
     };
   }, [open]);
 
+  // Menu layar penuh bertindak seperti dialog: Escape menutupnya, fokus
+  // pindah ke tombol tutup saat dibuka dan kembali ke tombol Menu saat ditutup.
+  // Tab tetap terperangkap di dalam dialog.
+  useEffect(() => {
+    if (!open) return;
+    const menuBtn = menuBtnRef.current;
+    const dialog = document.querySelector('[role="dialog"]');
+    if (!dialog) return;
+    
+    closeBtnRef.current?.focus();
+    
+    const focusable = Array.from(
+      dialog.querySelectorAll<HTMLElement>(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      )
+    ).filter((el) => !el.hasAttribute("disabled"));
+    
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setOpen(false);
+        return;
+      }
+      if (e.key === "Tab" && focusable.length > 0) {
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    };
+    
+    window.addEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      menuBtn?.focus();
+    };
+  }, [open]);
+
+  // Tutup menu jika viewport melebar ke desktop saat menu terbuka — kalau
+  // tidak, dialog menghilang (lg:hidden) tapi scroll tetap terkunci.
+  useEffect(() => {
+    if (!open) return;
+    const mq = window.matchMedia("(min-width: 1024px)");
+    const onResize = () => {
+      if (mq.matches) setOpen(false);
+    };
+    mq.addEventListener("change", onResize);
+    return () => mq.removeEventListener("change", onResize);
+  }, [open]);
+
   const other = lang === "EN" ? "ID" : "EN";
 
   /*
@@ -87,7 +143,7 @@ export function Header({ name, email }: { name: string; email: string }) {
       type="button"
       onClick={() => setLang(other)}
       aria-label={`${t(UI.switchLang)}: ${other}`}
-      className="relative flex cursor-pointer items-center rounded-full bg-[var(--color-line)] p-[3px] font-mono text-[11px] leading-none font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid"
+      className="relative flex cursor-pointer items-center rounded-full bg-[var(--color-line)] p-[3px] max-lg:min-h-11 font-mono text-xs leading-none font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid"
     >
       {/* Thumb yang meluncur; lebarnya persis satu sel label. */}
       <span
@@ -117,7 +173,7 @@ export function Header({ name, email }: { name: string; email: string }) {
       type="button"
       onClick={toggleTheme}
       aria-label={t(theme === "dark" ? UI.themeToLight : UI.themeToDark)}
-      className="cursor-pointer rounded-full border border-[var(--color-line-strong)] p-2 text-muted transition-colors hover:border-ink hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid"
+      className="cursor-pointer rounded-full border border-[var(--color-line-strong)] p-2 text-muted max-lg:flex max-lg:h-11 max-lg:w-11 max-lg:items-center max-lg:justify-center transition-colors hover:border-ink hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid"
     >
       {theme === "dark" ? (
         <Sun aria-hidden="true" className="h-4 w-4" />
@@ -149,7 +205,7 @@ export function Header({ name, email }: { name: string; email: string }) {
         <SpotlightPill className="nav-pill hidden items-center gap-2 py-1.5 pr-2 pl-5 lg:flex">
           <Link
             href="/"
-            className="rounded-full font-display text-[15px] leading-none font-semibold tracking-[-0.01em] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid"
+            className="rounded-full font-display text-[15px] leading-none font-semibold tracking-[-0.01em] max-lg:inline-flex max-lg:min-h-11 max-lg:items-center focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid"
           >
             {name}
           </Link>
@@ -187,7 +243,7 @@ export function Header({ name, email }: { name: string; email: string }) {
         <SpotlightPill className="nav-pill flex items-center gap-2 py-1.5 pr-2 pl-4 font-body text-[13px] leading-none font-medium lg:hidden">
           <Link
             href="/"
-            className="rounded-full font-display text-[15px] leading-none font-semibold tracking-[-0.01em] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid"
+            className="rounded-full font-display text-[15px] leading-none font-semibold tracking-[-0.01em] max-lg:inline-flex max-lg:min-h-11 max-lg:items-center focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid"
           >
             {name}
           </Link>
@@ -196,10 +252,11 @@ export function Header({ name, email }: { name: string; email: string }) {
           {themeToggle}
           <button
             type="button"
+            ref={menuBtnRef}
             onClick={() => setOpen(true)}
             aria-label={t(UI.menu)}
             aria-expanded={open}
-            className="cursor-pointer rounded-full px-2 py-1 font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid"
+            className="min-h-11 cursor-pointer rounded-full px-3 py-1 font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid"
           >
             {t(UI.menu)}
           </button>
@@ -207,16 +264,22 @@ export function Header({ name, email }: { name: string; email: string }) {
       </div>
 
       {open ? (
-        <div className="fixed inset-0 z-40 bg-page lg:hidden">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={t(UI.menu)}
+          className="fixed inset-0 z-40 bg-page lg:hidden"
+        >
           <div className="section-x flex items-center justify-between border-b border-[var(--color-line-soft)] py-[18px]">
             <span className="font-display text-[15px] leading-none font-semibold">
               {name}
             </span>
             <button
               type="button"
+              ref={closeBtnRef}
               onClick={() => setOpen(false)}
               aria-label={t(UI.closeMenu)}
-              className="rounded-lg border border-[var(--color-line-strong)] px-3 py-2 font-body text-[13px] leading-none font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid"
+              className="min-h-11 min-w-11 rounded-lg border border-[var(--color-line-strong)] px-3 py-2 font-body text-[13px] leading-none font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid"
             >
               ✕
             </button>

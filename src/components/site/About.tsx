@@ -28,7 +28,7 @@ export function About({ profile }: { profile: Profile }) {
               key={fact.label}
               className="grid gap-1.5 border-b border-[var(--color-line)] py-3.5 sm:grid-cols-[160px_1fr] sm:gap-6"
             >
-              <dt className="font-mono text-[11px] leading-[1.5] font-semibold text-muted-2 sm:pt-[3px]">
+              <dt className="font-mono text-xs leading-[1.5] font-semibold text-muted-2 sm:pt-[3px]">
                 {fact.label}
               </dt>
               <dd className="m-0 font-body text-[15px] leading-[1.5] font-medium">

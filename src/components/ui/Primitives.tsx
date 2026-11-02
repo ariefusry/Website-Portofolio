@@ -3,9 +3,9 @@ import { Reveal } from "./Reveal";
 /** Label mono kecil di kolom kiri tiap section. */
 export function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
-    <div className="pt-1.5 font-mono text-xs leading-none font-semibold text-muted-2">
+    <h2 className="m-0 pt-1.5 font-mono text-xs leading-none font-semibold text-muted-2">
       {children}
-    </div>
+    </h2>
   );
 }
 
@@ -27,7 +27,7 @@ export function Chip({
 
   return (
     <span
-      className={`rounded-[5px] px-2.5 py-[5px] font-body text-[11.5px] leading-none font-medium ${tone}`}
+      className={`rounded-[5px] px-2.5 py-[5px] font-body text-xs leading-none font-medium ${tone}`}
     >
       {children}
     </span>
@@ -48,7 +48,7 @@ export function TagPill({
 
   return (
     <span
-      className={`rounded-[5px] px-2.5 py-[5px] font-mono text-[10.5px] leading-none font-semibold ${tone}`}
+      className={`rounded-[5px] px-2.5 py-[5px] font-mono text-xs leading-none font-semibold ${tone}`}
     >
       {children}
     </span>

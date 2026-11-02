@@ -80,7 +80,7 @@ export function MediaViewer({
     return (
       <SmartImage
         src={item.src}
-        alt={`${title} — ${t(UI.screenshotOf)}${items.length > 1 ? ` ${n}` : ""}`}
+        alt={`${title}, ${t(UI.screenshotOf)}${items.length > 1 ? ` ${n}` : ""}`}
         priority={i === 0}
         sizes="(max-width: 1024px) 100vw, 1000px"
         fit="contain"

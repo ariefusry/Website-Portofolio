@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "Arief M. Usry — Fullstack Engineer";
+export const alt = "Arief M. Usry | Fullstack Engineer";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -32,7 +32,7 @@ export default function OpengraphImage() {
             letterSpacing: 1,
           }}
         >
-          OPEN TO ROLES — FULLSTACK · DATA · ML
+          OPEN TO ROLES: FULLSTACK · DATA · ML
         </div>
 
         <div

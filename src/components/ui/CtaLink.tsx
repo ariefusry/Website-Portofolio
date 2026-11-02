@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 export type CtaVariant = "dark" | "accent";
 
 const BASE =
-  "inline-flex items-center justify-center rounded-lg px-[22px] py-[13px] font-display text-sm leading-none font-semibold transition-[opacity,transform] duration-200 hover:opacity-85 active:translate-y-px motion-reduce:transition-none focus-visible:outline-2 focus-visible:outline-offset-2";
+  "inline-flex min-h-11 items-center justify-center rounded-lg px-[22px] py-[13px] font-display text-sm leading-none font-semibold transition-[opacity,transform] duration-200 hover:opacity-85 active:translate-y-px motion-reduce:transition-none focus-visible:outline-2 focus-visible:outline-offset-2";
 
 const VARIANT: Record<CtaVariant, string> = {
   dark: "bg-ink text-on-ink focus-visible:outline-accent-solid",

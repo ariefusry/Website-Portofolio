@@ -38,7 +38,7 @@ export async function generateMetadata({
     alternates: { canonical: `/projects/${project.slug}` },
     openGraph: {
       type: "article",
-      title: `${project.title} — Arief M. Usry`,
+      title: `${project.title} | Arief M. Usry`,
       description,
       url: `/projects/${project.slug}`,
     },

@@ -10,13 +10,13 @@ export const revalidate = 60;
 export const metadata: Metadata = {
   title: "Selected Projects",
   description:
-    "Web apps and platforms designed, built and shipped by Arief M. Usry — fullstack engineering, data and machine learning.",
+    "Web apps and platforms designed, built and shipped by Arief M. Usry: fullstack engineering, data and machine learning.",
   alternates: { canonical: "/projects" },
   openGraph: {
     type: "website",
-    title: "Selected Projects — Arief M. Usry",
+    title: "Selected Projects | Arief M. Usry",
     description:
-      "Web apps and platforms designed, built and shipped — fullstack engineering, data and machine learning.",
+      "Web apps and platforms designed, built and shipped: fullstack engineering, data and machine learning.",
     url: "/projects",
   },
 };

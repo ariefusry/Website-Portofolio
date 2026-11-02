@@ -91,9 +91,8 @@ export function ProjectDetail({ project, backHref = "/#projects" }: { project: P
                     key={item}
                     className="grid grid-cols-[auto_1fr] gap-3 font-body text-[15px] leading-[1.65] text-body-2"
                   >
-                    <span aria-hidden="true" className="text-accent-solid">
-                      —
-                    </span>
+                    {/* Garis pendek yang digambar, bukan karakter em dash. */}
+                    <span aria-hidden="true" className="mt-[0.85em] h-px w-3 bg-accent-solid" />
                     {item}
                   </li>
                 ))}
@@ -112,7 +111,7 @@ export function ProjectDetail({ project, backHref = "/#projects" }: { project: P
                     key={fact.label}
                     className="border-b border-[var(--color-line)] py-3.5"
                   >
-                    <dt className="mb-1.5 font-mono text-[11px] leading-none font-semibold text-muted-2">
+                    <dt className="mb-1.5 font-mono text-xs leading-none font-semibold text-muted-2">
                       {fact.label}
                     </dt>
                     <dd className="m-0 font-body text-[15px] leading-[1.5] font-medium">

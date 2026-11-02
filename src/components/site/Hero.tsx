@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { useLang } from "@/lib/lang-context";
 import { UI } from "@/lib/i18n";
@@ -10,51 +9,9 @@ import type { Profile } from "@/lib/types";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
-/** Bungkus tiap kata dalam mask overflow-hidden untuk reveal per kata. */
-function WordReveal({
-  text,
-  animateIn,
-}: {
-  text: string;
-  animateIn: boolean;
-}) {
-  const words = text.split(/\s+/).filter(Boolean);
-
-  // Setelah animasi masuk selesai, ganti bahasa hanya menukar teks — tidak memutar ulang.
-  if (!animateIn) return <>{text}</>;
-
-  return (
-    <>
-      {words.map((word, i) => (
-        <span key={`${word}-${i}`}>
-          {i > 0 ? " " : null}
-          <span className="inline-block overflow-hidden align-bottom pb-[0.14em] -mb-[0.14em]">
-            <motion.span
-              className="inline-block whitespace-pre will-change-transform"
-              initial={{ opacity: 0, y: "105%" }}
-              animate={{ opacity: 1, y: "0%" }}
-              transition={{ duration: 0.85, delay: 0.18 + i * 0.045, ease: EASE }}
-            >
-              {word}
-            </motion.span>
-          </span>
-        </span>
-      ))}
-    </>
-  );
-}
-
 export function Hero({ profile }: { profile: Profile }) {
-  const { lang, t } = useLang();
+  const { t } = useLang();
   const reduced = useReducedMotion() ?? false;
-
-  // Animasi masuk berjalan sekali per load; setelah selesai, toggle bahasa
-  // hanya menukar teks tanpa memutar ulang reveal.
-  const [introDone, setIntroDone] = useState(false);
-  useEffect(() => {
-    const id = window.setTimeout(() => setIntroDone(true), 1400);
-    return () => window.clearTimeout(id);
-  }, []);
 
   // Kunci mount: animasi hero dijalankan sekali saat load, bukan tiap ganti bahasa.
   const fade = (delay: number, y = 16, extra: Record<string, number> = {}) =>
@@ -98,40 +55,35 @@ export function Hero({ profile }: { profile: Profile }) {
         */}
         <div className="grid items-start gap-10 md:grid-cols-[1fr_minmax(0,480px)] md:gap-12">
         <div className="relative">
-          {/* 4. H1 reveal per kata */}
+          {/* H1 langsung terbaca: ini yang pertama dicari pembaca, jadi tidak ditahan animasi. */}
           <h1 className="mt-0 mb-6 max-w-[640px] font-display font-semibold tracking-[-0.035em] text-pretty text-[clamp(34px,7vw,60px)] leading-[1.04]">
-            <WordReveal
-              // Re-split saat bahasa berganti; animasinya sendiri hanya jalan sekali.
-              key={lang}
-              text={t(profile.heroTitle)}
-              animateIn={!reduced && !introDone}
-            />
+            {t(profile.heroTitle)}
           </h1>
 
           {/* 5. Subhead */}
           <motion.p
             className="mt-0 mb-[34px] max-w-[520px] font-body text-[17px] leading-[1.65] font-normal text-body-2 text-pretty"
-            {...fade(0.55)}
+            {...fade(0.1)}
           >
             {t(profile.heroSub)}
           </motion.p>
 
           {/* 6. Tombol CTA */}
-          <motion.div className="flex flex-wrap gap-3" {...fade(0.68)}>
+          <motion.div className="flex flex-wrap gap-3" {...fade(0.2)}>
             {/* Primer: gelap, kilau putih */}
             <CtaLink href="#projects">{t(UI.ctaWork)}</CtaLink>
 
-            {/* Sekunder: aksen pekat + teks putih (5.9:1), kilau putih */}
-            <CtaLink
-              variant="accent"
-              href={profile.cvUrl ?? "#"}
-              {...(profile.cvUrl
-                ? { target: "_blank", rel: "noopener noreferrer" }
-                : { "aria-disabled": true })}
-              className={profile.cvUrl ? "" : "opacity-70"}
-            >
-              {t(UI.ctaCv)}
-            </CtaLink>
+            {/* Sekunder: aksen pekat + teks putih (5.9:1). Tanpa berkas CV, tombolnya tidak dirender sama sekali. */}
+            {profile.cvUrl ? (
+              <CtaLink
+                variant="accent"
+                href={profile.cvUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {t(UI.ctaCv)}
+              </CtaLink>
+            ) : null}
           </motion.div>
         </div>
 
@@ -169,7 +121,7 @@ export function Hero({ profile }: { profile: Profile }) {
         >
           <SmartImage
             src={profile.photoUrl}
-            alt={`${t(UI.photoAlt)} — ${profile.name}`}
+            alt={`${t(UI.photoAlt)}: ${profile.name}`}
             label={t(UI.photoPlaceholder)}
             priority
             fit="contain"
