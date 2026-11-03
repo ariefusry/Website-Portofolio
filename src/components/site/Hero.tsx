@@ -55,6 +55,16 @@ export function Hero({ profile }: { profile: Profile }) {
         */}
         <div className="grid items-start gap-10 md:grid-cols-[1fr_minmax(0,480px)] md:gap-12">
         <div className="relative">
+          {/*
+            Nama lengkap di atas judul: header tidak lagi memuat nama, dan HR
+            yang datang dari CV perlu mencocokkan nama dengan pemilik situs
+            sebelum membaca apa pun. Ditulis langsung, bukan dari profile.name,
+            karena kolom itu berisi singkatan.
+          */}
+          <p className="mt-0 mb-3 font-display text-[18px] leading-tight font-semibold tracking-[-0.01em] text-ink md:text-[20px]">
+            Arief Muhammad Usry
+          </p>
+
           {/* H1 langsung terbaca: ini yang pertama dicari pembaca, jadi tidak ditahan animasi. */}
           <h1 className="mt-0 mb-6 max-w-[640px] font-display font-semibold tracking-[-0.035em] text-pretty text-[clamp(34px,7vw,60px)] leading-[1.04]">
             {t(profile.heroTitle)}
