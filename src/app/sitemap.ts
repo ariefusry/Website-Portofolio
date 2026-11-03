@@ -23,6 +23,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified,
       changeFrequency: "monthly" as const,
       priority: 0.8,
+      ...((p.imageUrls[0] ?? p.imageUrl) ? { images: [p.imageUrls[0] ?? p.imageUrl!] } : {}),
     })),
   ];
 }

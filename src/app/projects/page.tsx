@@ -18,6 +18,23 @@ export const metadata: Metadata = {
     description:
       "Web apps and platforms designed, built and shipped: fullstack engineering, data and machine learning.",
     url: "/projects",
+    siteName: "Arief M. Usry",
+    locale: "en_US",
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "Arief M. Usry | Fullstack Engineer",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Selected Projects | Arief M. Usry",
+    description:
+      "Web apps and platforms designed, built and shipped: fullstack engineering, data and machine learning.",
+    images: ["/opengraph-image"],
   },
 };
 
