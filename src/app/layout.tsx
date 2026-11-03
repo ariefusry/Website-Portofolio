@@ -31,8 +31,8 @@ const description =
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Arief M. Usry | Fullstack Engineer",
-    template: "%s | Arief M. Usry",
+    default: "Arief Muhammad Usry | Fullstack Engineer",
+    template: "%s | Arief Muhammad Usry",
   },
   description,
   keywords: [
@@ -50,15 +50,15 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: siteUrl,
-    siteName: "Arief M. Usry",
-    title: "Arief M. Usry | Fullstack Engineer",
+    siteName: "Arief Muhammad Usry",
+    title: "Arief Muhammad Usry | Fullstack Engineer",
     description,
     locale: "en_US",
     alternateLocale: ["id_ID"],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Arief M. Usry | Fullstack Engineer",
+    title: "Arief Muhammad Usry | Fullstack Engineer",
     description,
   },
   robots: { index: true, follow: true },

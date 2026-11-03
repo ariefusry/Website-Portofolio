@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "Arief M. Usry | Fullstack Engineer";
+export const alt = "Arief Muhammad Usry | Fullstack Engineer";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -58,7 +58,7 @@ export default function OpengraphImage() {
             color: "#404040",
           }}
         >
-          <span style={{ fontWeight: 600, color: "#000000" }}>Arief M. Usry</span>
+          <span style={{ fontWeight: 600, color: "#000000" }}>Arief Muhammad Usry</span>
           <span>Flutter · Laravel · Supabase · TensorFlow</span>
         </div>
       </div>

@@ -41,10 +41,10 @@ export async function generateMetadata({
     alternates: { canonical: `/projects/${project.slug}` },
     openGraph: {
       type: "article",
-      title: `${project.title} | Arief M. Usry`,
+      title: `${project.title} | Arief Muhammad Usry`,
       description,
       url: `/projects/${project.slug}`,
-      siteName: "Arief M. Usry",
+      siteName: "Arief Muhammad Usry",
       locale: "en_US",
       images: image
         ? [{ url: image, alt: `${project.title}, screenshot` }]
@@ -53,13 +53,13 @@ export async function generateMetadata({
               url: "/opengraph-image",
               width: 1200,
               height: 630,
-              alt: "Arief M. Usry | Fullstack Engineer",
+              alt: "Arief Muhammad Usry | Fullstack Engineer",
             },
           ],
     },
     twitter: {
       card: "summary_large_image",
-      title: `${project.title} | Arief M. Usry`,
+      title: `${project.title} | Arief Muhammad Usry`,
       description,
       images: [image ?? "/opengraph-image"],
     },

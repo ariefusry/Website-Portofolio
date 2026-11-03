@@ -57,7 +57,7 @@ export function Contact({ profile }: { profile: Profile }) {
       heading={t(profile.contactHeading)}
       note={t(profile.contactNote)}
       columns={columns}
-      copyright={`© ${new Date().getFullYear()} ${profile.name}. ${t(UI.rightsReserved)}`}
+      copyright={`© ${new Date().getFullYear()} Arief Muhammad Usry. ${t(UI.rightsReserved)}`}
       meta={<VisitorCount />}
     />
   );
