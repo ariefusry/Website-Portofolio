@@ -71,7 +71,15 @@ export default function RootLayout({
     // suppressHydrationWarning: skrip tema di <head> sengaja memasang
     // `data-theme` pada <html> sebelum React hidrasi, jadi atribut server dan
     // klien memang berbeda. Cakupannya hanya elemen ini, bukan isinya.
-    <html lang="en" suppressHydrationWarning>
+    // Variabel font dipasang di <html>, bukan <body>: token --font-display,
+    // --font-body, dan --font-mono dari @theme dihitung di :root. Kalau
+    // variabel next/font baru ada di <body>, token itu kosong di :root dan
+    // seluruh situs jatuh ke font sistem.
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${instrumentSans.variable} ${manrope.variable} ${jetbrainsMono.variable}`}
+    >
       <head>
         {/*
           Tema dipasang sebelum render pertama. Kalau ini dikerjakan React,
@@ -92,9 +100,7 @@ export default function RootLayout({
           <style>{`[style*="opacity:0"],[style*="opacity: 0"]{opacity:1!important;transform:none!important}`}</style>
         </noscript>
       </head>
-      <body
-        className={`${instrumentSans.variable} ${manrope.variable} ${jetbrainsMono.variable}`}
-      >
+      <body>
         {children}
         {/*
           Vercel Web Analytics. Skripnya dimuat dari va.vercel-scripts.com,

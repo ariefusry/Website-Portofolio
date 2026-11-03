@@ -59,7 +59,12 @@ export function Footer({
           {meta}
         </AnimatedContainer>
 
-        <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 xl:col-span-2">
+        {/*
+          Satu kolom di ponsel sempit: alamat email tidak punya titik
+          pemenggalan dan lebih lebar dari setengah layar 360px, jadi dua kolom
+          membuat halaman bergeser ke samping.
+        */}
+        <div className="grid grid-cols-1 gap-8 min-[440px]:grid-cols-2 sm:grid-cols-3 xl:col-span-2">
           {columns.map((section, index) => (
             <AnimatedContainer key={section.label} delay={0.1 + index * 0.1}>
               <h3 className="m-0 font-mono text-xs leading-none font-semibold text-muted">

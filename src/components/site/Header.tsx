@@ -137,13 +137,18 @@ export function Header({ email }: { email: string }) {
    *
    * Kedua label selalu dirender, jadi lebarnya tetap saat bahasa berganti dan
    * pil navbar tidak ikut melompat.
+   *
+   * Hurufnya Manrope seperti menu di sebelahnya, bukan mono: di samping
+   * label nav, huruf mono terbaca seperti kode yang nyasar. Karena Manrope
+   * proporsional ("EN" lebih lebar dari "ID"), tiap sel dipatok lebar tetap
+   * supaya thumb tetap pas menutup satu label.
    */
   const langToggle = (
     <button
       type="button"
       onClick={() => setLang(other)}
       aria-label={`${t(UI.switchLang)}: ${other}`}
-      className="relative flex cursor-pointer items-center rounded-full bg-[var(--color-line)] p-[3px] max-lg:min-h-11 font-mono text-xs leading-none font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid"
+      className="relative flex cursor-pointer items-center rounded-full bg-[var(--color-line)] p-[3px] max-lg:min-h-11 font-body text-xs leading-none font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid"
     >
       {/* Thumb yang meluncur; lebarnya persis satu sel label. */}
       <span
@@ -156,7 +161,7 @@ export function Header({ email }: { email: string }) {
         <span
           key={code}
           aria-hidden="true"
-          className={`relative z-10 w-1/2 px-[9px] py-[5px] text-center transition-colors duration-300 motion-reduce:transition-none ${
+          className={`relative z-10 w-[34px] py-[5px] text-center transition-colors duration-300 motion-reduce:transition-none ${
             lang === code ? "text-on-ink" : "text-muted"
           }`}
         >
