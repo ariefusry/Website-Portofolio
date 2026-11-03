@@ -44,7 +44,7 @@ export default async function Home() {
           __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
         }}
       />
-      <Header name={profile.name} email={profile.email} />
+      <Header email={profile.email} />
       <main>
         <Hero profile={profile} />
         <About profile={profile} />

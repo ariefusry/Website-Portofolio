@@ -26,7 +26,7 @@ const NAV = [
   { id: "research", label: UI.nav.research },
 ] as const;
 
-export function Header({ name, email }: { name: string; email: string }) {
+export function Header({ email }: { email: string }) {
   const { lang, setLang, t } = useLang();
   const { theme, toggle: toggleTheme } = useTheme();
   const pathname = usePathname();
@@ -201,17 +201,8 @@ export function Header({ name, email }: { name: string; email: string }) {
      */
     <header className="sticky top-0 z-30">
       <div className="section-x flex justify-center py-[14px]">
-        {/* Desktop: satu pil berisi nama, nav, dan kontrol. */}
-        <SpotlightPill className="nav-pill hidden items-center gap-2 py-1.5 pr-2 pl-5 lg:flex">
-          <Link
-            href="/"
-            className="rounded-full font-display text-[15px] leading-none font-semibold tracking-[-0.01em] max-lg:inline-flex max-lg:min-h-11 max-lg:items-center focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid"
-          >
-            {name}
-          </Link>
-
-          <Divider />
-
+        {/* Desktop: satu pil berisi nav dan kontrol. */}
+        <SpotlightPill className="nav-pill hidden items-center gap-2 py-1.5 pr-2 pl-2 lg:flex">
           <nav className="font-body text-[13px] leading-none font-medium text-muted">
             <ul className="m-0 flex list-none items-center p-0">
               {items.map((n) => (
@@ -239,15 +230,8 @@ export function Header({ name, email }: { name: string; email: string }) {
           </div>
         </SpotlightPill>
 
-        {/* Mobile: pil yang sama, isinya nama dan kontrol saja. */}
-        <SpotlightPill className="nav-pill flex items-center gap-2 py-1.5 pr-2 pl-4 font-body text-[13px] leading-none font-medium lg:hidden">
-          <Link
-            href="/"
-            className="rounded-full font-display text-[15px] leading-none font-semibold tracking-[-0.01em] max-lg:inline-flex max-lg:min-h-11 max-lg:items-center focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-solid"
-          >
-            {name}
-          </Link>
-          <Divider />
+        {/* Mobile: pil yang sama, isinya kontrol saja. */}
+        <SpotlightPill className="nav-pill flex items-center gap-2 py-1.5 pr-2 pl-2 font-body text-[13px] leading-none font-medium lg:hidden">
           {langToggle}
           {themeToggle}
           <button
@@ -270,10 +254,7 @@ export function Header({ name, email }: { name: string; email: string }) {
           aria-label={t(UI.menu)}
           className="fixed inset-0 z-40 bg-page lg:hidden"
         >
-          <div className="section-x flex items-center justify-between border-b border-[var(--color-line-soft)] py-[18px]">
-            <span className="font-display text-[15px] leading-none font-semibold">
-              {name}
-            </span>
+          <div className="section-x flex items-center justify-end border-b border-[var(--color-line-soft)] py-[18px]">
             <button
               type="button"
               ref={closeBtnRef}

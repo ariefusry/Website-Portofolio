@@ -49,7 +49,7 @@ export default async function ProjectsPage({
 
   return (
     <LangProvider defaultLang={content.settings.defaultLang}>
-      <Header name={content.profile.name} email={content.profile.email} />
+      <Header email={content.profile.email} />
       <main>
         <ProjectsIndex
           projects={content.projects}

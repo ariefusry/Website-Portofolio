@@ -104,7 +104,7 @@ export default async function ProjectPage({
           __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
         }}
       />
-      <Header name={content.profile.name} email={content.profile.email} />
+      <Header email={content.profile.email} />
       <main>
         <ProjectDetail project={project} backHref={backHref} />
       </main>
