@@ -1,4 +1,4 @@
-# Portfolio — Arief M. Usry
+# Portfolio — Arief Muhamamd Usry
 
 A personal portfolio site: Next.js App Router, content editable through a
 Supabase-backed `/admin` dashboard, and it still renders in full when Supabase
